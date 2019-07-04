@@ -273,6 +273,10 @@ github.com/openzipkin/zipkin-go v0.1.6 h1:yXiysv1CSK7Q5yjGy1710zZGnsbMUIjluWBxtL
 github.com/openzipkin/zipkin-go v0.1.6/go.mod h1:QgAqvLzwWbR/WpD4A3cGpPtJrZXNIiJc5AZX7/PBEpw=
 github.com/orijtech/prometheus-go-metrics-exporter v0.0.3-0.20190313163149-b321c5297f60 h1:vN7d/Zv6aOXqhspiqoEMkb6uFHNARVESmYn5XtNeyrk=
 github.com/orijtech/prometheus-go-metrics-exporter v0.0.3-0.20190313163149-b321c5297f60/go.mod h1:+Mu9w51Uc2RNKSUTA95d6Pvy8cxFiRX3ANRPlCcnGLA=
+github.com/owais/opencensus-go-exporter-ocagent v0.5.0-unary h1:SiHPPJb7AvFnlUgivWKctlmteW6b+qQHTU5zHkuUZiY=
+github.com/owais/opencensus-go-exporter-ocagent v0.5.0-unary/go.mod h1:vq8M6Dz93hCmwk+nlNLPkk9ko0iTN9845jsqn/Q4Rdk=
+github.com/owais/opencensus-proto v0.3.0-beta-unary h1:uiOYCggvbdhUOTc3p5LYTDksz9LNsm/r2j1WcwKTHmM=
+github.com/owais/opencensus-proto v0.3.0-beta-unary/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c h1:Lgl0gzECD8GnQ5QCWA8o6BtfL6mDH5rQgM4/fX3avOs=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181zc=

@@ -89,6 +89,7 @@ func (ocr *Receiver) Config(tcs agenttracepb.TraceService_ConfigServer) error {
 var errTraceExportProtocolViolation = errors.New("protocol violation: Export's first message must have a Node")
 
 const receiverTagValue = "oc_trace"
+const receiverTagValueUnary = "oc_trace_unary"
 
 // Export is the gRPC method that receives streamed traces from
 // OpenCensus-traceproto compatible libraries/applications.
@@ -122,16 +123,7 @@ func (ocr *Receiver) Export(tes agenttracepb.TraceService_ExportServer) error {
 			resource = recv.Resource
 		}
 
-		td := &consumerdata.TraceData{
-			Node:         lastNonNilNode,
-			Resource:     resource,
-			Spans:        recv.Spans,
-			SourceFormat: "oc_trace",
-		}
-
-		ocr.messageChan <- &traceDataWithCtx{data: td, ctx: ctxWithReceiverName}
-
-		observability.RecordTraceReceiverMetrics(ctxWithReceiverName, len(td.Spans), 0)
+		ocr.dispatchMsg(ctxWithReceiverName, recv, lastNonNilNode, resource)
 
 		recv, err = tes.Recv()
 		if err != nil {
@@ -143,6 +135,39 @@ func (ocr *Receiver) Export(tes agenttracepb.TraceService_ExportServer) error {
 			return err
 		}
 	}
+}
+
+// ExportOne is the unary gRPC method that receives traces from
+// OpenCensus-traceproto compatible libraries/applications.
+// func (ocr *Receiver) ExportOne(tes agenttracepb.TraceService_ExportServer) error {
+
+func (ocr *Receiver) ExportOne(ctx context.Context, req *agenttracepb.ExportTraceServiceRequest) (*agenttracepb.ExportTraceServiceResponse, error) {
+	// Every batch must have node information when exported using unary rpc
+	if req.Node == nil {
+		return nil, errTraceExportProtocolViolation
+	}
+
+	// We need to ensure that it propagates the receiver name as a tag
+	ctxWithReceiverName := observability.ContextWithReceiverName(ctx, receiverTagValueUnary)
+
+	ocr.dispatchMsg(ctxWithReceiverName, req, req.Node, req.Resource)
+	return &agenttracepb.ExportTraceServiceResponse{}, nil
+}
+
+func (ocr *Receiver) dispatchMsg(
+	ctx context.Context,
+	req *agenttracepb.ExportTraceServiceRequest,
+	node *commonpb.Node,
+	resource *resourcepb.Resource,
+) {
+	td := &consumerdata.TraceData{
+		Node:         node,
+		Resource:     resource,
+		Spans:        req.Spans,
+		SourceFormat: "oc_trace",
+	}
+	ocr.messageChan <- &traceDataWithCtx{data: td, ctx: ctx}
+	observability.RecordTraceReceiverMetrics(ctx, len(td.Spans), 0)
 }
 
 // Stop the receiver and its workers

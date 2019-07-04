@@ -50,3 +50,7 @@ require (
 	google.golang.org/grpc v1.21.0
 	gopkg.in/yaml.v2 v2.2.2
 )
+
+replace contrib.go.opencensus.io/exporter/ocagent => github.com/owais/opencensus-go-exporter-ocagent v0.5.0-unary
+
+replace github.com/census-instrumentation/opencensus-proto => github.com/owais/opencensus-proto v0.3.0-beta-unary
