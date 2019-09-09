@@ -35,8 +35,10 @@ import (
 	"github.com/open-telemetry/opentelemetry-service/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-service/receiver/zipkinreceiver"
 
+	"github.com/Omnition/omnition-opentelemetry-service/exporter/debugexporter"
 	"github.com/Omnition/omnition-opentelemetry-service/exporter/kinesis"
 	"github.com/Omnition/omnition-opentelemetry-service/exporter/opencensusexporter"
+	"github.com/Omnition/omnition-opentelemetry-service/processor/kubernetes"
 	"github.com/Omnition/omnition-opentelemetry-service/processor/memorylimiter"
 	"github.com/Omnition/omnition-opentelemetry-service/receiver/opencensusreceiver"
 )
@@ -53,6 +55,7 @@ func components() (config.Factories, error) {
 	}
 
 	exporters, err := exporter.Build(
+		&debugexporter.Factory{},
 		&opencensusexporter.Factory{},
 		&prometheusexporter.Factory{},
 		&loggingexporter.Factory{},
@@ -67,6 +70,7 @@ func components() (config.Factories, error) {
 
 	processors, err := processor.Build(
 		&attributesprocessor.Factory{},
+		&kubernetes.Factory{},
 		&queuedprocessor.Factory{},
 		&nodebatcherprocessor.Factory{},
 		&memorylimiter.Factory{},

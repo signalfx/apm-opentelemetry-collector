@@ -1,0 +1,43 @@
+package kubernetes
+
+import (
+	"path"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/open-telemetry/opentelemetry-service/config"
+	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
+)
+
+func TestLoadConfig(t *testing.T) {
+	receivers, processors, exporters, err := config.ExampleComponents()
+	assert.Nil(t, err)
+
+	factory := &Factory{}
+	processors[typeStr] = factory
+	cfg, err := config.LoadConfigFile(
+		t, path.Join(".", "testdata", "config.yaml"), receivers, processors, exporters,
+	)
+
+	require.Nil(t, err)
+	require.NotNil(t, cfg)
+
+	p0 := cfg.Processors["add-attributes"]
+	assert.Equal(t, p0, factory.CreateDefaultConfig())
+
+	p1 := cfg.Processors["add-attributes/2"]
+	assert.Equal(t, p1,
+		&Config{
+			ProcessorSettings: configmodels.ProcessorSettings{
+				TypeVal: "add-attributes",
+				NameVal: "add-attributes/2",
+			},
+			Values: map[string]interface{}{
+				"attribute1":         123,
+				"string attribute":   "string value",
+				"attribute.with.dot": "another value",
+			},
+		})
+}
