@@ -29,6 +29,12 @@ type Exporter struct {
 	logger  *zap.Logger
 }
 
+// Shutdown is invoked during exporter shutdown.
+func (e Exporter) Shutdown() error {
+	e.kinesis.Flush()
+	return nil
+}
+
 // ConsumeTraceData receives a span batch and exports it to AWS Kinesis
 func (e Exporter) ConsumeTraceData(c context.Context, td consumerdata.TraceData) error {
 	pBatch, err := jaegertranslator.OCProtoToJaegerProto(td)

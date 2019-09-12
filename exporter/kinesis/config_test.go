@@ -26,13 +26,13 @@ import (
 )
 
 func TestDefaultConfig(t *testing.T) {
-	receiverFactories, processorsFactories, exporterFactories, err := config.ExampleComponents()
+	factories, err := config.ExampleComponents()
 	assert.Nil(t, err)
 
 	factory := &Factory{}
-	exporterFactories[factory.Type()] = factory
+	factories.Exporters[factory.Type()] = factory
 	cfg, err := config.LoadConfigFile(
-		t, path.Join(".", "testdata", "default.yaml"), receiverFactories, processorsFactories, exporterFactories,
+		t, path.Join(".", "testdata", "default.yaml"), factories,
 	)
 	require.NoError(t, err)
 	require.NotNil(t, cfg)
@@ -66,13 +66,13 @@ func TestDefaultConfig(t *testing.T) {
 }
 
 func TestConfig(t *testing.T) {
-	receiverFactories, processorsFactories, exporterFactories, err := config.ExampleComponents()
+	factories, err := config.ExampleComponents()
 	assert.Nil(t, err)
 
 	factory := &Factory{}
-	exporterFactories[factory.Type()] = factory
+	factories.Exporters[factory.Type()] = factory
 	cfg, err := config.LoadConfigFile(
-		t, path.Join(".", "testdata", "config.yaml"), receiverFactories, processorsFactories, exporterFactories,
+		t, path.Join(".", "testdata", "config.yaml"), factories,
 	)
 
 	require.NoError(t, err)

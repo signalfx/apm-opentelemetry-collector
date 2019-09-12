@@ -124,7 +124,7 @@ misspell-correction:
 
 .PHONY: staticcheck
 staticcheck:
-	$(STATICCHECK) $(ALL_SRC)
+	export GOFLAGS=$(GOMOD) && $(STATICCHECK) ./...
 
 .PHONY: vet
 vet:
@@ -145,6 +145,10 @@ install-tools:
 
 .PHONY: dep
 dep:
+    # go mod vendor doesn't forcibly update folders leading to stale code being
+    # present locally. Deleting the vendor directory ensures only the desired
+    # version of the code is available.
+	rm -fr vendor
 	go mod vendor
 	gogoproto-rewriter vendor/github.com/open-telemetry/opentelemetry-service/
 	gogoproto-rewriter vendor/contrib.go.opencensus.io/exporter/

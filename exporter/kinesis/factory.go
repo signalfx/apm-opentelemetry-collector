@@ -18,7 +18,6 @@ import (
 	kinesis "github.com/omnition/opencensus-go-exporter-kinesis"
 	"github.com/open-telemetry/opentelemetry-service/config/configerror"
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
-	"github.com/open-telemetry/opentelemetry-service/consumer"
 	"github.com/open-telemetry/opentelemetry-service/exporter"
 	"go.uber.org/zap"
 )
@@ -61,7 +60,7 @@ func (f *Factory) CreateDefaultConfig() configmodels.Exporter {
 }
 
 // CreateTraceExporter initializes and returns a new trace exporter
-func (f *Factory) CreateTraceExporter(logger *zap.Logger, cfg configmodels.Exporter) (consumer.TraceConsumer, exporter.StopFunc, error) {
+func (f *Factory) CreateTraceExporter(logger *zap.Logger, cfg configmodels.Exporter) (exporter.TraceExporter, error) {
 	c := cfg.(*Config)
 	k, err := kinesis.NewExporter(kinesis.Options{
 		Name:               c.Name(),
@@ -88,16 +87,12 @@ func (f *Factory) CreateTraceExporter(logger *zap.Logger, cfg configmodels.Expor
 		Encoding:              exportFormat,
 	}, logger)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	stopFunc := func() error {
-		k.Flush()
-		return nil
-	}
-	return Exporter{k, logger}, stopFunc, nil
+	return Exporter{k, logger}, nil
 }
 
 // CreateMetricsExporter creates a metrics exporter based on this config.
-func (f *Factory) CreateMetricsExporter(logger *zap.Logger, cfg configmodels.Exporter) (consumer.MetricsConsumer, exporter.StopFunc, error) {
-	return nil, nil, configerror.ErrDataTypeIsNotSupported
+func (f *Factory) CreateMetricsExporter(logger *zap.Logger, cfg configmodels.Exporter) (exporter.MetricsExporter, error) {
+	return nil, configerror.ErrDataTypeIsNotSupported
 }

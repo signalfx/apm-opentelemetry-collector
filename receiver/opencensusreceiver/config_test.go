@@ -27,13 +27,13 @@ import (
 )
 
 func TestLoadConfig(t *testing.T) {
-	receivers, processors, exporters, err := config.ExampleComponents()
+	factories, err := config.ExampleComponents()
 	assert.Nil(t, err)
 
 	factory := &Factory{}
-	receivers[typeStr] = factory
+	factories.Receivers[typeStr] = factory
 	cfg, err := config.LoadConfigFile(
-		t, path.Join(".", "testdata", "config.yaml"), receivers, processors, exporters,
+		t, path.Join(".", "testdata", "config.yaml"), factories,
 	)
 
 	require.NoError(t, err)
@@ -76,11 +76,11 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, r3,
 		&Config{
 			ReceiverSettings: configmodels.ReceiverSettings{
-				TypeVal:             typeStr,
-				NameVal:             "opencensus/nobackpressure",
-				Endpoint:            "127.0.0.1:55678",
-				DisableBackPressure: true,
+				TypeVal:  typeStr,
+				NameVal:  "opencensus/nobackpressure",
+				Endpoint: "127.0.0.1:55678",
 			},
+			EnableBackPressure:   false,
 			MaxRecvMsgSizeMiB:    32,
 			MaxConcurrentStreams: 16,
 		})

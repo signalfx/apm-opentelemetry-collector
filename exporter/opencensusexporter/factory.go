@@ -17,7 +17,6 @@ package opencensusexporter
 import (
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
-	"github.com/open-telemetry/opentelemetry-service/consumer"
 	"github.com/open-telemetry/opentelemetry-service/exporter"
 	"github.com/open-telemetry/opentelemetry-service/exporter/opencensusexporter"
 	"go.uber.org/zap"
@@ -46,11 +45,11 @@ func (f *Factory) CreateDefaultConfig() configmodels.Exporter {
 }
 
 // CreateTraceExporter creates a trace exporter based on this config.
-func (f *Factory) CreateTraceExporter(logger *zap.Logger, config configmodels.Exporter) (consumer.TraceConsumer, exporter.StopFunc, error) {
+func (f *Factory) CreateTraceExporter(logger *zap.Logger, config configmodels.Exporter) (exporter.TraceExporter, error) {
 	ocac := config.(*Config)
 	opts, err := f.factory.OCAgentOptions(logger, &ocac.Config)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	if ocac.UseUnaryExporter {
@@ -58,10 +57,10 @@ func (f *Factory) CreateTraceExporter(logger *zap.Logger, config configmodels.Ex
 			Timeout: ocac.UnaryExporterTimeout,
 		}))
 	}
-	return f.factory.CreateOCAgent(logger, &ocac.Config, opts)
+	return opencensusexporter.NewTraceExporter(logger, &ocac.Config, opts...)
 }
 
 // CreateMetricsExporter creates a metrics exporter based on this config.
-func (f *Factory) CreateMetricsExporter(logger *zap.Logger, config configmodels.Exporter) (consumer.MetricsConsumer, exporter.StopFunc, error) {
+func (f *Factory) CreateMetricsExporter(logger *zap.Logger, config configmodels.Exporter) (exporter.MetricsExporter, error) {
 	return f.factory.CreateMetricsExporter(logger, config)
 }

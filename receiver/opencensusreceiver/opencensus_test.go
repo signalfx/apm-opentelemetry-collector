@@ -29,7 +29,6 @@ import (
 	commonpb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/common/v1"
 	agenttracepb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/trace/v1"
 	tracepb "github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1"
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
 	"github.com/open-telemetry/opentelemetry-service/consumer"
 	"github.com/open-telemetry/opentelemetry-service/consumer/consumerdata"
 	"github.com/open-telemetry/opentelemetry-service/exporter/exportertest"
@@ -418,7 +417,7 @@ func TestOCReceiverTrace_HandleNextConsumerResponse(t *testing.T) {
 	}
 	tests := []struct {
 		name                                       string
-		backPressureSetting                        configmodels.BackPressureSetting
+		backPressureSetting                        bool
 		expectedReceivedBatches                    int
 		expectedIngestionBlockedRPCs               int
 		expectedIngestionBlockedRPCsNoBackPressure int
@@ -426,7 +425,7 @@ func TestOCReceiverTrace_HandleNextConsumerResponse(t *testing.T) {
 	}{
 		{
 			name:                         "EnableBackPressure",
-			backPressureSetting:          configmodels.EnableBackPressure,
+			backPressureSetting:          true,
 			expectedReceivedBatches:      2,
 			expectedIngestionBlockedRPCs: 1,
 			expectedIngestionBlockedRPCsNoBackPressure: 0,
@@ -447,7 +446,7 @@ func TestOCReceiverTrace_HandleNextConsumerResponse(t *testing.T) {
 		},
 		{
 			name:                         "DisableBackPressure",
-			backPressureSetting:          configmodels.DisableBackPressure,
+			backPressureSetting:          false,
 			expectedReceivedBatches:      2,
 			expectedIngestionBlockedRPCs: 1,
 			expectedIngestionBlockedRPCsNoBackPressure: 1,
@@ -549,7 +548,7 @@ func TestOCReceiverTrace_HandleNextConsumerResponse(t *testing.T) {
 				sink := new(sinkTraceConsumer)
 
 				var opts []Option
-				if tt.backPressureSetting == configmodels.EnableBackPressure {
+				if tt.backPressureSetting == true {
 					opts = append(opts, WithTraceReceiverOptions(octrace.WithBackPressure()))
 				}
 				ocr, err := New(addr, nil, nil, opts...)

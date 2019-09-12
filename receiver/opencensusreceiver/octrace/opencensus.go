@@ -180,7 +180,7 @@ func (ocr *Receiver) sendToNextConsumer(longLivedCtx context.Context, tracedata 
 	}
 
 	if len(tracedata.Spans) == 0 {
-		observability.RecordTraceReceiverMetrics(longLivedCtx, 0, 0)
+		observability.RecordMetricsForTraceReceiver(longLivedCtx, 0, 0)
 		return nil
 	}
 
@@ -193,7 +193,7 @@ func (ocr *Receiver) sendToNextConsumer(longLivedCtx context.Context, tracedata 
 
 	err := ocr.nextConsumer.ConsumeTraceData(ctx, *tracedata)
 	if err != nil {
-		observability.RecordTraceReceiverMetrics(longLivedCtx, 0, len(tracedata.Spans))
+		observability.RecordMetricsForTraceReceiver(longLivedCtx, 0, len(tracedata.Spans))
 		span.Annotate([]trace.Attribute{
 			trace.Int64Attribute("dropped_spans", int64(len(tracedata.Spans))),
 		}, "")
@@ -203,7 +203,7 @@ func (ocr *Receiver) sendToNextConsumer(longLivedCtx context.Context, tracedata 
 			Message: err.Error(),
 		})
 	} else {
-		observability.RecordTraceReceiverMetrics(longLivedCtx, len(tracedata.Spans), 0)
+		observability.RecordMetricsForTraceReceiver(longLivedCtx, len(tracedata.Spans), 0)
 		span.Annotate([]trace.Attribute{
 			trace.Int64Attribute("num_spans", int64(len(tracedata.Spans))),
 		}, "")

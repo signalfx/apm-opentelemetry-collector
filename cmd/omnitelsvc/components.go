@@ -15,17 +15,17 @@
 package main
 
 import (
+	"github.com/open-telemetry/opentelemetry-service/config"
 	"github.com/open-telemetry/opentelemetry-service/exporter"
 	"github.com/open-telemetry/opentelemetry-service/exporter/loggingexporter"
 	"github.com/open-telemetry/opentelemetry-service/exporter/prometheusexporter"
 	"github.com/open-telemetry/opentelemetry-service/oterr"
 	"github.com/open-telemetry/opentelemetry-service/processor"
-	"github.com/open-telemetry/opentelemetry-service/processor/addattributesprocessor"
-	"github.com/open-telemetry/opentelemetry-service/processor/attributekeyprocessor"
-	"github.com/open-telemetry/opentelemetry-service/processor/probabilisticsampler"
+	"github.com/open-telemetry/opentelemetry-service/processor/attributesprocessor"
+	"github.com/open-telemetry/opentelemetry-service/processor/nodebatcherprocessor"
+	"github.com/open-telemetry/opentelemetry-service/processor/probabilisticsamplerprocessor"
+	"github.com/open-telemetry/opentelemetry-service/processor/queuedprocessor"
 
-	"github.com/open-telemetry/opentelemetry-service/processor/nodebatcher"
-	"github.com/open-telemetry/opentelemetry-service/processor/queued"
 	"github.com/open-telemetry/opentelemetry-service/receiver"
 	"github.com/open-telemetry/opentelemetry-service/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-service/receiver/zipkinreceiver"
@@ -37,9 +37,7 @@ import (
 )
 
 func components() (
-	map[string]receiver.Factory,
-	map[string]processor.Factory,
-	map[string]exporter.Factory,
+	config.Factories,
 	error,
 ) {
 	errs := []error{}
@@ -63,15 +61,19 @@ func components() (
 	}
 
 	processors, err := processor.Build(
-		&addattributesprocessor.Factory{},
-		&attributekeyprocessor.Factory{},
-		&queued.Factory{},
-		&nodebatcher.Factory{},
+		&attributesprocessor.Factory{},
+		&queuedprocessor.Factory{},
+		&nodebatcherprocessor.Factory{},
 		&memorylimiter.Factory{},
-		&probabilisticsampler.Factory{},
+		&probabilisticsamplerprocessor.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
 	}
-	return receivers, processors, exporters, oterr.CombineErrors(errs)
+	factories := config.Factories{
+		Receivers:  receivers,
+		Processors: processors,
+		Exporters:  exporters,
+	}
+	return factories, oterr.CombineErrors(errs)
 }

@@ -11,7 +11,7 @@ receivers:
         min-time: 10s
         permit-without-stream: true
   opencensus/nobackpressure:
-    disable-backpressure: true
+    backpressure: false
     max-recv-msg-size-mib: 32
     max-concurrent-streams: 16
 
