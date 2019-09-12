@@ -17,8 +17,13 @@ package main
 import (
 	"github.com/open-telemetry/opentelemetry-service/config"
 	"github.com/open-telemetry/opentelemetry-service/exporter"
+	"github.com/open-telemetry/opentelemetry-service/exporter/jaeger/jaegergrpcexporter"
+	"github.com/open-telemetry/opentelemetry-service/exporter/jaeger/jaegerthrifthttpexporter"
 	"github.com/open-telemetry/opentelemetry-service/exporter/loggingexporter"
 	"github.com/open-telemetry/opentelemetry-service/exporter/prometheusexporter"
+	"github.com/open-telemetry/opentelemetry-service/exporter/zipkinexporter"
+	"github.com/open-telemetry/opentelemetry-service/extension"
+	"github.com/open-telemetry/opentelemetry-service/extension/healthcheckextension"
 	"github.com/open-telemetry/opentelemetry-service/oterr"
 	"github.com/open-telemetry/opentelemetry-service/processor"
 	"github.com/open-telemetry/opentelemetry-service/processor/attributesprocessor"
@@ -36,10 +41,7 @@ import (
 	"github.com/Omnition/omnition-opentelemetry-service/receiver/opencensusreceiver"
 )
 
-func components() (
-	config.Factories,
-	error,
-) {
+func components() (config.Factories, error) {
 	errs := []error{}
 	receivers, err := receiver.Build(
 		&jaegerreceiver.Factory{},
@@ -54,6 +56,9 @@ func components() (
 		&opencensusexporter.Factory{},
 		&prometheusexporter.Factory{},
 		&loggingexporter.Factory{},
+		&jaegergrpcexporter.Factory{},
+		&jaegerthrifthttpexporter.Factory{},
+		&zipkinexporter.Factory{},
 		&kinesis.Factory{},
 	)
 	if err != nil {
@@ -70,10 +75,18 @@ func components() (
 	if err != nil {
 		errs = append(errs, err)
 	}
+
+	extensions, err := extension.Build(
+		&healthcheckextension.Factory{},
+	)
+	if err != nil {
+		errs = append(errs, err)
+	}
 	factories := config.Factories{
 		Receivers:  receivers,
 		Processors: processors,
 		Exporters:  exporters,
+		Extensions: extensions,
 	}
 	return factories, oterr.CombineErrors(errs)
 }
