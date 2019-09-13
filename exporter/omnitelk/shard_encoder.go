@@ -34,25 +34,6 @@ const avgBatchSizeInSpans = 1000
 
 var compressedMagicByte = [8]byte{111, 109, 58, 106, 115, 112, 108, 122}
 
-// FailureCode describes encoding failures.
-type FailureCode int
-
-const (
-	_ FailureCode = iota // skip 0 value.
-
-	// FailedEncoderStopped indicates encoding attempt when encoder is stopped.
-	FailedEncoderStopped
-
-	// FailedNotRetryable indicates that encoding or sending span data failed and
-	// it should not be retried because the problem is fatal (e.g. bad data that
-	// cannot be marshaled).
-	FailedNotRetryable
-
-	// FailedShouldRetry indicates that encoding or sending span data failed but
-	// that should be retried because the error is transient.
-	FailedShouldRetry
-)
-
 // A function that accepts encoded records and the config that was used for encoding.
 type recordConsumeFunc func(record *omnitelpb.EncodedRecord, shard *shardInMemConfig)
 
