@@ -1,0 +1,106 @@
+// Copyright 2019 Omnition Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package omnitelk;
+
+message ExportRequest {
+    // Unique request id.
+    uint64 id = 1;
+
+    // List of encoded records.
+    repeated EncodedRecord records = 2;
+
+    // The shard that the records were prepared for. The receiver will
+    // accept the records if the current sharding configuration has a
+    // shard with specified shardId and matching hash key range.
+    ShardDefinition shard = 3;
+}
+
+message EncodedRecord {
+    // data is a byte sequence encoded as follows:
+    // 1. github.com/omnition/opencensus-go-exporter-kinesis/SpanList
+    //    encoded in Protocol Buffer format.
+    // 2. Result of step 1 compressed using gzip.
+    bytes data = 1;
+
+    // Partition key defines the shard that this data is intended for.
+    string partitionKey = 2;
+
+    // Number of spans encoded in this record. Useful for recipient
+    // to maintain span count stats without uncompressing the data.
+    uint64 spanCount = 3;
+
+    // Size of encoded but uncompressed data in bytes. Useful for recipient
+    // to calculate compression ratio stats without uncompressing the data.
+    uint64 uncompressedBytes = 4;
+}
+
+message ExportResponse {
+    // Request id to which this response corresponds.
+    uint64 id = 1;
+
+    enum ResultCode {
+        // Successfully received and accepted.
+        SUCCESS = 0;
+
+        // Failed to process the data. Sender MUST NOT retry this request.
+        FAILED_NOT_RETRYABLE = 1;
+
+        // Failed to process the data. Sender SHOULD retry this request.
+        FAILED_RETRYABLE = 2;
+
+        // Sharding configuration at receiver does not match
+        // sharding performed by sender. Sender MUST re-shard the
+        // data according to new sharding configuration specified
+        // in shardingConfig field and send again.
+        SHARD_CONFIG_MISTMATCH = 3;
+    }
+
+    // Result of request processing.
+    ResultCode resultCode = 2;
+
+    // If resultCode=SHARD_CONFIG_MISTMATCH then this field
+    // must contain the new sharding configuration otherwise
+    // it should be omitted and ignored.
+    ShardingConfig shardingConfig = 3;
+}
+
+message ShardDefinition {
+    // The id of the shard.
+    string shardId = 1;
+
+    // Shard starting and ending hash keys.
+    // hasKey is byte sequence representation of big.Int hash key.
+    bytes startingHashKey = 2;
+    bytes endingHashKey = 3;
+}
+
+message ShardingConfig {
+    // Sharding configuration is a list of shard definitions.
+    repeated ShardDefinition shardDefinitions = 1;
+}
+
+message ConfigRequest {
+}
+
+service OmnitelK {
+    // Get the sharding configuration. Typically called at the beginning of
+    // communication, before calling Export.
+    rpc GetShardingConfig(ConfigRequest) returns (ShardingConfig) {}
+
+    // Export a stream of requests and receive a stream of responses.
+    rpc Export(stream ExportRequest) returns(stream ExportResponse) {}
+}

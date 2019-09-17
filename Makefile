@@ -3,6 +3,7 @@ ALL_SRC := $(shell find . -name '*.go' \
                                 -not -path './vendor/*' \
                                 -not -path './tools/*' \
                                 -not -path './testbed/*' \
+                                -not -path '*/gen/*' \
                                 -type f | sort)
 
 # All source code and documents. Used in spell check.
@@ -182,3 +183,14 @@ binaries-all-sys:
 	GOOS=darwin $(MAKE) binaries
 	GOOS=linux $(MAKE) binaries
 	GOOS=windows $(MAKE) binaries
+
+# Helper target to generate Protobuf implementations based on .proto files.
+PROTO_PACKAGE_PATH?=./exporter/omnitelk/gen/
+
+.PHONY: generate-protobuf
+generate-protobuf:
+	docker run --rm -v $(PWD):$(PWD) -w $(PWD) \
+	    --user $(shell id -u):$(shell id -g) \
+	    znly/protoc \
+		--go_out=plugins=grpc:$(PROTO_PACKAGE_PATH) \
+		-I./exporter/omnitelk/ ./exporter/omnitelk/*.proto \
