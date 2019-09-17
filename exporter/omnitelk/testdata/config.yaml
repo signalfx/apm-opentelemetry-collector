@@ -1,0 +1,31 @@
+receivers:
+  examplereceiver:
+    enabled: true
+
+exporters:
+  omnitelk:
+    enabled: true
+    endpoint: 0.0.0.0:1234
+
+    # Number of gRPC streams to use concurrently to send encoded
+    # data to the server. Default value is 1. Higher values may be necessary
+    # to achieve good throughput.
+    streams: 4
+
+    # How often to reopen the stream to help L7 Load Balancers re-balance the traffic.
+    # The default value is 30 seconds.
+    stream_reopen_period: 10s
+
+    # Also reopen the stream after specified count of requests are sent.
+    # The default value is 1000.
+    stream_reopen_request_count: 100
+
+processors:
+  exampleprocessor:
+    enabled: true
+
+pipelines:
+  traces:
+    receivers: [examplereceiver]
+    processors: [exampleprocessor]
+    exporters: [omnitelk]

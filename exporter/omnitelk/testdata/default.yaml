@@ -1,0 +1,19 @@
+receivers:
+  examplereceiver:
+    enabled: true
+
+exporters:
+  omnitelk:
+    enabled: true
+
+processors:
+  exampleprocessor:
+    enabled: true
+
+pipelines:
+  traces:
+    receivers: [examplereceiver]
+    processors: [exampleprocessor]
+    exporters: [omnitelk]
+
+
