@@ -15,7 +15,9 @@
 package omnitelk
 
 import (
+	"log"
 	"math/rand"
+	"net"
 	"sync"
 	"testing"
 	"time"
@@ -117,4 +119,19 @@ func GenRandByteString(len int) string {
 		b[i] = byte(rand.Intn(256))
 	}
 	return string(b)
+}
+
+// GetAvailableLocalAddress finds an available local port and returns an endpoint
+// describing it. The port is available for opening when this function returns
+// provided that there is no race by some other code to grab the same port
+// immediately.
+func GetAvailableLocalAddress() string {
+	ln, err := net.Listen("tcp", "localhost:0")
+	if err != nil {
+		log.Fatalf("failed to get a free local port: %v", err)
+	}
+	// There is a possible race if something else takes this same port before
+	// the test uses it, however, that is unlikely in practice.
+	defer ln.Close()
+	return ln.Addr().String()
 }
