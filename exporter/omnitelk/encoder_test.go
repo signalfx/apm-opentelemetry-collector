@@ -30,24 +30,24 @@ import (
 	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
 )
 
-var testConfig = createTestConfig()
+var testConfig = createTestShardConfig(4)
 
-func createTestConfig() *omnitelpb.ShardingConfig {
+func createTestShardConfig(shardCount int) *omnitelpb.ShardingConfig {
 	cfg := &omnitelpb.ShardingConfig{}
-
-	const shardCount = 4
 
 	// Create shards, with evenly spaced start and end hash keys covering entire
 	// hash key space from minHashKey to maxHashKey.
 
-	prevHashKey := minHashKey
+	prevHashKey := big.NewInt(0)
+	prevHashKey.Set(minHashKey)
+
 	var hashKey *big.Int
 	for i := 1; i <= shardCount; i++ {
 		// hashKey = maxHashKey*i/shardCount
 		hashKey = big.NewInt(0)
 		hashKey.Set(maxHashKey)
 		hashKey.Mul(hashKey, big.NewInt(int64(i)))
-		hashKey.Div(hashKey, big.NewInt(shardCount))
+		hashKey.Div(hashKey, big.NewInt(int64(shardCount)))
 
 		shard := &omnitelpb.ShardDefinition{
 			ShardId:         "shard#" + strconv.Itoa(i),
@@ -316,4 +316,41 @@ func TestEncodeLargeSpanCut(t *testing.T) {
 	assert.EqualValues(t, 1, sink.successSpanCount)
 	assert.EqualValues(t, 1, len(sink.encodedRecords))
 	assert.EqualValues(t, 0, sink.failSpanCount)
+}
+
+func TestEncodeSpanBeforeConfig(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		sink := &encoderSink{}
+
+		o := &Options{
+			BatchFlushInterval: time.Millisecond,
+			NumWorkers:         4,
+		}
+
+		e, err := newEncoder(
+			o,
+			zap.NewNop(),
+			sink.onReady,
+			sink.onFail,
+		)
+		require.Nil(t, err)
+
+		// Encode spans.
+		e.EncodeSpans(createSpanBatch())
+
+		// Set config afterwards. This should still work since it is supported.
+		e.SetConfig(testConfig)
+
+		WaitForN(t, func() bool {
+			sink.mutex.Lock()
+			defer sink.mutex.Unlock()
+			return sink.successSpanCount == 1
+		}, time.Millisecond*500, "encoding is successful")
+
+		assert.EqualValues(t, 1, sink.encodedRecords[0].SpanCount)
+		assert.EqualValues(t, 0, sink.failSpanCount)
+		assert.EqualValues(t, 0, len(sink.failedSpans))
+
+		e.Stop(time.Second)
+	}
 }

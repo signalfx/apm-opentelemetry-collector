@@ -36,7 +36,10 @@ type encoderSink struct {
 	failedSpans      []*jaeger.Span
 }
 
-func (es *encoderSink) onReady(record *omnitelpb.EncodedRecord, shard *shardInMemConfig) {
+func (es *encoderSink) onReady(
+	record *omnitelpb.EncodedRecord,
+	shard *shardInMemConfig,
+) {
 	es.mutex.Lock()
 	defer es.mutex.Unlock()
 
@@ -134,4 +137,58 @@ func GetAvailableLocalAddress() string {
 	// the test uses it, however, that is unlikely in practice.
 	defer ln.Close()
 	return ln.Addr().String()
+}
+
+// byPartitionKey implements sort.Interface for []*omnitelpb.EncodedRecord based on
+// the PartitionKey field.
+type byPartitionKey []*omnitelpb.EncodedRecord
+
+func (a byPartitionKey) Len() int      { return len(a) }
+func (a byPartitionKey) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a byPartitionKey) Less(i, j int) bool {
+	return a[i].PartitionKey < a[j].PartitionKey
+}
+
+// clientSink is used in the tests to store responses that the client receives from
+// the server.
+type clientSink struct {
+	mutex sync.Mutex
+
+	responseToRecords []*omnitelpb.EncodedRecord
+	responses         []*omnitelpb.ExportResponse
+
+	failedRecords []*omnitelpb.EncodedRecord
+}
+
+func (cs *clientSink) onSendResponse(
+	responseToRecords *omnitelpb.EncodedRecord,
+	originalSpans []*jaeger.Span,
+	response *omnitelpb.ExportResponse,
+) {
+	cs.mutex.Lock()
+	defer cs.mutex.Unlock()
+	cs.responseToRecords = append(cs.responseToRecords, responseToRecords)
+	cs.responses = append(cs.responses, response)
+}
+
+func (cs *clientSink) onSendFail(
+	failedRecords *omnitelpb.EncodedRecord,
+	originalSpans []*jaeger.Span,
+	code SendErrorCode,
+) {
+	cs.mutex.Lock()
+	defer cs.mutex.Unlock()
+	cs.failedRecords = append(cs.failedRecords, failedRecords)
+}
+
+func (cs *clientSink) getResponseToRecords() []*omnitelpb.EncodedRecord {
+	cs.mutex.Lock()
+	defer cs.mutex.Unlock()
+	return cs.responseToRecords
+}
+
+func (cs *clientSink) getResponses() []*omnitelpb.ExportResponse {
+	cs.mutex.Lock()
+	defer cs.mutex.Unlock()
+	return cs.responses
 }

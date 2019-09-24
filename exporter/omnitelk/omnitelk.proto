@@ -20,8 +20,8 @@ message ExportRequest {
     // Unique request id.
     uint64 id = 1;
 
-    // List of encoded records.
-    repeated EncodedRecord records = 2;
+    // Encoded record.
+    EncodedRecord record = 2;
 
     // The shard that the records were prepared for. The receiver will
     // accept the records if the current sharding configuration has a
@@ -101,6 +101,6 @@ service OmnitelK {
     // communication, before calling Export.
     rpc GetShardingConfig(ConfigRequest) returns (ShardingConfig) {}
 
-    // Export a stream of requests and receive a stream of responses.
-    rpc Export(stream ExportRequest) returns(stream ExportResponse) {}
+    // Export a single request.
+    rpc Export(ExportRequest) returns(ExportResponse) {}
 }

@@ -15,8 +15,6 @@
 package omnitelk
 
 import (
-	"time"
-
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
 )
 
@@ -27,17 +25,8 @@ type Config struct {
 	// Endpoint of the server to connect to.
 	Endpoint string `mapstructure:"endpoint"`
 
-	// Number of gRPC streams to use concurrently to send encoded
-	// data to the server. Default value is 1. Higher values may be necessary
-	// to achieve good throughput.
+	// Number of concurrent requests to use for sending ExportRequests.
+	// Default value is 20. Higher values may be necessary to achieve good throughput.
 	// TODO: run perf test and set a recommendation.
-	Streams uint `mapstructure:"streams"`
-
-	// How often to reopen the stream to help L7 Load Balancers re-balance the traffic.
-	// The default value is 30 seconds.
-	StreamReopenPeriod time.Duration `mapstructure:"stream_reopen_period"`
-
-	// Also reopen the stream after specified count of requests are sent.
-	// The default value is 1000.
-	StreamReopenRequestCount uint `mapstructure:"stream_reopen_request_count"`
+	SendConcurrency uint `mapstructure:"send_concurrency"`
 }

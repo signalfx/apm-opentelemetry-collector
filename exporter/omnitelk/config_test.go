@@ -17,7 +17,6 @@ package omnitelk
 import (
 	"path"
 	"testing"
-	"time"
 
 	"github.com/open-telemetry/opentelemetry-service/config"
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
@@ -45,9 +44,7 @@ func TestDefaultConfig(t *testing.T) {
 				TypeVal: "omnitelk",
 				NameVal: "omnitelk",
 			},
-			Streams:                  1,
-			StreamReopenPeriod:       30 * time.Second,
-			StreamReopenRequestCount: 1000,
+			SendConcurrency: 20,
 		},
 	)
 }
@@ -73,10 +70,8 @@ func TestConfig(t *testing.T) {
 				TypeVal: "omnitelk",
 				NameVal: "omnitelk",
 			},
-			Endpoint:                 "0.0.0.0:1234",
-			Streams:                  4,
-			StreamReopenPeriod:       10 * time.Second,
-			StreamReopenRequestCount: 100,
+			Endpoint:        "0.0.0.0:1234",
+			SendConcurrency: 4,
 		},
 	)
 }

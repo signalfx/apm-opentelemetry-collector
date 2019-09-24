@@ -15,8 +15,6 @@
 package omnitelk
 
 import (
-	"time"
-
 	"github.com/open-telemetry/opentelemetry-service/config/configerror"
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
 	"github.com/open-telemetry/opentelemetry-service/exporter"
@@ -28,9 +26,7 @@ const (
 	typeStr = "omnitelk"
 
 	// Default values for config options.
-	defStreams                  = 1
-	defStreamReopenPeriod       = 30 * time.Second
-	defStreamReopenRequestCount = 1000
+	defSendConcurrency = 20
 )
 
 // Factory is the factory for OmnitelK exporter.
@@ -45,17 +41,15 @@ func (f *Factory) Type() string {
 // CreateDefaultConfig creates the default configuration for exporter.
 func (f *Factory) CreateDefaultConfig() configmodels.Exporter {
 	return &Config{
-		Streams:                  defStreams,
-		StreamReopenPeriod:       defStreamReopenPeriod,
-		StreamReopenRequestCount: defStreamReopenRequestCount,
+		SendConcurrency: defSendConcurrency,
 	}
 }
 
 // CreateTraceExporter initializes and returns a new trace exporter
 func (f *Factory) CreateTraceExporter(logger *zap.Logger, cfg configmodels.Exporter) (exporter.TraceExporter, error) {
 	config := cfg.(*Config)
-	if config.Streams < 1 {
-		config.Streams = 1
+	if config.SendConcurrency < 1 {
+		config.SendConcurrency = defSendConcurrency
 	}
 
 	// TODO: Create an exporter like this when Exporter and ClientImpl are ready.
