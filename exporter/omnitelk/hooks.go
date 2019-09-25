@@ -74,12 +74,12 @@ func (h *telemetryHooks) OnXLSpanTruncated(size int) {
 	)
 }
 
-func (h *telemetryHooks) OnPutSpanListFlushed(spans, bytes int64) {
+func (h *telemetryHooks) OnSpanListFlushed(spans, bytes int64) {
 	_ = stats.RecordWithTags(
 		context.Background(),
 		h.commonTags,
 		statFlushedSpans.M(spans),
-		statSpanListBytes.M(bytes),
+		statFlushedSpansBytes.M(bytes),
 	)
 }
 
@@ -88,5 +88,13 @@ func (h *telemetryHooks) OnCompressed(original, compressed int64) {
 		context.Background(),
 		h.commonTags,
 		statCompressFactor.M(original/compressed),
+	)
+}
+
+func (h *telemetryHooks) OnDropSpans(spans int64) {
+	_ = stats.RecordWithTags(
+		context.Background(),
+		h.commonTags,
+		statDroppedSpans.M(spans),
 	)
 }

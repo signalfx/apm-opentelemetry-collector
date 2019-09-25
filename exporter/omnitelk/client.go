@@ -42,6 +42,11 @@ type client interface {
 	// originalSpans represents original spans that are encoded into record.
 	// It is required that these 2 fields match each other.
 	Send(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *omnitelpb.ShardDefinition)
+
+	// Shutdown the client. After this call Send() should not be called anymore.
+	// Any requests that are not sent yet will not be sent. The responses to already
+	// sent requests may continue arriving after Shutdown() call returns.
+	Shutdown()
 }
 
 // ConnectionOptions to use for the client.

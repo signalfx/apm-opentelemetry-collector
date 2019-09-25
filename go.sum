@@ -48,8 +48,6 @@ github.com/bmizerany/perks v0.0.0-20141205001514-d9a9656a3a4b/go.mod h1:ac9efd0D
 github.com/brianvoe/gofakeit v3.17.0+incompatible h1:C1+30+c0GtjgGDtRC+iePZeP1WMiwsWCELNJhmc7aIc=
 github.com/brianvoe/gofakeit v3.17.0+incompatible/go.mod h1:kfwdRA90vvNhPutZWfH7WPaDzUjz+CZFqG+rPkOjGOc=
 github.com/cenk/backoff v2.0.0+incompatible/go.mod h1:7FtoeaSnHoZnmZzz47cM35Y9nSW7tNyaidugnHTaFDE=
-github.com/cenkalti/backoff v2.2.1+incompatible h1:tNowT99t7UNflLxfYYSlKYsBpXdEet03Pg2g16Swow4=
-github.com/cenkalti/backoff v2.2.1+incompatible/go.mod h1:90ReRw6GdpyfrHakVjL/QHaoyV4aDUVVkXQJJJ3NXXM=
 github.com/certifi/gocertifi v0.0.0-20180905225744-ee1a9a0726d2/go.mod h1:GJKEexRPVJrBSOjoqN5VNOIKJ5Q3RViH6eu3puDRwx4=
 github.com/cespare/xxhash v1.1.0 h1:a6HrQnmkObjyL+Gs60czilIUGqrzKutQD6XZog3p+ko=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
@@ -280,8 +278,8 @@ github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f h1:WYg
 github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f/go.mod h1:KPlPLR7FonWeEx9RUg54uLFEtVrVv0w1klqkg9krq00=
 github.com/omnition/omnition-kinesis-producer v0.4.5 h1:PViWxVyg3cbfLZV+fvIBn/+AdNWvGlFUfZTia7xkCCE=
 github.com/omnition/omnition-kinesis-producer v0.4.5/go.mod h1:UhBKCuCbBikBOjI1HmHZYhhcUlgqzTdat6d6pX/gx7U=
-github.com/omnition/opencensus-go-exporter-kinesis v0.3.2 h1:+dB8gQ6s20ywh9YzL3s8VT09iMiVAa+G9NAyR+TSgC0=
-github.com/omnition/opencensus-go-exporter-kinesis v0.3.2/go.mod h1:1LygQP504rv3ft6zJhyag1fjpqedkyn2fMLbA7VuxGY=
+github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe h1:pKL2Shi6oBFZQQLihqZEYqqU8XwqBJpsFFIHWfsjEws=
+github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe/go.mod h1:vPsJtWXXfRtf7EB18TcIxuzcQ0INrM+CGWRymSfuho0=
 github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition h1:WTGtF3gm+5vQe1Ys9frsadeHUvUwDupfvI8jp5qKijc=
 github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition/go.mod h1:hR7pVfbP8za6jUuwIQcYwybxWD2CGz3eHj0uv95qafI=
 github.com/omnition/opencensus-proto v0.2.1-gogo-unary h1:asZXFkqxcl2g9GZ5FLoRzEmeTC74ilNPsZDsGmzmOX0=

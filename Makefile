@@ -18,7 +18,7 @@ ALL_PKGS := $(shell go list $(sort $(dir $(ALL_SRC))))
 
 GOTEST_OPT?= -race -timeout 30s
 GOTEST_OPT_WITH_COVERAGE = $(GOTEST_OPT) -coverprofile=coverage.txt -covermode=atomic
-GOTEST=go test
+GOTEST=go test -v
 GOFMT=gofmt
 GOIMPORTS=goimports
 GOLINT=golint

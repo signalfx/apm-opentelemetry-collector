@@ -250,7 +250,7 @@ func TestEncodeLargeSpanFail(t *testing.T) {
 		{
 			TraceID: jaeger.NewTraceID(rand.Uint64(), rand.Uint64()),
 			// Very large operation name to ensure encoding fails.
-			OperationName: GenRandByteString(defaultMaxAllowedSizePerSpan + 1),
+			OperationName: GenRandByteString(defMaxAllowedSizePerSpan + 1),
 		},
 	}
 
@@ -290,7 +290,7 @@ func TestEncodeLargeSpanCut(t *testing.T) {
 							Key:   "test",
 							VType: jaeger.ValueType_STRING,
 							// Very large log to ensure encoding hits the limit.
-							VStr: GenRandByteString(defaultMaxAllowedSizePerSpan + 1),
+							VStr: GenRandByteString(defMaxAllowedSizePerSpan + 1),
 						},
 					},
 				},

@@ -29,14 +29,15 @@ var (
 	statXLSpansBytes = stats.Int64("omnitelk_xl_span_size", "size of spans bigger than max support size", stats.UnitBytes)
 	statXLSpans      = stats.Int64("omnitelk_xl_spans", "number of spans found to be bigger than the max support size", stats.UnitDimensionless)
 
-	statFlushedSpans     = stats.Int64("omnitelk_flushed_spans", "number of total spans flushed to omnitelk exporter", stats.UnitDimensionless)
-	statFlushedSpanLists = stats.Int64("omnitelk_flushed_spanlists", "number of spanlists flushed to omnitelk exporter", stats.UnitDimensionless)
-	statSpanListBytes    = stats.Int64("omnitelk_spanlist_bytes", "size of span list in bytes", stats.UnitBytes)
+	statFlushedSpans      = stats.Int64("omnitelk_flushed_spans", "number of spans flushed to omnitelk exporter", stats.UnitDimensionless)
+	statFlushedSpansBytes = stats.Int64("omnitelk_spanlist_bytes", "total size in bytes of spans flushed to omnitelk exporter", stats.UnitBytes)
 
 	statEnqueuedSpans = stats.Int64("omnitelk_enqueued_spans", "spans received and put in a queue to be processed by omnitelk exporter", stats.UnitDimensionless)
 	statDequeuedSpans = stats.Int64("omnitelk_dequeued_spans", "spans taken out of queue and processed by omnitelk exporter", stats.UnitDimensionless)
 
 	statCompressFactor = stats.Int64("omnitelk_compress_factor", "compression factor achieved by spanlists", stats.UnitDimensionless)
+
+	statDroppedSpans = stats.Int64("omnitelk_dropped_spans", "dropped span count", stats.UnitDimensionless)
 )
 
 // TODO: support telemetry level
@@ -55,17 +56,9 @@ func metricViews() []*view.View {
 		Aggregation: view.Sum(),
 	}
 
-	spanListsFlushedView := &view.View{
-		Name:        statFlushedSpanLists.Name(),
-		Measure:     statFlushedSpanLists,
-		Description: "Number of spanlists flushed.",
-		TagKeys:     tagKeys,
-		Aggregation: view.Sum(),
-	}
-
 	spanListBytesView := &view.View{
-		Name:        statSpanListBytes.Name(),
-		Measure:     statSpanListBytes,
+		Name:        statFlushedSpansBytes.Name(),
+		Measure:     statFlushedSpansBytes,
 		Description: "Size of a spanlist in bytes",
 		TagKeys:     tagKeys,
 		Aggregation: view.LastValue(),
@@ -114,7 +107,6 @@ func metricViews() []*view.View {
 	return []*view.View{
 		compressFactorView,
 		spansFlushedView,
-		spanListsFlushedView,
 		spanListBytesView,
 		xlSpansBytesView,
 		xlSpansView,

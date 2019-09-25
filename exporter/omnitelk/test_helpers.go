@@ -38,6 +38,7 @@ type encoderSink struct {
 
 func (es *encoderSink) onReady(
 	record *omnitelpb.EncodedRecord,
+	originalSpans []*jaeger.Span,
 	shard *shardInMemConfig,
 ) {
 	es.mutex.Lock()
@@ -47,7 +48,7 @@ func (es *encoderSink) onReady(
 	es.encodedRecords = append(es.encodedRecords, record)
 }
 
-func (es *encoderSink) onFail(failedSpans []*jaeger.Span, code FailureCode) {
+func (es *encoderSink) onFail(failedSpans []*jaeger.Span, code EncoderErrorCode) {
 	es.mutex.Lock()
 	defer es.mutex.Unlock()
 

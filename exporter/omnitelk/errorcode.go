@@ -14,21 +14,17 @@
 
 package omnitelk
 
-// FailureCode describes encoding or sending failures.
-type FailureCode int
+// EncoderErrorCode describes encoding errors.
+type EncoderErrorCode int
 
 const (
-	_ FailureCode = iota // skip 0 value.
+	_ EncoderErrorCode = iota // skip 0 value.
 
-	// FailedEncoderStopped indicates encoding attempt when encoder is stopped.
-	FailedEncoderStopped
+	// ErrEncoderStopped indicates encoding attempt when encoder is stopped.
+	ErrEncoderStopped
 
-	// FailedNotRetryable indicates that encoding or sending span data failed and
+	// ErrEncodingFailed indicates that encoding span data failed and
 	// it should not be retried because the problem is fatal (e.g. bad data that
 	// cannot be marshaled).
-	FailedNotRetryable
-
-	// FailedShouldRetry indicates that encoding or sending span data failed but
-	// that should be retried because the error is transient.
-	FailedShouldRetry
+	ErrEncodingFailed
 )

@@ -145,18 +145,12 @@ func (c *ClientUnary) processSendRequests() {
 			return
 
 		case request := <-c.requestsToSend:
-			if !c.sendRequest(request) {
-				// sendRequest signalled that processing must stop since it cannot send anymore.
-				// This typically happens when the stream is closed.
-				return
-			}
+			c.sendRequest(request)
 		}
 	}
 }
 
-func (c *ClientUnary) sendRequest(
-	pr requestToSend,
-) bool {
+func (c *ClientUnary) sendRequest(pr requestToSend) {
 	// Send the batch via stream.
 	exportRequest := pr.exportRequest
 
@@ -170,17 +164,15 @@ func (c *ClientUnary) sendRequest(
 				if t.RetryDelay.Seconds > 0 || t.RetryDelay.Nanos > 0 {
 					// TODO: Wait before retrying.
 					c.options.OnSendFail(exportRequest.Record, pr.originalSpans, ErrFailedRetryable)
-					return true
+					return
 				}
 			}
 		}
 
-		// Some other error, probably cannot decode because we have bad data. Drop the data.
+		// Some other error, probably cannot serialize because we have bad data. Drop the data.
 		c.logger.Error("Cannot send request", zap.Error(err))
 		c.options.OnSendFail(exportRequest.Record, pr.originalSpans, ErrFailedNotRetryable)
 	} else {
 		c.options.OnSendResponse(pr.exportRequest.Record, pr.originalSpans, response)
 	}
-
-	return true
 }

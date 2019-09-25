@@ -87,9 +87,9 @@ func newShardingInMemConfig(pbConf *omnitelpb.ShardingConfig) (*shardingInMemCon
 	return sc, nil
 }
 
-func (s *shardInMemConfig) belongsToShard(partitionKey string) (bool, error) {
+func (s *shardInMemConfig) belongsToShard(partitionKey string) bool {
 	key := s.partitionKeyToHashKey(partitionKey)
-	return key.Cmp(&s.startingHashKey) >= 0 && key.Cmp(&s.endingHashKey) <= 0, nil
+	return key.Cmp(&s.startingHashKey) >= 0 && key.Cmp(&s.endingHashKey) <= 0
 }
 
 func (s *shardInMemConfig) partitionKeyToHashKey(partitionKey string) *big.Int {
