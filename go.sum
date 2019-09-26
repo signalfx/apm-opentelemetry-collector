@@ -280,6 +280,7 @@ github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f h1:WYg
 github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f/go.mod h1:KPlPLR7FonWeEx9RUg54uLFEtVrVv0w1klqkg9krq00=
 github.com/omnition/omnition-kinesis-producer v0.4.5 h1:PViWxVyg3cbfLZV+fvIBn/+AdNWvGlFUfZTia7xkCCE=
 github.com/omnition/omnition-kinesis-producer v0.4.5/go.mod h1:UhBKCuCbBikBOjI1HmHZYhhcUlgqzTdat6d6pX/gx7U=
+github.com/omnition/omnition-opentelemetry-service v0.0.0-20190925153546-713288e48e31 h1:X23wy48mOyFm2BRnCTXGXPbzwf7NOFYi4bpAfJu/+WM=
 github.com/omnition/opencensus-go-exporter-kinesis v0.3.2 h1:+dB8gQ6s20ywh9YzL3s8VT09iMiVAa+G9NAyR+TSgC0=
 github.com/omnition/opencensus-go-exporter-kinesis v0.3.2/go.mod h1:1LygQP504rv3ft6zJhyag1fjpqedkyn2fMLbA7VuxGY=
 github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition h1:WTGtF3gm+5vQe1Ys9frsadeHUvUwDupfvI8jp5qKijc=
