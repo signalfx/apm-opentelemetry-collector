@@ -28,9 +28,11 @@ const (
 	typeStr = "omnitelk"
 
 	// Default values for config options.
-	defStreams                  = 1
-	defStreamReopenPeriod       = 30 * time.Second
-	defStreamReopenRequestCount = 1000
+	defSendConcurrency       = 20
+	defNumWorkers            = 1
+	defMaxRecordSize         = 100000
+	defBatchFlushInterval    = 5 * time.Second
+	defMaxAllowedSizePerSpan = 900000
 )
 
 // Factory is the factory for OmnitelK exporter.
@@ -45,25 +47,31 @@ func (f *Factory) Type() string {
 // CreateDefaultConfig creates the default configuration for exporter.
 func (f *Factory) CreateDefaultConfig() configmodels.Exporter {
 	return &Config{
-		Streams:                  defStreams,
-		StreamReopenPeriod:       defStreamReopenPeriod,
-		StreamReopenRequestCount: defStreamReopenRequestCount,
+		SendConcurrency:       defSendConcurrency,
+		NumWorkers:            defNumWorkers,
+		BatchFlushInterval:    defBatchFlushInterval,
+		MaxAllowedSizePerSpan: defMaxAllowedSizePerSpan,
+		MaxRecordSize:         defMaxRecordSize,
 	}
 }
 
 // CreateTraceExporter initializes and returns a new trace exporter
 func (f *Factory) CreateTraceExporter(logger *zap.Logger, cfg configmodels.Exporter) (exporter.TraceExporter, error) {
 	config := cfg.(*Config)
-	if config.Streams < 1 {
-		config.Streams = 1
+	if config.SendConcurrency < 1 {
+		config.SendConcurrency = defSendConcurrency
+	}
+	if config.NumWorkers < 1 {
+		config.NumWorkers = 1
 	}
 
-	// TODO: Create an exporter like this when Exporter and ClientImpl are ready.
-	// e := NewExporter(config, logger, NewClient(config.Endpoint, config.Streams, logger))
-	// e.Start()
-	// return e, nil
+	e, err := NewExporter(config, logger, NewClientUnary(logger))
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, configerror.ErrDataTypeIsNotSupported
+	e.Start()
+	return e, nil
 }
 
 // CreateMetricsExporter creates a metrics exporter based on this config.

@@ -94,17 +94,13 @@ type encoder struct {
 // Immutable list of shard encoders.
 type shardEncoders []*shardEncoder
 
-const defaultBatchFlushInterval = time.Second * 5
-const defaultMaxAllowedSizePerSpan = 900000
-
 // Options are the options to be used when initializing an encoder.
 type Options struct {
 	// TODO: document this field.
 	Name string
 
 	// Number of workers that will feed spans to shard encoders concurrently.
-	// If unspecified or set to 0 it allows unlimited concurrent execution of
-	// span feeders.
+	// Minimum and default value is 1.
 	NumWorkers uint
 
 	// MaxRecordSize is the maximum size of one encoded uncompressed record in bytes.
@@ -112,14 +108,14 @@ type Options struct {
 	MaxRecordSize uint
 
 	// BatchFlushInterval defines how often to flush batches of spans if they don't
-	// reach the MaxRecordSize. The default value is defaultBatchFlushInterval.
+	// reach the MaxRecordSize. The default value is defBatchFlushInterval.
 	BatchFlushInterval time.Duration
 
 	// MaxAllowedSizePerSpan limits the size of an individual span (in uncompressed encoded
 	// bytes). If the encoded size is larger than this the encode will attempt to
 	// drop some fields from the span and re-encode (see MaxAllowedSizePerSpan usage
 	// in the code below for more details on what is dropped). If that doesn't help the
-	// span will be dropped altogether. The default value is defaultMaxAllowedSizePerSpan.
+	// span will be dropped altogether. The default value is defMaxAllowedSizePerSpan.
 	MaxAllowedSizePerSpan uint
 }
 
@@ -138,15 +134,15 @@ func newEncoder(
 	// Validate options and populate default values if option is unspecified.
 
 	if o.MaxRecordSize == 0 {
-		o.MaxRecordSize = 100000
+		o.MaxRecordSize = defMaxRecordSize
 	}
 
 	if o.BatchFlushInterval == 0 {
-		o.BatchFlushInterval = defaultBatchFlushInterval
+		o.BatchFlushInterval = defBatchFlushInterval
 	}
 
 	if o.MaxAllowedSizePerSpan == 0 {
-		o.MaxAllowedSizePerSpan = defaultMaxAllowedSizePerSpan
+		o.MaxAllowedSizePerSpan = defMaxAllowedSizePerSpan
 	}
 
 	if o.NumWorkers == 0 {
@@ -211,8 +207,6 @@ func (e *encoder) SetConfig(config *omnitelpb.ShardingConfig) {
 // EncodeSpans puts the spans to a size-limited queue and blocks if there is no
 // more room in the queue.
 func (e *encoder) EncodeSpans(spans []*jaeger.Span) error {
-	// TODO: handle the case when EncodeSpans is called before config is set.
-
 	if e.isStopping() {
 		// We will not accept new spans when we are already stopping.
 		return errors.New("encoder is already stopped")
@@ -347,7 +341,6 @@ func (e *encoder) startWorkers() {
 // returned by calling onSpanProcessFail func.
 func (e *encoder) stopShardEncoders() {
 	ses := e.shardEncoders.Load().(shardEncoders)
-	e.shardEncoders.Store(make(shardEncoders, 0))
 
 	// Tell all encoders to stop.
 	for _, se := range ses {
@@ -444,7 +437,7 @@ func (e *encoder) processSpanBatch(spans []*jaeger.Span) {
 			// sufficient for troubleshooting.
 			e.logger.Error("failed to get producer/shard", zap.Error(err),
 				zap.String("traceID", span.TraceID.String()))
-			e.onSpanProcessFail([]*jaeger.Span{span}, FailedNotRetryable)
+			e.onSpanProcessFail([]*jaeger.Span{span}, ErrEncodingFailed)
 			continue
 		}
 
@@ -463,11 +456,7 @@ func (e *encoder) getShardEncoder(partitionKey string) (*shardEncoder, error) {
 	// TODO: Consider using binary search in a future PR. Each belongsToShard may be
 	// relatively slow (does md5, than big.Int comparisons) so binary search may be warranted.
 	for _, se := range ses {
-		ok, err := se.shard.belongsToShard(partitionKey)
-		if err != nil {
-			return nil, err
-		}
-		if ok {
+		if se.shard.belongsToShard(partitionKey) {
 			return se, nil
 		}
 	}

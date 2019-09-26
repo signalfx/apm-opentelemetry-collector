@@ -249,7 +249,7 @@ func TestShardEncoderStopConcurrently(t *testing.T) {
 
 func TestShardEncoderCannotMarshal(t *testing.T) {
 	var failSpanCount uint32
-	var failureCode FailureCode
+	var failureCode EncoderErrorCode
 
 	shardID := "abc123"
 
@@ -268,9 +268,9 @@ func TestShardEncoderCannotMarshal(t *testing.T) {
 		1, // small max to disable batching.
 		math.MaxInt32,
 		1*time.Microsecond, // timeout doesn't matter.
-		func(record *omnitelk.EncodedRecord, shard *shardInMemConfig) {
+		func(record *omnitelk.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
 		},
-		func(failedSpans []*jaeger.Span, code FailureCode) {
+		func(failedSpans []*jaeger.Span, code EncoderErrorCode) {
 			failureCode = code
 			atomic.AddUint32(&failSpanCount, uint32(len(failedSpans)))
 		},
@@ -289,5 +289,5 @@ func TestShardEncoderCannotMarshal(t *testing.T) {
 
 	// Ensure encoding failed.
 	assert.EqualValues(t, 1, atomic.LoadUint32(&failSpanCount))
-	assert.EqualValues(t, FailedNotRetryable, failureCode)
+	assert.EqualValues(t, ErrEncodingFailed, failureCode)
 }

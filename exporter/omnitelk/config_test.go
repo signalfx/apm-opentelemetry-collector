@@ -45,9 +45,11 @@ func TestDefaultConfig(t *testing.T) {
 				TypeVal: "omnitelk",
 				NameVal: "omnitelk",
 			},
-			Streams:                  1,
-			StreamReopenPeriod:       30 * time.Second,
-			StreamReopenRequestCount: 1000,
+			SendConcurrency:       defSendConcurrency,
+			BatchFlushInterval:    defBatchFlushInterval,
+			MaxRecordSize:         defMaxRecordSize,
+			MaxAllowedSizePerSpan: defMaxAllowedSizePerSpan,
+			NumWorkers:            defNumWorkers,
 		},
 	)
 }
@@ -73,10 +75,12 @@ func TestConfig(t *testing.T) {
 				TypeVal: "omnitelk",
 				NameVal: "omnitelk",
 			},
-			Endpoint:                 "0.0.0.0:1234",
-			Streams:                  4,
-			StreamReopenPeriod:       10 * time.Second,
-			StreamReopenRequestCount: 100,
+			Endpoint:              "0.0.0.0:1234",
+			SendConcurrency:       4,
+			NumWorkers:            4,
+			MaxAllowedSizePerSpan: 50000,
+			MaxRecordSize:         200000,
+			BatchFlushInterval:    2 * time.Second,
 		},
 	)
 }

@@ -15,7 +15,7 @@
 package omnitelk
 
 import (
-	"time"
+	jaeger "github.com/jaegertracing/jaeger/model"
 
 	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
 )
@@ -33,13 +33,20 @@ type client interface {
 	GetShardingConfig() (*omnitelpb.ShardingConfig, error)
 
 	// Send an encoded record to the server. The record must be encoded for the shard
-	// that is passed as the second parameter (record's partition key must be in the
-	// hash key range of the shard).
+	// that is passed as a parameter (record's partition key must be in the hash
+	// key range of the shard).
 	// This function will block if it wants to apply backpressure otherwise it may
 	// return as soon as the record is queued for delivery.
 	// The result of sending will be reported via OnSendResponse or OnSendFail
 	// callbacks.
-	Send(record *omnitelpb.EncodedRecord, shard *omnitelpb.ShardDefinition)
+	// originalSpans represents original spans that are encoded into record.
+	// It is required that these 2 fields match each other.
+	Send(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *omnitelpb.ShardDefinition)
+
+	// Shutdown the client. After this call Send() should not be called anymore.
+	// Any requests that are not sent yet will not be sent. The responses to already
+	// sent requests may continue arriving after Shutdown() call returns.
+	Shutdown()
 }
 
 // ConnectionOptions to use for the client.
@@ -47,20 +54,39 @@ type ConnectionOptions struct {
 	// Server's address and port.
 	Endpoint string
 
-	// Number of parallel streams to use for sending ExportRequests.
-	StreamCount uint
-
-	// How often to reopen the stream to help L7 Load Balancers re-balance the traffic.
-	StreamReopenPeriod time.Duration
-
-	// Also reopen the stream after specified count of requests are sent.
-	StreamReopenRequestCount uint32
+	// Number of concurrent requests to use for sending ExportRequests.
+	SendConcurrency uint
 
 	// Callback called when a response is received regarding previously sent records.
 	// Called asynchronously sometime after Send() successfully sends the record.
-	OnSendResponse func(responseToRecords []*omnitelpb.EncodedRecord, response *omnitelpb.ExportResponse)
+	// originalSpans represents original spans that were encoded into record and
+	// to which the response was received.
+	OnSendResponse func(
+		responseToRecords *omnitelpb.EncodedRecord,
+		originalSpans []*jaeger.Span,
+		response *omnitelpb.ExportResponse,
+	)
 
 	// Callback called if the records cannot be sent for whatever reason (e.g. the
 	// records cannot be serialized).
-	OnSendFail func(failedRecords []*omnitelpb.EncodedRecord, code FailureCode)
+	OnSendFail func(
+		failedRecords *omnitelpb.EncodedRecord,
+		failedSpans []*jaeger.Span,
+		code SendErrorCode,
+	)
 }
+
+// SendErrorCode describes sending errors.
+type SendErrorCode int
+
+const (
+	_ SendErrorCode = iota // skip 0 value.
+
+	// ErrFailedRetryable indicates that Send() operation must be retried.
+	ErrFailedRetryable
+
+	// ErrFailedNotRetryable indicates that Send span data failed and
+	// it should not be retried because the problem is fatal (e.g. bad data that
+	// cannot be marshaled).
+	ErrFailedNotRetryable
+)

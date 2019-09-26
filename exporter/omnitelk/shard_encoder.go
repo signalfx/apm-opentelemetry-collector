@@ -34,11 +34,12 @@ const avgBatchSizeInSpans = 1000
 
 var compressedMagicByte = [8]byte{111, 109, 58, 106, 115, 112, 108, 122}
 
-// A function that accepts encoded records and the config that was used for encoding.
-type recordConsumeFunc func(record *omnitelpb.EncodedRecord, shard *shardInMemConfig)
+// A function that accepts encoded records, the original spans that were encoded
+// and the config that was used for encoding.
+type recordConsumeFunc func(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig)
 
 // A function that accepts spans that failed processing and the failure code.
-type spanProcessFailFunc func(failedSpans []*jaeger.Span, code FailureCode)
+type spanProcessFailFunc func(failedSpans []*jaeger.Span, code EncoderErrorCode)
 
 // shardEncoder encodes spans belonging to a single shard into a sequence
 // of EncodedRecords. Spans are batched according to maxRecordSize and flushInterval
@@ -131,9 +132,10 @@ func (se *shardEncoder) Start() {
 // This means that either spans will be encoded and will be emitted via onRecordReady
 // or will be returned via onSpanProcessFail, so no spans will be lost even during stopping.
 func (se *shardEncoder) Stop() {
-	// Signal stop.
-	atomic.StoreUint32(&se.stopped, 1)
-	close(se.done)
+	// Signal stop if not already stopped.
+	if atomic.CompareAndSwapUint32(&se.stopped, 0, 1) {
+		close(se.done)
+	}
 }
 
 // Encode a span. Can be called after Start() is called. If accumulated size of spans
@@ -177,7 +179,7 @@ func (se *shardEncoder) Flush() {
 		spans := se.spans.Spans
 		se.clearAccumulated()
 		se.Unlock()
-		se.onSpanProcessFail(spans, FailedEncoderStopped)
+		se.onSpanProcessFail(spans, ErrEncoderStopped)
 		return
 	}
 
@@ -187,7 +189,7 @@ func (se *shardEncoder) Flush() {
 		spans := se.spans.Spans
 		se.clearAccumulated()
 		se.Unlock()
-		se.onSpanProcessFail(spans, FailedNotRetryable)
+		se.onSpanProcessFail(spans, ErrEncodingFailed)
 		se.logger.Error("failed to marshal: ", zap.Error(err))
 		return
 	}
@@ -198,7 +200,7 @@ func (se *shardEncoder) Flush() {
 		spans := se.spans.Spans
 		se.clearAccumulated()
 		se.Unlock()
-		se.onSpanProcessFail(spans, FailedNotRetryable)
+		se.onSpanProcessFail(spans, ErrEncodingFailed)
 		se.logger.Error("failed to compress: ", zap.Error(err))
 		return
 	}
@@ -210,15 +212,16 @@ func (se *shardEncoder) Flush() {
 		SpanCount:         uint64(numSpans),
 		UncompressedBytes: uint64(len(encoded)),
 	}
+	originalSpans := se.spans.Spans
 
 	se.clearAccumulated()
 	se.Unlock()
 
-	se.onRecordReady(record, &se.shard)
+	se.onRecordReady(record, originalSpans, &se.shard)
 
 	// Record stats.
 	se.hooks.OnCompressed(int64(record.UncompressedBytes), int64(len(record.Data)))
-	se.hooks.OnPutSpanListFlushed(int64(record.SpanCount), int64(len(record.Data)))
+	se.hooks.OnSpanListFlushed(int64(record.SpanCount), int64(len(record.Data)))
 }
 
 // tryEncodeSpan encodes the span and ensures encoded size is within maxAllowedSizePerSpan.
@@ -230,7 +233,7 @@ func (se *shardEncoder) tryEncodeSpan(span *jaeger.Span) (size int, err error) {
 	encoded, err := proto.Marshal(span)
 	if err != nil {
 		se.logger.Error("failed to marshal", zap.Error(err))
-		se.onSpanProcessFail([]*jaeger.Span{span}, FailedNotRetryable)
+		se.onSpanProcessFail([]*jaeger.Span{span}, ErrEncodingFailed)
 		return 0, err
 	}
 	size = len(encoded)
@@ -252,7 +255,7 @@ func (se *shardEncoder) tryEncodeSpan(span *jaeger.Span) (size int, err error) {
 		if err != nil {
 			// Cannot encode, drop it.
 			se.logger.Error("failed to marshal span", zap.Error(err))
-			se.onSpanProcessFail([]*jaeger.Span{span}, FailedNotRetryable)
+			se.onSpanProcessFail([]*jaeger.Span{span}, ErrEncodingFailed)
 			return 0, err
 		}
 		size = len(encoded)
@@ -261,7 +264,7 @@ func (se *shardEncoder) tryEncodeSpan(span *jaeger.Span) (size int, err error) {
 		if uint(size) > se.maxAllowedSizePerSpan {
 			// Still too big, drop it.
 			se.logger.Error("failed to reduce span size", zap.Error(err))
-			se.onSpanProcessFail([]*jaeger.Span{span}, FailedNotRetryable)
+			se.onSpanProcessFail([]*jaeger.Span{span}, ErrEncodingFailed)
 			return 0, errors.New("spans is too big")
 		}
 	}
@@ -275,7 +278,7 @@ func (se *shardEncoder) accumulateEncodedSpan(span *jaeger.Span, size int) {
 	if se.isStopped() {
 		se.Unlock()
 		// Return the span, we are stopped.
-		se.onSpanProcessFail([]*jaeger.Span{span}, FailedEncoderStopped)
+		se.onSpanProcessFail([]*jaeger.Span{span}, ErrEncoderStopped)
 		return
 	}
 
@@ -293,13 +296,7 @@ func (se *shardEncoder) accumulateEncodedSpan(span *jaeger.Span, size int) {
 }
 
 func (se *shardEncoder) clearAccumulated() {
-	// TODO: iterate over and set items to nil to enable GC on them?
-	// Re-slicing to zero re-uses the same underlying array insead of re-allocating it.
-	// This saves us a huge number of allocations but the downside is that spans from the
-	// underlying array are never GC'ed. This should be okay as they'll be overwritten
-	// anyway as newer spans arrive. This should allow us to make the spanlist consume
-	// a static amount of memory throughout the life of the process.
-	se.spans.Spans = se.spans.Spans[:0]
+	se.spans.Spans = []*jaeger.Span{}
 	se.accumulatedSize = 0
 }
 
