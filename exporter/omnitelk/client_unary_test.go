@@ -93,9 +93,9 @@ func TestClientUnarySendRequest(t *testing.T) {
 			for i := 0; i < recordCount; i++ {
 				// Create a record and send it.
 				record := &omnitelpb.EncodedRecord{
-					SpanCount:         uint64(i),
+					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
-					UncompressedBytes: uint64(i * 10),
+					UncompressedBytes: int64(i * 10),
 				}
 				originalSpans := []*jaeger.Span{{}} // fake span, doesn't matter in this test.
 				shard := config.ShardDefinitions[rand.Intn(len(config.ShardDefinitions))]
@@ -118,9 +118,9 @@ func TestClientUnarySendRequest(t *testing.T) {
 
 			for i := 0; i < recordCount; i++ {
 				record := &omnitelpb.EncodedRecord{
-					SpanCount:         uint64(i),
+					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
-					UncompressedBytes: uint64(i * 10),
+					UncompressedBytes: int64(i * 10),
 				}
 				assert.EqualValues(t, record, serverRecords[i])
 			}
@@ -138,9 +138,9 @@ func TestClientUnarySendRequest(t *testing.T) {
 
 			for i := 0; i < recordCount; i++ {
 				record := &omnitelpb.EncodedRecord{
-					SpanCount:         uint64(i),
+					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
-					UncompressedBytes: uint64(i * 10),
+					UncompressedBytes: int64(i * 10),
 				}
 				assert.EqualValues(t, record, responseToRecords[i])
 			}

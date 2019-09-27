@@ -94,13 +94,13 @@ func TestShardEncoderMultiplePutOneBatch(t *testing.T) {
 	// Encode a bunch of spans. The should all fit in one batch.
 	traceID := jaeger.NewTraceID(123, 456)
 	const spanCount = 100
-	var uncompressedBytes uint64
+	var uncompressedBytes int64
 	for i := 0; i < spanCount; i++ {
 		span := &jaeger.Span{
 			TraceID: traceID,
 		}
 		size := se.Encode(span)
-		uncompressedBytes += uint64(size)
+		uncompressedBytes += int64(size)
 	}
 
 	// There should not be any batches yet, since we Encode the spans quickly and
@@ -137,14 +137,14 @@ func TestShardEncoderMultiplePutOneSpanPerBatch(t *testing.T) {
 	se.Start()
 
 	traceID := jaeger.NewTraceID(123, 456)
-	var uncompressedBytes uint64
+	var uncompressedBytes int64
 	const spanCount = 100
 	for i := 0; i < spanCount; i++ {
 		span := &jaeger.Span{
 			TraceID: traceID,
 		}
 		size := se.Encode(span)
-		uncompressedBytes = uint64(size)
+		uncompressedBytes = int64(size)
 	}
 
 	WaitFor(t,

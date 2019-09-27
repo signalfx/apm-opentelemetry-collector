@@ -50,7 +50,6 @@ func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportReques
 	if !shardIsPartOfConfig(request.Shard, s.srv.GetConfig()) {
 		// Client's config does not match our config.
 		response = &omnitelpb.ExportResponse{
-			Id:             request.Id,
 			ResultCode:     omnitelpb.ExportResponse_SHARD_CONFIG_MISTMATCH,
 			ShardingConfig: s.srv.GetConfig(),
 		}
@@ -60,7 +59,6 @@ func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportReques
 
 		// Send response to client.
 		response = &omnitelpb.ExportResponse{
-			Id:             request.Id,
 			ResultCode:     s.srv.nextResponseCode,
 			ShardingConfig: s.srv.nextResponseShardingConfig,
 		}
