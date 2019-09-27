@@ -3,7 +3,7 @@ receivers:
     enabled: true
 
 exporters:
-  omnitelk:
+  omnishard:
     enabled: true
     endpoint: 0.0.0.0:1234
 
@@ -57,4 +57,4 @@ pipelines:
   traces:
     receivers: [examplereceiver]
     processors: [exampleprocessor]
-    exporters: [omnitelk]
+    exporters: [omnishard]

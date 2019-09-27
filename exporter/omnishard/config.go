@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"time"
@@ -20,7 +20,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
 )
 
-// Config contains the main configuration options for the OmnitelK exporter.
+// Config contains the main configuration options for the OmniShard exporter.
 type Config struct {
 	configmodels.ExporterSettings `mapstructure:",squash"`
 

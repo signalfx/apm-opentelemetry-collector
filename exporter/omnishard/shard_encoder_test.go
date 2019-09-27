@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"math"
@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	omnitelk "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnishard "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 	jaeger "github.com/jaegertracing/jaeger/model"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
@@ -268,7 +268,7 @@ func TestShardEncoderCannotMarshal(t *testing.T) {
 		1, // small max to disable batching.
 		math.MaxInt32,
 		1*time.Microsecond, // timeout doesn't matter.
-		func(record *omnitelk.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
+		func(record *omnishard.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
 		},
 		func(failedSpans []*jaeger.Span, code EncoderErrorCode) {
 			failureCode = code

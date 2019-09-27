@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"context"
@@ -24,14 +24,14 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 // ClientUnary can connect to a server and send an ExportRequest. It uses multiple
 // concurrent unary calls to increase throughput.
 type ClientUnary struct {
 	// gRPC client.
-	client omnitelpb.OmnitelKClient
+	client omnitelpb.OmniShardClient
 
 	options ConnectionOptions
 
@@ -107,7 +107,7 @@ func (c *ClientUnary) Connect(options ConnectionOptions, cancelCh chan interface
 	}
 
 	// Connection successful, create gRPC client.
-	c.client = omnitelpb.NewOmnitelKClient(conn)
+	c.client = omnitelpb.NewOmniShardClient(conn)
 
 	// Create queue of requests to send.
 	c.requestsToSend = make(chan requestToSend, c.options.SendConcurrency)

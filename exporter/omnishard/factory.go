@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"time"
@@ -25,7 +25,7 @@ import (
 
 const (
 	// The value of "type" key in configuration.
-	typeStr = "omnitelk"
+	typeStr = "omnishard"
 
 	// Default values for config options.
 	defSendConcurrency       = 20
@@ -35,7 +35,7 @@ const (
 	defMaxAllowedSizePerSpan = 900000
 )
 
-// Factory is the factory for OmnitelK exporter.
+// Factory is the factory for OmniShard exporter.
 type Factory struct {
 }
 

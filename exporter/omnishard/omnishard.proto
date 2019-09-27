@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package omnitelk;
+package omnishard;
 
 message ExportRequest {
     // Encoded record.
@@ -90,7 +90,7 @@ message ShardingConfig {
 message ConfigRequest {
 }
 
-service OmnitelK {
+service OmniShard {
     // Get the sharding configuration. Typically called at the beginning of
     // communication, before calling Export.
     rpc GetShardingConfig(ConfigRequest) returns (ShardingConfig) {}

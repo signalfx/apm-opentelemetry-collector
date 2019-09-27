@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"context"
@@ -23,7 +23,7 @@ import (
 	jaegertranslator "github.com/open-telemetry/opentelemetry-service/translator/trace/jaeger"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 // Maximum number of batches allowed in the retry queue.
@@ -31,7 +31,7 @@ import (
 const retryQueueSize = 10000
 
 // Exporter implements an OpenTelemetry trace exporter that exports spans via
-// OmnitelK protocol.
+// OmniShard protocol.
 //
 // The Exporter is composed of an Encoder that is responsible for sharding
 // and encoding spans into records which are ready for sending and a Client
@@ -160,7 +160,7 @@ func (e *Exporter) connectAndGetConfig() {
 	go e.processRetryQueue()
 }
 
-// ConsumeTraceData receives a span batch and exports it to OmnitelK server.
+// ConsumeTraceData receives a span batch and exports it to OmniShard server.
 func (e *Exporter) ConsumeTraceData(c context.Context, td consumerdata.TraceData) error {
 	// Translate to Jaeger format. This is the only operation that does not depend
 	// on sharding and which we can perform regardless of sharding configuration.

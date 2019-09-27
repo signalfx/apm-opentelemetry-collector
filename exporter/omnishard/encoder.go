@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"errors"
@@ -25,7 +25,7 @@ import (
 	"go.opencensus.io/stats/view"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 // encoder encodes spans into EncodedRecords. Spans are batched according to their

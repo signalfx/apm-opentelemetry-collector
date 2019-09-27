@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"bytes"
@@ -27,7 +27,7 @@ import (
 	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 const avgBatchSizeInSpans = 1000

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"bytes"
@@ -31,7 +31,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 type gRPCServer struct {
@@ -176,7 +176,7 @@ func (srv *mockServer) Listen(
 		grpcSrv.SetRequiredHeaders(headers)
 	}
 
-	omnitelpb.RegisterOmnitelKServer(srv.s, grpcSrv)
+	omnitelpb.RegisterOmniShardServer(srv.s, grpcSrv)
 	if err := srv.s.Serve(lis); err != nil {
 		log.Printf("failed to serve: %v", err)
 	}

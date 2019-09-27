@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"go.opencensus.io/stats"
@@ -26,18 +26,18 @@ var (
 	tagShardID, _      = tag.NewKey("shard_id")
 	tagFlushReason, _  = tag.NewKey("flush_reason")
 
-	statXLSpansBytes = stats.Int64("omnitelk_xl_span_size", "size of spans bigger than max support size", stats.UnitBytes)
-	statXLSpans      = stats.Int64("omnitelk_xl_spans", "number of spans found to be bigger than the max support size", stats.UnitDimensionless)
+	statXLSpansBytes = stats.Int64("omnishard_xl_span_size", "size of spans bigger than max support size", stats.UnitBytes)
+	statXLSpans      = stats.Int64("omnishard_xl_spans", "number of spans found to be bigger than the max support size", stats.UnitDimensionless)
 
-	statFlushedSpans      = stats.Int64("omnitelk_flushed_spans", "number of spans flushed to omnitelk exporter", stats.UnitDimensionless)
-	statFlushedSpansBytes = stats.Int64("omnitelk_spanlist_bytes", "total size in bytes of spans flushed to omnitelk exporter", stats.UnitBytes)
+	statFlushedSpans      = stats.Int64("omnishard_flushed_spans", "number of spans flushed to omnishard exporter", stats.UnitDimensionless)
+	statFlushedSpansBytes = stats.Int64("omnishard_spanlist_bytes", "total size in bytes of spans flushed to omnishard exporter", stats.UnitBytes)
 
-	statEnqueuedSpans = stats.Int64("omnitelk_enqueued_spans", "spans received and put in a queue to be processed by omnitelk exporter", stats.UnitDimensionless)
-	statDequeuedSpans = stats.Int64("omnitelk_dequeued_spans", "spans taken out of queue and processed by omnitelk exporter", stats.UnitDimensionless)
+	statEnqueuedSpans = stats.Int64("omnishard_enqueued_spans", "spans received and put in a queue to be processed by omnishard exporter", stats.UnitDimensionless)
+	statDequeuedSpans = stats.Int64("omnishard_dequeued_spans", "spans taken out of queue and processed by omnishard exporter", stats.UnitDimensionless)
 
-	statCompressFactor = stats.Int64("omnitelk_compress_factor", "compression factor achieved by spanlists", stats.UnitDimensionless)
+	statCompressFactor = stats.Int64("omnishard_compress_factor", "compression factor achieved by spanlists", stats.UnitDimensionless)
 
-	statDroppedSpans = stats.Int64("omnitelk_dropped_spans", "dropped span count", stats.UnitDimensionless)
+	statDroppedSpans = stats.Int64("omnishard_dropped_spans", "dropped span count", stats.UnitDimensionless)
 )
 
 // TODO: support telemetry level
@@ -83,7 +83,7 @@ func metricViews() []*view.View {
 	enqueuedSpansView := &view.View{
 		Name:        statEnqueuedSpans.Name(),
 		Measure:     statEnqueuedSpans,
-		Description: "spans received and put in a queue to be processed by omnitelk exporter",
+		Description: "spans received and put in a queue to be processed by omnishard exporter",
 		TagKeys:     tagKeys,
 		Aggregation: view.Sum(),
 	}
@@ -91,7 +91,7 @@ func metricViews() []*view.View {
 	dequeuedSpansView := &view.View{
 		Name:        statDequeuedSpans.Name(),
 		Measure:     statDequeuedSpans,
-		Description: "spans taken out of queue and processed by omnitelk exporter",
+		Description: "spans taken out of queue and processed by omnishard exporter",
 		TagKeys:     tagKeys,
 		Aggregation: view.Sum(),
 	}
