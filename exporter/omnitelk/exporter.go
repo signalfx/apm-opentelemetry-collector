@@ -132,6 +132,7 @@ func (e *Exporter) Shutdown() error {
 func (e *Exporter) connectAndGetConfig() {
 	co := ConnectionOptions{
 		Endpoint:        e.cfg.Endpoint,
+		DisableSecurity: e.cfg.DisableSecurity,
 		SendConcurrency: e.cfg.SendConcurrency,
 		OnSendFail:      e.OnSendFail,
 		OnSendResponse:  e.OnSendResponse,

@@ -59,7 +59,7 @@ func TestClientUnaryConnect(t *testing.T) {
 	server := newMockServer()
 
 	// Run a server
-	go runServer(server, endpoint)
+	go runServer(server, endpoint, nil)
 	defer server.Stop()
 
 	// Create a client
@@ -68,7 +68,8 @@ func TestClientUnaryConnect(t *testing.T) {
 
 	// Connect to the server
 	err := client.Connect(ConnectionOptions{
-		Endpoint: endpoint,
+		Endpoint:        endpoint,
+		DisableSecurity: true,
 	}, cancelCh)
 
 	// Make sure connection succeeded.
@@ -165,8 +166,12 @@ func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *client
 	server := newMockServer()
 	server.SetConfig(createTestShardConfig(4))
 
+	headers := map[string]string{
+		"hdr-test-key": "hdr-test-value",
+	}
+
 	// Run a server
-	go runServer(server, endpoint)
+	go runServer(server, endpoint, headers)
 
 	// Create a client
 	client := NewClientUnary(zap.NewNop())
@@ -176,8 +181,12 @@ func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *client
 	err := client.Connect(ConnectionOptions{
 		SendConcurrency: sendConcurrency,
 		Endpoint:        endpoint,
-		OnSendResponse:  callback.onSendResponse,
-		OnSendFail:      callback.onSendFail,
+		DisableSecurity: true,
+		Headers: map[string]string{
+			"hdr-test-key": "hdr-test-value",
+		},
+		OnSendResponse: callback.onSendResponse,
+		OnSendFail:     callback.onSendFail,
 	}, cancelCh)
 
 	// Make sure connection succeeded.

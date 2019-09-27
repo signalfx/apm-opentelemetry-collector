@@ -31,3 +31,5 @@ require (
 replace contrib.go.opencensus.io/exporter/ocagent => github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition
 
 replace github.com/census-instrumentation/opencensus-proto => github.com/omnition/opencensus-proto v0.2.1-gogo-unary
+
+replace git.apache.org/thrift.git => github.com/apache/thrift v0.12.0

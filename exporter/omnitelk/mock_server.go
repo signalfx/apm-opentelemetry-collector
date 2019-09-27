@@ -17,6 +17,8 @@ package omnitelk
 import (
 	"bytes"
 	"context"
+	"errors"
+	"fmt"
 	"log"
 	"math/rand"
 	"net"
@@ -26,6 +28,7 @@ import (
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
@@ -34,9 +37,18 @@ import (
 type gRPCServer struct {
 	srv       *mockServer
 	onReceive func(request *omnitelpb.ExportRequest)
+	headers   map[string]string
+}
+
+func (s *gRPCServer) SetRequiredHeaders(headers map[string]string) {
+	s.headers = headers
 }
 
 func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportRequest) (*omnitelpb.ExportResponse, error) {
+	if err := s.checkRequiredHeaders(ctx); err != nil {
+		return nil, err
+	}
+
 	if s.srv.RandomServerError && rand.Float64() < 0.1 {
 		status, err := status.New(codes.Unavailable, "Server is unavailable").
 			WithDetails(&errdetails.RetryInfo{RetryDelay: &duration.Duration{Nanos: 1e6 * 100}})
@@ -88,8 +100,32 @@ func compareHashKey(k1 []byte, k2 []byte) int {
 	return bytes.Compare(k1, k2)
 }
 
-func (s *gRPCServer) GetShardingConfig(context.Context, *omnitelpb.ConfigRequest) (*omnitelpb.ShardingConfig, error) {
+func (s *gRPCServer) GetShardingConfig(ctx context.Context, req *omnitelpb.ConfigRequest) (*omnitelpb.ShardingConfig, error) {
+	if err := s.checkRequiredHeaders(ctx); err != nil {
+		return nil, err
+	}
+
 	return s.srv.GetConfig(), nil
+}
+
+func (s *gRPCServer) checkRequiredHeaders(ctx context.Context) error {
+	if len(s.headers) < 1 {
+		return nil
+	}
+
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return errors.New("missing expected headers: no metadata on context")
+	}
+
+	for k, v := range s.headers {
+		vals := md.Get(k)
+		if len(vals) != 1 || vals[0] != v {
+			return fmt.Errorf("missing header key %q or incorrect value (want %q) got: %q", k, v, vals)
+		}
+	}
+
+	return nil
 }
 
 type mockServer struct {
@@ -125,12 +161,22 @@ func (srv *mockServer) SetConfig(config *omnitelpb.ShardingConfig) {
 	srv.config = config
 }
 
-func (srv *mockServer) Listen(endpoint string, onReceive func(request *omnitelpb.ExportRequest)) error {
+func (srv *mockServer) Listen(
+	endpoint string,
+	onReceive func(request *omnitelpb.ExportRequest),
+	headers map[string]string,
+) error {
 	lis, err := net.Listen("tcp", endpoint)
 	if err != nil {
 		log.Printf("failed to listen: %v", err)
 	}
-	omnitelpb.RegisterOmnitelKServer(srv.s, &gRPCServer{srv: srv, onReceive: onReceive})
+
+	grpcSrv := &gRPCServer{srv: srv, onReceive: onReceive}
+	if len(headers) > 0 {
+		grpcSrv.SetRequiredHeaders(headers)
+	}
+
+	omnitelpb.RegisterOmnitelKServer(srv.s, grpcSrv)
 	if err := srv.s.Serve(lis); err != nil {
 		log.Printf("failed to serve: %v", err)
 	}
@@ -142,11 +188,11 @@ func (srv *mockServer) Stop() {
 	srv.s.Stop()
 }
 
-func runServer(srv *mockServer, listenAddress string) {
-
-	srv.Listen(listenAddress, func(request *omnitelpb.ExportRequest) {
+func runServer(srv *mockServer, listenAddress string, headers map[string]string) {
+	onReceiveFunc := func(request *omnitelpb.ExportRequest) {
 		srv.Sink.onReceive(request)
-	})
+	}
+	srv.Listen(listenAddress, onReceiveFunc, headers)
 }
 
 type mockServerSink struct {

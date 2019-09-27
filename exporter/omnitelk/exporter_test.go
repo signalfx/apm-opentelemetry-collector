@@ -126,6 +126,7 @@ func setupExporter(t *testing.T, streamCount uint) (*Exporter, *mockServer) {
 
 	cfg := &Config{
 		Endpoint:           endpoint,
+		DisableSecurity:    true,
 		SendConcurrency:    streamCount,
 		BatchFlushInterval: 100 * time.Millisecond,
 	}
@@ -138,7 +139,7 @@ func setupExporter(t *testing.T, streamCount uint) (*Exporter, *mockServer) {
 	server := newMockServer()
 	server.SetConfig(createTestShardConfig(4))
 
-	go runServer(server, endpoint)
+	go runServer(server, endpoint, nil)
 
 	exp, err := NewExporter(cfg, logger, client)
 

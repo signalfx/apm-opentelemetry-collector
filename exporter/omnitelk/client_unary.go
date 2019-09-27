@@ -21,6 +21,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
@@ -33,6 +34,9 @@ type ClientUnary struct {
 	client omnitelpb.OmnitelKClient
 
 	options ConnectionOptions
+
+	// Cached context that is the basis for other contexts used by the client.
+	baseCtx context.Context
 
 	// Requests that are pending to be sent.
 	requestsToSend chan requestToSend
@@ -72,8 +76,14 @@ func (c *ClientUnary) Connect(options ConnectionOptions, cancelCh chan interface
 	// Set up a connection to the server. We will use blocking mode with cancellation
 	// options.
 
-	// First create a cancellable context.
-	ctx, cancelFunc := context.WithCancel(context.Background())
+	// Create the base context for RPC messages.
+	c.baseCtx = context.Background()
+	if len(options.Headers) > 0 {
+		c.baseCtx = metadata.NewOutgoingContext(c.baseCtx, metadata.New(options.Headers))
+	}
+
+	// Create a cancellable context.
+	ctx, cancelFunc := context.WithCancel(c.baseCtx)
 	defer cancelFunc()
 
 	// Cancel if cancelCh signal is raised.
@@ -82,8 +92,16 @@ func (c *ClientUnary) Connect(options ConnectionOptions, cancelCh chan interface
 		cancelFunc()
 	}()
 
+	// Build the gRPC dial options.
+	grpcOptions := []grpc.DialOption{
+		grpc.WithBlock(),
+	}
+	if options.DisableSecurity {
+		grpcOptions = append(grpcOptions, grpc.WithInsecure())
+	}
+
 	// Now connect. This will block until connected or until cancelFunc is called.
-	conn, err := grpc.DialContext(ctx, options.Endpoint, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.DialContext(ctx, options.Endpoint, grpcOptions...)
 	if err != nil {
 		return err
 	}
@@ -111,7 +129,7 @@ func (c *ClientUnary) Shutdown() {
 // GetShardingConfig returns a sharding config from the server. May be called
 // only after Connect succeeds.
 func (c *ClientUnary) GetShardingConfig() (*omnitelpb.ShardingConfig, error) {
-	return c.client.GetShardingConfig(context.Background(), &omnitelpb.ConfigRequest{})
+	return c.client.GetShardingConfig(c.baseCtx, &omnitelpb.ConfigRequest{})
 }
 
 // Send an encoded record to the server. The record must be encoded for the shard
@@ -154,7 +172,7 @@ func (c *ClientUnary) sendRequest(pr requestToSend) {
 	// Send the batch via stream.
 	exportRequest := pr.exportRequest
 
-	response, err := c.client.Export(context.Background(), exportRequest)
+	response, err := c.client.Export(c.baseCtx, exportRequest)
 	if err != nil {
 		// Check if this is a throttling response from the server.
 		st := status.Convert(err)

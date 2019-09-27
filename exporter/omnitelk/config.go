@@ -27,6 +27,13 @@ type Config struct {
 	// Endpoint of the server to connect to.
 	Endpoint string `mapstructure:"endpoint"`
 
+	// Disables transport security for the client connection. Useful for private
+	// networks or simple testing. By default security is enabled.
+	DisableSecurity bool `mapstructure:"disable_security"`
+
+	// The headers associated with the export requests.
+	Headers map[string]string `mapstructure:"headers"`
+
 	// Number of concurrent requests to use for sending ExportRequests.
 	// Default value is 20. Higher values may be necessary to achieve good throughput.
 	// TODO: run perf test and set a recommendation.

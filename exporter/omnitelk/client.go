@@ -54,6 +54,12 @@ type ConnectionOptions struct {
 	// Server's address and port.
 	Endpoint string
 
+	// Controls if the default transport security is going to be disabled.
+	DisableSecurity bool
+
+	// Headers associated with the export requests.
+	Headers map[string]string
+
 	// Number of concurrent requests to use for sending ExportRequests.
 	SendConcurrency uint
 
