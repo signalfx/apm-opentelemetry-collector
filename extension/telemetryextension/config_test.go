@@ -56,6 +56,5 @@ func TestLoadConfig(t *testing.T) {
 			"x-auth-header": "12345",
 		},
 		ScrapeInterval: time.Duration(5 * time.Second),
-		SourceURL:      "http://localhost:8889/metrics",
 	})
 }

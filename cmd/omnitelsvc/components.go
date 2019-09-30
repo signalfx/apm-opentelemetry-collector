@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/Omnition/omnition-opentelemetry-service/extension/telemetryextension"
 	"github.com/open-telemetry/opentelemetry-service/config"
 	"github.com/open-telemetry/opentelemetry-service/exporter"
 	"github.com/open-telemetry/opentelemetry-service/exporter/jaeger/jaegergrpcexporter"
@@ -78,6 +79,7 @@ func components() (config.Factories, error) {
 
 	extensions, err := extension.Build(
 		&healthcheckextension.Factory{},
+		&telemetryextension.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)

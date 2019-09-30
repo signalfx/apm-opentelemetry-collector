@@ -33,11 +33,6 @@ type Config struct {
 	Headers map[string]string `mapstructure:"headers"`
 
 	// ScrapeInterval specifies how often to scrape the service for telemetry.
+	// If not specified, the default scrape interval is 10 seconds.
 	ScrapeInterval time.Duration `mapstructure:"scrape_interval"`
-
-	// SourceUrl defines the local endpoint to retrieve metrics from.
-	// It is usually `http://localhost:<metrics-port>/metrics` where
-	// `metrics-port` is a command line argument to the application.
-	// If not defined, the default value is `http://localhost:8888/metrics`
-	SourceURL string `mapstructure:"source_url"`
 }

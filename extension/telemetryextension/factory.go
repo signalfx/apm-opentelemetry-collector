@@ -15,6 +15,9 @@
 package telemetryextension
 
 import (
+	"errors"
+	"sync/atomic"
+
 	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
 	"github.com/open-telemetry/opentelemetry-service/extension"
 	"go.uber.org/zap"
@@ -26,6 +29,17 @@ const (
 )
 
 var _ (extension.Factory) = (*Factory)(nil)
+
+var (
+	// MetricPort is a workaround to access the command line argument `--metrics-port`.
+	// The configuration passed into extension creation doesn't have the command line arguments.
+	MetricPort string
+
+	// ConfigFile is a workaround to access the command line argument ``--config`.
+	// The configuration passed into extension creation doesn't have the command line arguments,
+	// nor does it have access to the top level configuration file.
+	ConfigFile string
+)
 
 // Factory is the factory of the telemetry extension.
 type Factory struct {
@@ -43,12 +57,37 @@ func (f *Factory) CreateDefaultConfig() configmodels.Extension {
 			TypeVal: typeStr,
 			NameVal: typeStr,
 		},
-		SourceURL: "http://localhost:8888/metrics",
 	}
 }
 
 // CreateExtension creates a service extension based on the given config.
 func (f *Factory) CreateExtension(logger *zap.Logger, cfg configmodels.Extension) (extension.ServiceExtension, error) {
-	return nil, nil
 
+	// The runtime settings are global to the application, so while in principle it
+	// is possible to have more than one instance, running multiple does not bring
+	// any value to the service.
+	// In order to avoid this issue we will allow the creation of a single
+	// instance once per process while keeping the private function that allow
+	// the creation of multiple instances for unit tests. Summary: only a single
+	// instance can be created via the factory.
+	if !atomic.CompareAndSwapInt32(&instanceState, instanceNotCreated, instanceCreated) {
+		return nil, errors.New("only a single instance can be created per process")
+	}
+
+	oCfg := cfg.(*Config)
+	if oCfg.Endpoint == "" {
+		return nil, errors.New("error creating \"telemetry\" extension. endpoint is a required field")
+	}
+	if oCfg.ScrapeInterval == 0 {
+		oCfg.ScrapeInterval = defaultScrapeInterval
+	}
+	return newTelemetryExtension(*oCfg, logger)
 }
+
+// See comment in CreateExtension how these are used.
+var instanceState int32
+
+const (
+	instanceNotCreated int32 = 0
+	instanceCreated    int32 = 1
+)

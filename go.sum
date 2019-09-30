@@ -147,6 +147,8 @@ github.com/google/martian v2.1.0+incompatible/go.mod h1:9I4somxYTbIHy5NJKHRl3wXi
 github.com/google/pprof v0.0.0-20180605153948-8b03ce837f34/go.mod h1:zfwlbNMJ+OItoe0UupaVj+oy1omPYYDuagoSzA8v9mc=
 github.com/google/pprof v0.0.0-20181206194817-3ea8567a2e57/go.mod h1:zfwlbNMJ+OItoe0UupaVj+oy1omPYYDuagoSzA8v9mc=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
+github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
+github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/googleapis/gax-go/v2 v2.0.4/go.mod h1:0Wqv26UfaUD9n4G6kQubkQ+KchISgw+vpHVxEJEs9eg=
 github.com/googleapis/gax-go/v2 v2.0.5 h1:sjZBwGj9Jlw33ImPtvFviGYvseOtDM7hkSKB7+Tv3SM=
 github.com/googleapis/gax-go/v2 v2.0.5/go.mod h1:DWXyrwAJ9X0FpwwEdw+IPEYBICEFu5mhpdKc/us6bOk=
@@ -278,6 +280,7 @@ github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f h1:WYg
 github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f/go.mod h1:KPlPLR7FonWeEx9RUg54uLFEtVrVv0w1klqkg9krq00=
 github.com/omnition/omnition-kinesis-producer v0.4.5 h1:PViWxVyg3cbfLZV+fvIBn/+AdNWvGlFUfZTia7xkCCE=
 github.com/omnition/omnition-kinesis-producer v0.4.5/go.mod h1:UhBKCuCbBikBOjI1HmHZYhhcUlgqzTdat6d6pX/gx7U=
+github.com/omnition/omnition-opentelemetry-service v0.0.0-20190927183624-944825a32996 h1:8IToZh2kHuJvwdDP20LxNQK+wl6Abp6zOpBds1aezwQ=
 github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe h1:pKL2Shi6oBFZQQLihqZEYqqU8XwqBJpsFFIHWfsjEws=
 github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe/go.mod h1:vPsJtWXXfRtf7EB18TcIxuzcQ0INrM+CGWRymSfuho0=
 github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition h1:WTGtF3gm+5vQe1Ys9frsadeHUvUwDupfvI8jp5qKijc=

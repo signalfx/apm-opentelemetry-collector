@@ -6,7 +6,6 @@ extensions:
     headers:
       "x-auth-header": 12345
     scrape_interval: 5s
-    source_url: http://localhost:8889/metrics
 
 
 service:

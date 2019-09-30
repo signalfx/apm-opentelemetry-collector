@@ -6,9 +6,11 @@ require (
 	contrib.go.opencensus.io/exporter/ocagent v0.6.0
 	github.com/census-instrumentation/opencensus-proto v0.2.2
 	github.com/client9/misspell v0.3.4
+	github.com/go-kit/kit v0.9.0
 	github.com/gogo/protobuf v1.3.0
 	github.com/golang/protobuf v1.3.2
 	github.com/google/addlicense v0.0.0-20190510175307-22550fa7c1b0
+	github.com/google/uuid v1.1.1
 	github.com/grpc-ecosystem/grpc-gateway v1.11.1
 	github.com/jaegertracing/jaeger v1.9.0
 	github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024
@@ -17,6 +19,7 @@ require (
 	github.com/open-telemetry/opentelemetry-service v0.0.2-0.20190909135303-35ecb0299990
 	github.com/rs/cors v1.6.0
 	github.com/soheilhy/cmux v0.1.4
+	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.4.0
 	go.opencensus.io v0.22.1
 	go.uber.org/zap v1.10.0
@@ -25,6 +28,7 @@ require (
 	golang.org/x/tools v0.0.0-20190906203814-12febf440ab1
 	google.golang.org/genproto v0.0.0-20190716160619-c506a9f90610
 	google.golang.org/grpc v1.23.0
+	gopkg.in/yaml.v2 v2.2.2
 	honnef.co/go/tools v0.0.1-2019.2.3
 )
 

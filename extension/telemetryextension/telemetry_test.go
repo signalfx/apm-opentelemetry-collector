@@ -14,26 +14,5 @@
 
 package telemetryextension
 
-import (
-	"testing"
-
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
-	"github.com/stretchr/testify/require"
-)
-
-func TestFactory_Type(t *testing.T) {
-	factory := Factory{}
-	require.Equal(t, typeStr, factory.Type())
-}
-
-func TestFactory_CreateDefaultConfig(t *testing.T) {
-	factory := Factory{}
-	config := factory.CreateDefaultConfig()
-	require.Equal(t, &Config{
-		ExtensionSettings: configmodels.ExtensionSettings{
-			NameVal: typeStr,
-			TypeVal: typeStr,
-		},
-	},
-		config)
-}
+// TODO: When extensions are able to access the global config and command line parameters,
+//  add proper tests.
