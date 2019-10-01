@@ -14,12 +14,9 @@
 
 syntax = "proto3";
 
-package omnitelk;
+package omnishard;
 
 message ExportRequest {
-    // Unique request id.
-    uint64 id = 1;
-
     // Encoded record.
     EncodedRecord record = 2;
 
@@ -41,17 +38,14 @@ message EncodedRecord {
 
     // Number of spans encoded in this record. Useful for recipient
     // to maintain span count stats without uncompressing the data.
-    uint64 spanCount = 3;
+    int64 spanCount = 3;
 
     // Size of encoded but uncompressed data in bytes. Useful for recipient
     // to calculate compression ratio stats without uncompressing the data.
-    uint64 uncompressedBytes = 4;
+    int64 uncompressedBytes = 4;
 }
 
 message ExportResponse {
-    // Request id to which this response corresponds.
-    uint64 id = 1;
-
     enum ResultCode {
         // Successfully received and accepted.
         SUCCESS = 0;
@@ -96,7 +90,7 @@ message ShardingConfig {
 message ConfigRequest {
 }
 
-service OmnitelK {
+service OmniShard {
     // Get the sharding configuration. Typically called at the beginning of
     // communication, before calling Export.
     rpc GetShardingConfig(ConfigRequest) returns (ShardingConfig) {}

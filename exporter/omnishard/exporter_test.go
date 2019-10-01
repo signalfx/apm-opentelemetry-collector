@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"bytes"
@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	omnitelk "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnishard "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 	tracepb "github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1"
 	"github.com/gogo/protobuf/proto"
 	jaeger "github.com/jaegertracing/jaeger/model"
@@ -126,6 +126,7 @@ func setupExporter(t *testing.T, streamCount uint) (*Exporter, *mockServer) {
 
 	cfg := &Config{
 		Endpoint:           endpoint,
+		DisableSecurity:    true,
 		SendConcurrency:    streamCount,
 		BatchFlushInterval: 100 * time.Millisecond,
 	}
@@ -138,7 +139,7 @@ func setupExporter(t *testing.T, streamCount uint) (*Exporter, *mockServer) {
 	server := newMockServer()
 	server.SetConfig(createTestShardConfig(4))
 
-	go runServer(server, endpoint)
+	go runServer(server, endpoint, nil)
 
 	exp, err := NewExporter(cfg, logger, client)
 
@@ -191,7 +192,7 @@ func createTraceData(spanCount int, createdSpanIDs map[string]bool) consumerdata
 	return td
 }
 
-func decodeRecord(t *testing.T, record *omnitelk.EncodedRecord) []*jaeger.Span {
+func decodeRecord(t *testing.T, record *omnishard.EncodedRecord) []*jaeger.Span {
 	// Verify heading magic bytes.
 	buf := bytes.NewBuffer(record.Data)
 	magicBytes := [len(compressedMagicByte)]byte{}

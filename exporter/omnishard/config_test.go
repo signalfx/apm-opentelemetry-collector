@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"path"
@@ -37,13 +37,13 @@ func TestDefaultConfig(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, cfg)
 
-	e := cfg.Exporters["omnitelk"]
+	e := cfg.Exporters["omnishard"]
 
 	assert.Equal(t, e,
 		&Config{
 			ExporterSettings: configmodels.ExporterSettings{
-				TypeVal: "omnitelk",
-				NameVal: "omnitelk",
+				TypeVal: "omnishard",
+				NameVal: "omnishard",
 			},
 			SendConcurrency:       defSendConcurrency,
 			BatchFlushInterval:    defBatchFlushInterval,
@@ -67,15 +67,21 @@ func TestConfig(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, cfg)
 
-	e := cfg.Exporters["omnitelk"]
+	e := cfg.Exporters["omnishard"]
 
 	assert.Equal(t, e,
 		&Config{
 			ExporterSettings: configmodels.ExporterSettings{
-				TypeVal: "omnitelk",
-				NameVal: "omnitelk",
+				TypeVal: "omnishard",
+				NameVal: "omnishard",
 			},
-			Endpoint:              "0.0.0.0:1234",
+			Endpoint: "0.0.0.0:1234",
+			Headers: map[string]string{
+				"some.key":                     "some.value",
+				"some_other":                   "some.value",
+				"you can have a sentence here": "F0000000-0000-0000-0000-000000000000",
+			},
+			DisableSecurity:       true,
 			SendConcurrency:       4,
 			NumWorkers:            4,
 			MaxAllowedSizePerSpan: 50000,

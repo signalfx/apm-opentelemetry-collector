@@ -3,9 +3,20 @@ receivers:
     enabled: true
 
 exporters:
-  omnitelk:
+  omnishard:
     enabled: true
     endpoint: 0.0.0.0:1234
+
+    # Controls if transport security should be disabled or not. The default
+    # is to have transport security enabled for well-known certificate authorities.
+    disable_security: true
+
+    # A map of any additional headers to be sent with each request (e.g.: api
+    # keys, etc).
+    headers:
+      some.key: some.value
+      some_other: some.value
+      "you can have a sentence here": F0000000-0000-0000-0000-000000000000
 
     # Number of concurrent requests to use for sending ExportRequests.
     # Default value is 20. Higher values may be necessary to achieve good throughput.
@@ -46,4 +57,4 @@ pipelines:
   traces:
     receivers: [examplereceiver]
     processors: [exampleprocessor]
-    exporters: [omnitelk]
+    exporters: [omnishard]

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"fmt"
@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 func TestClientUnaryConnectCancellation(t *testing.T) {
@@ -59,7 +59,7 @@ func TestClientUnaryConnect(t *testing.T) {
 	server := newMockServer()
 
 	// Run a server
-	go runServer(server, endpoint)
+	go runServer(server, endpoint, nil)
 	defer server.Stop()
 
 	// Create a client
@@ -68,7 +68,8 @@ func TestClientUnaryConnect(t *testing.T) {
 
 	// Connect to the server
 	err := client.Connect(ConnectionOptions{
-		Endpoint: endpoint,
+		Endpoint:        endpoint,
+		DisableSecurity: true,
 	}, cancelCh)
 
 	// Make sure connection succeeded.
@@ -93,9 +94,9 @@ func TestClientUnarySendRequest(t *testing.T) {
 			for i := 0; i < recordCount; i++ {
 				// Create a record and send it.
 				record := &omnitelpb.EncodedRecord{
-					SpanCount:         uint64(i),
+					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
-					UncompressedBytes: uint64(i * 10),
+					UncompressedBytes: int64(i * 10),
 				}
 				originalSpans := []*jaeger.Span{{}} // fake span, doesn't matter in this test.
 				shard := config.ShardDefinitions[rand.Intn(len(config.ShardDefinitions))]
@@ -118,9 +119,9 @@ func TestClientUnarySendRequest(t *testing.T) {
 
 			for i := 0; i < recordCount; i++ {
 				record := &omnitelpb.EncodedRecord{
-					SpanCount:         uint64(i),
+					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
-					UncompressedBytes: uint64(i * 10),
+					UncompressedBytes: int64(i * 10),
 				}
 				assert.EqualValues(t, record, serverRecords[i])
 			}
@@ -138,9 +139,9 @@ func TestClientUnarySendRequest(t *testing.T) {
 
 			for i := 0; i < recordCount; i++ {
 				record := &omnitelpb.EncodedRecord{
-					SpanCount:         uint64(i),
+					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
-					UncompressedBytes: uint64(i * 10),
+					UncompressedBytes: int64(i * 10),
 				}
 				assert.EqualValues(t, record, responseToRecords[i])
 			}
@@ -165,8 +166,12 @@ func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *client
 	server := newMockServer()
 	server.SetConfig(createTestShardConfig(4))
 
+	headers := map[string]string{
+		"hdr-test-key": "hdr-test-value",
+	}
+
 	// Run a server
-	go runServer(server, endpoint)
+	go runServer(server, endpoint, headers)
 
 	// Create a client
 	client := NewClientUnary(zap.NewNop())
@@ -176,8 +181,12 @@ func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *client
 	err := client.Connect(ConnectionOptions{
 		SendConcurrency: sendConcurrency,
 		Endpoint:        endpoint,
-		OnSendResponse:  callback.onSendResponse,
-		OnSendFail:      callback.onSendFail,
+		DisableSecurity: true,
+		Headers: map[string]string{
+			"hdr-test-key": "hdr-test-value",
+		},
+		OnSendResponse: callback.onSendResponse,
+		OnSendFail:     callback.onSendFail,
 	}, cancelCh)
 
 	// Make sure connection succeeded.

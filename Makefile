@@ -185,7 +185,7 @@ binaries-all-sys:
 	GOOS=windows $(MAKE) binaries
 
 # Helper target to generate Protobuf implementations based on .proto files.
-PROTO_PACKAGE_PATH?=./exporter/omnitelk/gen/
+PROTO_PACKAGE_PATH?=./exporter/omnishard/gen/
 
 .PHONY: generate-protobuf
 generate-protobuf:
@@ -193,4 +193,4 @@ generate-protobuf:
 	    --user $(shell id -u):$(shell id -g) \
 	    znly/protoc \
 		--go_out=plugins=grpc:$(PROTO_PACKAGE_PATH) \
-		-I./exporter/omnitelk/ ./exporter/omnitelk/*.proto \
+		-I./exporter/omnishard/ ./exporter/omnishard/*.proto \

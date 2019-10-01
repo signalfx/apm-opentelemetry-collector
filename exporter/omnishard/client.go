@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 // client allows to connect to a server, get sharding config and send encoded data.
@@ -53,6 +53,12 @@ type client interface {
 type ConnectionOptions struct {
 	// Server's address and port.
 	Endpoint string
+
+	// Controls if the default transport security is going to be disabled.
+	DisableSecurity bool
+
+	// Headers associated with the export requests.
+	Headers map[string]string
 
 	// Number of concurrent requests to use for sending ExportRequests.
 	SendConcurrency uint

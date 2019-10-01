@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"math"
@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	omnitelk "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnishard "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 	jaeger "github.com/jaegertracing/jaeger/model"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
@@ -94,13 +94,13 @@ func TestShardEncoderMultiplePutOneBatch(t *testing.T) {
 	// Encode a bunch of spans. The should all fit in one batch.
 	traceID := jaeger.NewTraceID(123, 456)
 	const spanCount = 100
-	var uncompressedBytes uint64
+	var uncompressedBytes int64
 	for i := 0; i < spanCount; i++ {
 		span := &jaeger.Span{
 			TraceID: traceID,
 		}
 		size := se.Encode(span)
-		uncompressedBytes += uint64(size)
+		uncompressedBytes += int64(size)
 	}
 
 	// There should not be any batches yet, since we Encode the spans quickly and
@@ -137,14 +137,14 @@ func TestShardEncoderMultiplePutOneSpanPerBatch(t *testing.T) {
 	se.Start()
 
 	traceID := jaeger.NewTraceID(123, 456)
-	var uncompressedBytes uint64
+	var uncompressedBytes int64
 	const spanCount = 100
 	for i := 0; i < spanCount; i++ {
 		span := &jaeger.Span{
 			TraceID: traceID,
 		}
 		size := se.Encode(span)
-		uncompressedBytes = uint64(size)
+		uncompressedBytes = int64(size)
 	}
 
 	WaitFor(t,
@@ -268,7 +268,7 @@ func TestShardEncoderCannotMarshal(t *testing.T) {
 		1, // small max to disable batching.
 		math.MaxInt32,
 		1*time.Microsecond, // timeout doesn't matter.
-		func(record *omnitelk.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
+		func(record *omnishard.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
 		},
 		func(failedSpans []*jaeger.Span, code EncoderErrorCode) {
 			failureCode = code

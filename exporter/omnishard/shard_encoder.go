@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package omnitelk
+package omnishard
 
 import (
 	"bytes"
@@ -27,7 +27,7 @@ import (
 	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnitelk/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 )
 
 const avgBatchSizeInSpans = 1000
@@ -209,8 +209,8 @@ func (se *shardEncoder) Flush() {
 	record := &omnitelpb.EncodedRecord{
 		Data:              compressed,
 		PartitionKey:      se.spans.Spans[0].TraceID.String(),
-		SpanCount:         uint64(numSpans),
-		UncompressedBytes: uint64(len(encoded)),
+		SpanCount:         int64(numSpans),
+		UncompressedBytes: int64(len(encoded)),
 	}
 	originalSpans := se.spans.Spans
 
@@ -220,8 +220,8 @@ func (se *shardEncoder) Flush() {
 	se.onRecordReady(record, originalSpans, &se.shard)
 
 	// Record stats.
-	se.hooks.OnCompressed(int64(record.UncompressedBytes), int64(len(record.Data)))
-	se.hooks.OnSpanListFlushed(int64(record.SpanCount), int64(len(record.Data)))
+	se.hooks.OnCompressed(record.UncompressedBytes, int64(len(record.Data)))
+	se.hooks.OnSpanListFlushed(record.SpanCount, int64(len(record.Data)))
 }
 
 // tryEncodeSpan encodes the span and ensures encoded size is within maxAllowedSizePerSpan.
