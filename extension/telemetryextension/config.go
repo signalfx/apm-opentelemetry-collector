@@ -21,7 +21,7 @@ import (
 )
 
 // Config has the configuration for the extension enabling the telemetry
-// extension. It is used to send telemetry from the
+// extension. It is used to send telemetry from the collector to an endpoint.
 type Config struct {
 	configmodels.ExtensionSettings `mapstructure:",squash"`
 
@@ -32,7 +32,7 @@ type Config struct {
 	// Headers specifies the headers to set on requests sent to the
 	Headers map[string]string `mapstructure:"headers"`
 
-	// ScrapeInterval specifies how often to scrape the service for telemetry.
+	// ScrapeInterval specifies how often to scrape the collector for telemetry.
 	// If not specified, the default scrape interval is 10 seconds.
 	ScrapeInterval time.Duration `mapstructure:"scrape_interval"`
 }

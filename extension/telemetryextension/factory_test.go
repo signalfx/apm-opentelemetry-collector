@@ -29,11 +29,10 @@ func TestFactory_Type(t *testing.T) {
 func TestFactory_CreateDefaultConfig(t *testing.T) {
 	factory := Factory{}
 	config := factory.CreateDefaultConfig()
-	require.Equal(t, &Config{
+	require.Equal(t, config, &Config{
 		ExtensionSettings: configmodels.ExtensionSettings{
 			NameVal: typeStr,
 			TypeVal: typeStr,
 		},
-	},
-		config)
+	})
 }

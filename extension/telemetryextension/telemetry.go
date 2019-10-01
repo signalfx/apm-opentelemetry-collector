@@ -23,13 +23,12 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/open-telemetry/opentelemetry-service/extension"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"gopkg.in/yaml.v2"
 
 	"github.com/Omnition/omnition-opentelemetry-service/internal/version"
 )
@@ -67,8 +66,39 @@ type telemetryExtension struct {
 var _ (extension.ServiceExtension) = (*telemetryExtension)(nil)
 
 func newTelemetryExtension(config Config, logger *zap.Logger) (*telemetryExtension, error) {
-	// Check configuration:
-	// 1. check for errors on the endpoint.
+
+	// Unfortunately, this is required to retrieve the command line arguments to the service.
+	// The command line arguments aren't accessible via Viper to the extensions.
+	// If the flags package is used, then it breaks the flags inherited from OpenTelemetry-Collector.
+	// This is a temporary work around until config parsing exposes the command line arguments
+	// in viper to the extensions.
+	metricsPort := ""
+	configFile := ""
+	setOfArgs := os.Args[1:]
+	argLen := len(setOfArgs)
+	for i, arg := range setOfArgs {
+		// Only set the metrics port global variable to be used within telemetry,
+		// if the next argument is of type UINT and it doesn't cause an index of out bounds error.
+		if arg == "--metrics-port" && i+1 < argLen {
+			// Ensure that the next argument is of UINT type as what is expected in the flags.
+			if _, err := strconv.ParseUint(setOfArgs[i+1], 10, 32); err == nil {
+				metricsPort = setOfArgs[i+1]
+			}
+		}
+
+		// Only set the config  global variable to be used within telemetry,
+		// if it doesn't cause an index of out bounds error.
+		if arg == "--config" && i+1 < argLen {
+			configFile = setOfArgs[i+1]
+		}
+	}
+
+	// The config file is required for configuring the collector.
+	if configFile == "" {
+		return nil, errors.New("missing configuration file for service")
+	}
+
+	// Ensures the endpoint passed in through the configuration is valid.
 	_, err := http.NewRequest("POST", config.Endpoint, nil)
 	if err != nil {
 		return nil, err
@@ -76,14 +106,12 @@ func newTelemetryExtension(config Config, logger *zap.Logger) (*telemetryExtensi
 
 	// The default value is pulled from
 	// https://github.com/open-telemetry/opentelemetry-collector/blob/master/service/telemetry.go#L53
-	sourcePort := "8888"
-	// This is a workaround because extensions do not have access to the flags passed in to the command line through viper.
-	if MetricPort != "" {
-		sourcePort = MetricPort
+	if metricsPort == "" {
+		metricsPort = "8888"
 	}
-	sourceURL := fmt.Sprintf("http://localhost:%s/metrics", sourcePort)
+	sourceURL := fmt.Sprintf("http://localhost:%s/metrics", metricsPort)
 
-	// 2. Check for errors on the source URL.
+	// Ensures the source URL created is valid..
 	scrapeRq, err := http.NewRequest("GET", sourceURL, nil)
 	if err != nil {
 		return nil, err
@@ -103,27 +131,20 @@ func newTelemetryExtension(config Config, logger *zap.Logger) (*telemetryExtensi
 	config.Headers[instanceVersionHeader] = version.Version
 	config.Headers[contentEncodingHeader] = contentEncodingGZIP
 
+	// The Go Environment values are only processed at collector start so there
+	// is no need to refresh this value.
 	goEnvBytes, err := gzipBytes(captureGoEnvBytes())
 	if err != nil {
 		return nil, err
 	}
 
-	// This is a workaround because extensions doesn't't have access to the full config
-	// for the application. The `ConfigFile` is set during main.go.
-	v := viper.New()
-	if ConfigFile == "" {
-		return nil, errors.New("missing configuration file for service")
-	}
-	v.SetConfigFile(ConfigFile)
-	err = v.ReadInConfig()
+	// Similar to Go Environment values, the config is only processed
+	// at collector start so there is no need to refresh the value.
+	yamlFile, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
-	svcConfigBytes, err := yaml.Marshal(v.AllSettings())
-	if err != nil {
-		return nil, err
-	}
-	svcConfigGzipBytes, err := gzipBytes(svcConfigBytes)
+	svcConfigGzipBytes, err := gzipBytes(yamlFile)
 	if err != nil {
 		return nil, err
 	}
@@ -143,8 +164,8 @@ func newTelemetryExtension(config Config, logger *zap.Logger) (*telemetryExtensi
 		done:        make(chan struct{}),
 		sourceURL:   sourceURL,
 	}
-	return te, nil
 
+	return te, nil
 }
 
 func (te *telemetryExtension) Start(host extension.Host) error {
