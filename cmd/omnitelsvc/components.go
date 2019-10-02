@@ -24,6 +24,8 @@ import (
 	"github.com/open-telemetry/opentelemetry-service/exporter/zipkinexporter"
 	"github.com/open-telemetry/opentelemetry-service/extension"
 	"github.com/open-telemetry/opentelemetry-service/extension/healthcheckextension"
+	"github.com/open-telemetry/opentelemetry-service/extension/pprofextension"
+	"github.com/open-telemetry/opentelemetry-service/extension/zpagesextension"
 	"github.com/open-telemetry/opentelemetry-service/oterr"
 	"github.com/open-telemetry/opentelemetry-service/processor"
 	"github.com/open-telemetry/opentelemetry-service/processor/attributesprocessor"
@@ -37,6 +39,7 @@ import (
 
 	"github.com/Omnition/omnition-opentelemetry-service/exporter/kinesis"
 	"github.com/Omnition/omnition-opentelemetry-service/exporter/opencensusexporter"
+	"github.com/Omnition/omnition-opentelemetry-service/extension/telemetryextension"
 	"github.com/Omnition/omnition-opentelemetry-service/processor/memorylimiter"
 	"github.com/Omnition/omnition-opentelemetry-service/receiver/opencensusreceiver"
 )
@@ -78,6 +81,9 @@ func components() (config.Factories, error) {
 
 	extensions, err := extension.Build(
 		&healthcheckextension.Factory{},
+		&pprofextension.Factory{},
+		&telemetryextension.Factory{},
+		&zpagesextension.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)

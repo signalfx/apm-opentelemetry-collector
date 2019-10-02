@@ -1,0 +1,25 @@
+extensions:
+  telemetry:
+    endpoint: https://api.test.com/stuff
+  telemetry/1:
+    endpoint: https://api.test2.com/stuff
+    headers:
+      "x-auth-header": 12345
+    scrape_interval: 5s
+
+
+service:
+  extensions: [telemetry/1]
+
+# Data pipeline is required to load the config.
+receivers:
+  examplereceiver:
+processors:
+  exampleprocessor:
+exporters:
+  exampleexporter:
+pipelines:
+  traces:
+    receivers: [examplereceiver]
+    processors: [exampleprocessor]
+    exporters: [exampleexporter]

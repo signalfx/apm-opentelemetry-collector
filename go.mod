@@ -9,6 +9,7 @@ require (
 	github.com/gogo/protobuf v1.3.0
 	github.com/golang/protobuf v1.3.2
 	github.com/google/addlicense v0.0.0-20190510175307-22550fa7c1b0
+	github.com/google/uuid v1.1.1
 	github.com/grpc-ecosystem/grpc-gateway v1.11.1
 	github.com/jaegertracing/jaeger v1.9.0
 	github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024
