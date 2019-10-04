@@ -1,15 +1,12 @@
 receivers:
   examplereceiver:
-    enabled: true
 
 exporters:
   omnishard:
-    enabled: true
     endpoint: 0.0.0.0:1234
 
-    # Controls if transport security should be disabled or not. The default
-    # is to have transport security enabled for well-known certificate authorities.
-    disable_security: true
+    # Controls if transport security should be enabled or not.
+    secure: true
 
     # A map of any additional headers to be sent with each request (e.g.: api
     # keys, etc).
@@ -21,14 +18,6 @@ exporters:
     # Number of concurrent requests to use for sending ExportRequests.
     # Default value is 20. Higher values may be necessary to achieve good throughput.
     send_concurrency: 4
-
-    # How often to reopen the stream to help L7 Load Balancers re-balance the traffic.
-    # The default value is 30 seconds.
-    stream_reopen_period: 10s
-
-    # Also reopen the stream after specified count of requests are sent.
-    # The default value is 1000.
-    stream_reopen_request_count: 100
 
     # Number of workers that will feed spans to shard encoders concurrently.
     # Minimum and default value is 1.
@@ -51,10 +40,10 @@ exporters:
 
 processors:
   exampleprocessor:
-    enabled: true
 
-pipelines:
-  traces:
-    receivers: [examplereceiver]
-    processors: [exampleprocessor]
-    exporters: [omnishard]
+service:
+  pipelines:
+    traces:
+      receivers: [examplereceiver]
+      processors: [exampleprocessor]
+      exporters: [omnishard]

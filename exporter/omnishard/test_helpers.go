@@ -24,7 +24,7 @@ import (
 
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // encoderSink stores results of encoding for later examination in the tests.

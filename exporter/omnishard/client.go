@@ -17,7 +17,7 @@ package omnishard
 import (
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // client allows to connect to a server, get sharding config and send encoded data.
@@ -54,8 +54,8 @@ type ConnectionOptions struct {
 	// Server's address and port.
 	Endpoint string
 
-	// Controls if the default transport security is going to be disabled.
-	DisableSecurity bool
+	// Controls if the default transport security is going to be enabled.
+	UseSecure bool
 
 	// Headers associated with the export requests.
 	Headers map[string]string

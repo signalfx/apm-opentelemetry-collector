@@ -15,7 +15,7 @@
 package kinesis
 
 import (
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
+	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 )
 
 // AWSConfig contains AWS specific configuration such as kinesis stream, region, etc.

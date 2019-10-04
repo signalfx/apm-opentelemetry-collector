@@ -19,8 +19,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/open-telemetry/opentelemetry-service/config"
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
+	"github.com/open-telemetry/opentelemetry-collector/config"
+	"github.com/open-telemetry/opentelemetry-collector/config/configgrpc"
+	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -75,13 +76,15 @@ func TestConfig(t *testing.T) {
 				TypeVal: "omnishard",
 				NameVal: "omnishard",
 			},
-			Endpoint: "0.0.0.0:1234",
-			Headers: map[string]string{
-				"some.key":                     "some.value",
-				"some_other":                   "some.value",
-				"you can have a sentence here": "F0000000-0000-0000-0000-000000000000",
+			GRPCSettings: configgrpc.GRPCSettings{
+				Endpoint: "0.0.0.0:1234",
+				Headers: map[string]string{
+					"some.key":                     "some.value",
+					"some_other":                   "some.value",
+					"you can have a sentence here": "F0000000-0000-0000-0000-000000000000",
+				},
+				UseSecure: true,
 			},
-			DisableSecurity:       true,
 			SendConcurrency:       4,
 			NumWorkers:            4,
 			MaxAllowedSizePerSpan: 50000,

@@ -31,7 +31,7 @@ MISSPELL_CORRECTION=misspell -w
 STATICCHECK=staticcheck
 
 GIT_SHA=$(shell git rev-parse --short HEAD)
-BUILD_INFO_IMPORT_PATH=github.com/Omnition/omnition-opentelemetry-service/internal/version
+BUILD_INFO_IMPORT_PATH=github.com/Omnition/omnition-opentelemetry-collector/internal/version
 BUILD_X1=-X $(BUILD_INFO_IMPORT_PATH).GitHash=$(GIT_SHA)
 ifdef VERSION
 BUILD_X2=-X $(BUILD_INFO_IMPORT_PATH).Version=$(VERSION)
@@ -65,7 +65,7 @@ travis-ci: fmt vet lint goimports misspell staticcheck test-with-cover omnitelsv
 .PHONY: test-with-cover
 test-with-cover:
 	@echo Verifying that all packages have test files to count in coverage
-	@scripts/check-test-files.sh $(subst github.com/Omnition/omnition-opentelemetry-service/,./,$(ALL_PKGS))
+	@scripts/check-test-files.sh $(subst github.com/Omnition/omnition-opentelemetry-collector/,./,$(ALL_PKGS))
 	@echo pre-compiling tests
 	@time go test $(GOMOD) -i $(ALL_PKGS)
 	$(GOTEST) $(GOMOD) $(GOTEST_OPT_WITH_COVERAGE) $(ALL_PKGS)
@@ -151,7 +151,7 @@ dep:
     # version of the code is available.
 	rm -fr vendor
 	go mod vendor
-	gogoproto-rewriter vendor/github.com/open-telemetry/opentelemetry-service/
+	gogoproto-rewriter vendor/github.com/open-telemetry/opentelemetry-collector/
 	gogoproto-rewriter vendor/contrib.go.opencensus.io/exporter/
 
 .PHONY: omnitelsvc

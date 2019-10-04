@@ -16,9 +16,9 @@ package kinesis
 
 import (
 	kinesis "github.com/omnition/opencensus-go-exporter-kinesis"
-	"github.com/open-telemetry/opentelemetry-service/config/configerror"
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
-	"github.com/open-telemetry/opentelemetry-service/exporter"
+	"github.com/open-telemetry/opentelemetry-collector/config/configerror"
+	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
+	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	"go.uber.org/zap"
 )
 

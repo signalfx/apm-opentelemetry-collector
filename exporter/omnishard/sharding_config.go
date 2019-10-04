@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"sort"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // shardingInMemConfig is an immutable in-memory representation of sharding

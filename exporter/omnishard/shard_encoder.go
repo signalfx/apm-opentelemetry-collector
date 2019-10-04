@@ -27,7 +27,7 @@ import (
 	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 const avgBatchSizeInSpans = 1000

@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 func TestClientUnaryConnectCancellation(t *testing.T) {
@@ -68,8 +68,8 @@ func TestClientUnaryConnect(t *testing.T) {
 
 	// Connect to the server
 	err := client.Connect(ConnectionOptions{
-		Endpoint:        endpoint,
-		DisableSecurity: true,
+		Endpoint:  endpoint,
+		UseSecure: false,
 	}, cancelCh)
 
 	// Make sure connection succeeded.
@@ -181,7 +181,7 @@ func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *client
 	err := client.Connect(ConnectionOptions{
 		SendConcurrency: sendConcurrency,
 		Endpoint:        endpoint,
-		DisableSecurity: true,
+		UseSecure:       false,
 		Headers: map[string]string{
 			"hdr-test-key": "hdr-test-value",
 		},

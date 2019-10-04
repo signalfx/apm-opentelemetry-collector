@@ -1,4 +1,4 @@
-module github.com/Omnition/omnition-opentelemetry-service
+module github.com/Omnition/omnition-opentelemetry-collector
 
 go 1.12
 
@@ -11,20 +11,20 @@ require (
 	github.com/google/addlicense v0.0.0-20190510175307-22550fa7c1b0
 	github.com/google/uuid v1.1.1
 	github.com/grpc-ecosystem/grpc-gateway v1.11.1
-	github.com/jaegertracing/jaeger v1.9.0
+	github.com/jaegertracing/jaeger v1.14.0
 	github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
 	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
-	github.com/open-telemetry/opentelemetry-service v0.0.2-0.20190909135303-35ecb0299990
+	github.com/open-telemetry/opentelemetry-collector v0.2.0
 	github.com/rs/cors v1.6.0
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.4.0
 	go.opencensus.io v0.22.1
 	go.uber.org/zap v1.10.0
 	golang.org/x/lint v0.0.0-20190409202823-959b441ac422
-	golang.org/x/net v0.0.0-20190628185345-da137c7871d7
+	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
 	golang.org/x/tools v0.0.0-20190906203814-12febf440ab1
-	google.golang.org/genproto v0.0.0-20190716160619-c506a9f90610
+	google.golang.org/genproto v0.0.0-20190801165951-fa694d86fc64
 	google.golang.org/grpc v1.23.0
 	honnef.co/go/tools v0.0.1-2019.2.3
 )

@@ -18,8 +18,8 @@ import (
 	"context"
 
 	kinesis "github.com/omnition/opencensus-go-exporter-kinesis"
-	"github.com/open-telemetry/opentelemetry-service/consumer/consumerdata"
-	jaegertranslator "github.com/open-telemetry/opentelemetry-service/translator/trace/jaeger"
+	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
 	"go.uber.org/zap"
 )
 

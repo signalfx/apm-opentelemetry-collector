@@ -34,14 +34,14 @@ import (
 	agenttracepb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/trace/v1"
 	tracepb "github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1"
 	"github.com/golang/protobuf/proto"
-	"github.com/open-telemetry/opentelemetry-service/consumer"
-	"github.com/open-telemetry/opentelemetry-service/consumer/consumerdata"
-	"github.com/open-telemetry/opentelemetry-service/observability"
+	"github.com/open-telemetry/opentelemetry-collector/consumer"
+	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	"github.com/open-telemetry/opentelemetry-collector/observability"
 	"go.opencensus.io/trace"
 	"go.opencensus.io/trace/tracestate"
 	"google.golang.org/grpc"
 
-	"github.com/Omnition/omnition-opentelemetry-service/ptypes/ptime"
+	"github.com/Omnition/omnition-opentelemetry-collector/ptypes/ptime"
 )
 
 func TestReceiver_endToEnd(t *testing.T) {

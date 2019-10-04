@@ -1,19 +1,17 @@
 receivers:
   examplereceiver:
-    enabled: true
 
 exporters:
   omnishard:
-    enabled: true
 
 processors:
   exampleprocessor:
-    enabled: true
 
-pipelines:
-  traces:
-    receivers: [examplereceiver]
-    processors: [exampleprocessor]
-    exporters: [omnishard]
+service:
+  pipelines:
+    traces:
+      receivers: [examplereceiver]
+      processors: [exampleprocessor]
+      exporters: [omnishard]
 
 

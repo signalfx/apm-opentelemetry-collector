@@ -17,7 +17,7 @@ package telemetryextension
 import (
 	"testing"
 
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
+	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 	"github.com/stretchr/testify/require"
 )
 

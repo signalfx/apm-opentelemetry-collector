@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
+	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
 
-	"github.com/Omnition/omnition-opentelemetry-service/receiver/opencensusreceiver/octrace"
+	"github.com/Omnition/omnition-opentelemetry-collector/receiver/opencensusreceiver/octrace"
 )
 
 // Config defines configuration for OpenCensus receiver.

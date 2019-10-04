@@ -19,7 +19,7 @@ package main
 import (
 	"log"
 
-	"github.com/open-telemetry/opentelemetry-service/service"
+	"github.com/open-telemetry/opentelemetry-collector/service"
 )
 
 func main() {
@@ -33,6 +33,6 @@ func main() {
 	handleErr(err)
 
 	svc := service.New(factories)
-	err = svc.StartUnified()
+	err = svc.Start()
 	handleErr(err)
 }

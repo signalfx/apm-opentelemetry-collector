@@ -16,9 +16,9 @@ package opencensusexporter
 
 import (
 	"contrib.go.opencensus.io/exporter/ocagent"
-	"github.com/open-telemetry/opentelemetry-service/config/configmodels"
-	"github.com/open-telemetry/opentelemetry-service/exporter"
-	"github.com/open-telemetry/opentelemetry-service/exporter/opencensusexporter"
+	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
+	"github.com/open-telemetry/opentelemetry-collector/exporter"
+	"github.com/open-telemetry/opentelemetry-collector/exporter/opencensusexporter"
 	"go.uber.org/zap"
 )
 

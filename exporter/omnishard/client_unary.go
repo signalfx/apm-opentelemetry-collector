@@ -24,7 +24,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // ClientUnary can connect to a server and send an ExportRequest. It uses multiple
@@ -96,7 +96,7 @@ func (c *ClientUnary) Connect(options ConnectionOptions, cancelCh chan interface
 	grpcOptions := []grpc.DialOption{
 		grpc.WithBlock(),
 	}
-	if options.DisableSecurity {
+	if !options.UseSecure {
 		grpcOptions = append(grpcOptions, grpc.WithInsecure())
 	}
 

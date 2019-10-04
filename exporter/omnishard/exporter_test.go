@@ -23,16 +23,18 @@ import (
 	"testing"
 	"time"
 
-	omnishard "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
 	tracepb "github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1"
 	"github.com/gogo/protobuf/proto"
 	jaeger "github.com/jaegertracing/jaeger/model"
-	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
-	"github.com/open-telemetry/opentelemetry-service/consumer/consumerdata"
-	tracetranslator "github.com/open-telemetry/opentelemetry-service/translator/trace"
+	"github.com/open-telemetry/opentelemetry-collector/config/configgrpc"
+	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	tracetranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
+
+	omnishard "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
 )
 
 func TestNewExporter(t *testing.T) {
@@ -125,8 +127,10 @@ func setupExporter(t *testing.T, streamCount uint) (*Exporter, *mockServer) {
 	endpoint := GetAvailableLocalAddress()
 
 	cfg := &Config{
-		Endpoint:           endpoint,
-		DisableSecurity:    true,
+		GRPCSettings: configgrpc.GRPCSettings{
+			Endpoint:  endpoint,
+			UseSecure: false,
+		},
 		SendConcurrency:    streamCount,
 		BatchFlushInterval: 100 * time.Millisecond,
 	}

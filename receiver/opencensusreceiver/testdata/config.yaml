@@ -21,9 +21,10 @@ processors:
 exporters:
   exampleexporter:
 
-pipelines:
-  traces:
-      receivers: [opencensus]
-      processors: [exampleprocessor]
-      exporters: [exampleexporter]
+service:
+  pipelines:
+    traces:
+        receivers: [opencensus]
+        processors: [exampleprocessor]
+        exporters: [exampleexporter]
 

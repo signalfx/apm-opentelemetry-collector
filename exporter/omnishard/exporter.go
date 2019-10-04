@@ -19,11 +19,11 @@ import (
 	"time"
 
 	jaeger "github.com/jaegertracing/jaeger/model"
-	"github.com/open-telemetry/opentelemetry-service/consumer/consumerdata"
-	jaegertranslator "github.com/open-telemetry/opentelemetry-service/translator/trace/jaeger"
+	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-service/exporter/omnishard/gen"
+	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // Maximum number of batches allowed in the retry queue.
@@ -132,7 +132,7 @@ func (e *Exporter) Shutdown() error {
 func (e *Exporter) connectAndGetConfig() {
 	co := ConnectionOptions{
 		Endpoint:        e.cfg.Endpoint,
-		DisableSecurity: e.cfg.DisableSecurity,
+		UseSecure:       e.cfg.UseSecure,
 		SendConcurrency: e.cfg.SendConcurrency,
 		OnSendFail:      e.OnSendFail,
 		OnSendResponse:  e.OnSendResponse,

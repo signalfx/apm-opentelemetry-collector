@@ -27,10 +27,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/open-telemetry/opentelemetry-service/extension"
+	"github.com/open-telemetry/opentelemetry-collector/extension"
 	"go.uber.org/zap"
 
-	"github.com/Omnition/omnition-opentelemetry-service/internal/version"
+	"github.com/Omnition/omnition-opentelemetry-collector/internal/version"
 )
 
 const (

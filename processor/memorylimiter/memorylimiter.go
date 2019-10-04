@@ -24,9 +24,9 @@ import (
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
 
-	"github.com/open-telemetry/opentelemetry-service/consumer"
-	"github.com/open-telemetry/opentelemetry-service/consumer/consumerdata"
-	"github.com/open-telemetry/opentelemetry-service/processor"
+	"github.com/open-telemetry/opentelemetry-collector/consumer"
+	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	"github.com/open-telemetry/opentelemetry-collector/processor"
 )
 
 var (
@@ -126,6 +126,10 @@ func (ml *memoryLimiter) ConsumeTraceData(
 		return errForcedDrop
 	}
 	return ml.nextConsumer.ConsumeTraceData(ctx, td)
+}
+
+func (ml *memoryLimiter) GetCapabilities() processor.Capabilities {
+	return processor.Capabilities{MutatesConsumedData: false}
 }
 
 // stopCheck stops the periodic check for memory consumption.
