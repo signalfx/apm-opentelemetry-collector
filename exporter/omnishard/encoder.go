@@ -25,7 +25,7 @@ import (
 	"go.opencensus.io/stats/view"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // encoder encodes spans into EncodedRecords. Spans are batched according to their
@@ -57,7 +57,7 @@ type encoder struct {
 	onSpanProcessFail spanProcessFailFunc
 
 	// The very last requested config change.
-	configChangeRequest *omnitelpb.ShardingConfig
+	configChangeRequest *omnishardpb.ShardingConfig
 
 	// Condition that is signaled when the config change is requested.
 	configChangeCond *sync.Cond
@@ -189,7 +189,7 @@ func newEncoder(
 // The first time this function is called with a valid config will result in the start
 // of encoder. Until that encoder will not process any spans and any calls to
 // EncodeSpans will place spans into queue for future processing when encoder starts.
-func (e *encoder) SetConfig(config *omnitelpb.ShardingConfig) {
+func (e *encoder) SetConfig(config *omnishardpb.ShardingConfig) {
 	// Update configChangeRequest and signal to processConfigChanges.
 	// Note: we only care about last call to SetConfig, so we happily overwrite
 	// the value of configChangeRequest here without worrying about its previous value.

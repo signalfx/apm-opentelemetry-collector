@@ -23,7 +23,7 @@ import (
 	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // Maximum number of batches allowed in the retry queue.
@@ -200,7 +200,7 @@ func (e *Exporter) processRetryQueue() {
 
 // onRecordReady is called when an encoded record is ready. This function will send it
 // to the server.
-func (e *Exporter) onRecordReady(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
+func (e *Exporter) onRecordReady(record *omnishardpb.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig) {
 	e.client.Send(record, originalSpans, shard.origin)
 }
 
@@ -232,24 +232,24 @@ func (e *Exporter) onSpanProcessFail(failedSpans []*jaeger.Span, code EncoderErr
 // OnSendResponse is called when a response is received regarding previously sent records.
 // Called asynchronously sometime after Send() successfully sends the record.
 func (e *Exporter) OnSendResponse(
-	responseToRecords *omnitelpb.EncodedRecord,
+	responseToRecords *omnishardpb.EncodedRecord,
 	originalSpans []*jaeger.Span,
-	response *omnitelpb.ExportResponse,
+	response *omnishardpb.ExportResponse,
 ) {
 	switch response.ResultCode {
-	case omnitelpb.ExportResponse_SUCCESS:
+	case omnishardpb.ExportResponse_SUCCESS:
 		// Spans were successfully delivered.
 		// TODO: increment success counter.
 
-	case omnitelpb.ExportResponse_FAILED_NOT_RETRYABLE:
+	case omnishardpb.ExportResponse_FAILED_NOT_RETRYABLE:
 		// Spans are not accepted by the server.
 		e.encoder.hooks.OnDropSpans(int64(len(originalSpans)))
 
-	case omnitelpb.ExportResponse_FAILED_RETRYABLE:
+	case omnishardpb.ExportResponse_FAILED_RETRYABLE:
 		// Spans must be retried.
 		e.resendSpans(originalSpans)
 
-	case omnitelpb.ExportResponse_SHARD_CONFIG_MISTMATCH:
+	case omnishardpb.ExportResponse_SHARD_CONFIG_MISTMATCH:
 		// Server's sharding configuration has changed.
 		// Let encoder know about new config.
 		e.encoder.SetConfig(response.ShardingConfig)
@@ -263,7 +263,7 @@ func (e *Exporter) OnSendResponse(
 // OnSendFail is called if the records cannot be sent for whatever reason (e.g. the
 // records cannot be serialized).
 func (e *Exporter) OnSendFail(
-	failedRecords *omnitelpb.EncodedRecord,
+	failedRecords *omnishardpb.EncodedRecord,
 	originalSpans []*jaeger.Span,
 	code SendErrorCode,
 ) {

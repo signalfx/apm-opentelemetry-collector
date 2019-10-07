@@ -24,14 +24,14 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // ClientUnary can connect to a server and send an ExportRequest. It uses multiple
 // concurrent unary calls to increase throughput.
 type ClientUnary struct {
 	// gRPC client.
-	client omnitelpb.OmniShardClient
+	client omnishardpb.OmniShardClient
 
 	options ConnectionOptions
 
@@ -50,7 +50,7 @@ type ClientUnary struct {
 // and in the requestsToSend queues.
 type requestToSend struct {
 	// Ready to send request containing spans encoded into a EncodedRecord.
-	exportRequest *omnitelpb.ExportRequest
+	exportRequest *omnishardpb.ExportRequest
 
 	// originalSpans represents original spans that were encoded into record.
 	originalSpans []*jaeger.Span
@@ -107,7 +107,7 @@ func (c *ClientUnary) Connect(options ConnectionOptions, cancelCh chan interface
 	}
 
 	// Connection successful, create gRPC client.
-	c.client = omnitelpb.NewOmniShardClient(conn)
+	c.client = omnishardpb.NewOmniShardClient(conn)
 
 	// Create queue of requests to send.
 	c.requestsToSend = make(chan requestToSend, c.options.SendConcurrency)
@@ -128,8 +128,8 @@ func (c *ClientUnary) Shutdown() {
 
 // GetShardingConfig returns a sharding config from the server. May be called
 // only after Connect succeeds.
-func (c *ClientUnary) GetShardingConfig() (*omnitelpb.ShardingConfig, error) {
-	return c.client.GetShardingConfig(c.baseCtx, &omnitelpb.ConfigRequest{})
+func (c *ClientUnary) GetShardingConfig() (*omnishardpb.ShardingConfig, error) {
+	return c.client.GetShardingConfig(c.baseCtx, &omnishardpb.ConfigRequest{})
 }
 
 // Send an encoded record to the server. The record must be encoded for the shard
@@ -141,9 +141,9 @@ func (c *ClientUnary) GetShardingConfig() (*omnitelpb.ShardingConfig, error) {
 // callbacks.
 // originalSpans represents original spans that are encoded into record.
 // It is required that these 2 fields match each other.
-func (c *ClientUnary) Send(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *omnitelpb.ShardDefinition) {
+func (c *ClientUnary) Send(record *omnishardpb.EncodedRecord, originalSpans []*jaeger.Span, shard *omnishardpb.ShardDefinition) {
 
-	exportRequest := &omnitelpb.ExportRequest{
+	exportRequest := &omnishardpb.ExportRequest{
 		Record: record,
 		Shard:  shard,
 	}

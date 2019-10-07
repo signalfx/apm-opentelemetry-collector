@@ -31,12 +31,12 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 type gRPCServer struct {
 	srv       *mockServer
-	onReceive func(request *omnitelpb.ExportRequest)
+	onReceive func(request *omnishardpb.ExportRequest)
 	headers   map[string]string
 }
 
@@ -44,7 +44,7 @@ func (s *gRPCServer) SetRequiredHeaders(headers map[string]string) {
 	s.headers = headers
 }
 
-func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportRequest) (*omnitelpb.ExportResponse, error) {
+func (s *gRPCServer) Export(ctx context.Context, request *omnishardpb.ExportRequest) (*omnishardpb.ExportResponse, error) {
 	if err := s.checkRequiredHeaders(ctx); err != nil {
 		return nil, err
 	}
@@ -58,11 +58,11 @@ func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportReques
 		return nil, status.Err()
 	}
 
-	var response *omnitelpb.ExportResponse
+	var response *omnishardpb.ExportResponse
 	if !shardIsPartOfConfig(request.Shard, s.srv.GetConfig()) {
 		// Client's config does not match our config.
-		response = &omnitelpb.ExportResponse{
-			ResultCode:     omnitelpb.ExportResponse_SHARD_CONFIG_MISTMATCH,
+		response = &omnishardpb.ExportResponse{
+			ResultCode:     omnishardpb.ExportResponse_SHARD_CONFIG_MISTMATCH,
 			ShardingConfig: s.srv.GetConfig(),
 		}
 	} else {
@@ -70,7 +70,7 @@ func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportReques
 		s.onReceive(request)
 
 		// Send response to client.
-		response = &omnitelpb.ExportResponse{
+		response = &omnishardpb.ExportResponse{
 			ResultCode:     s.srv.nextResponseCode,
 			ShardingConfig: s.srv.nextResponseShardingConfig,
 		}
@@ -79,7 +79,7 @@ func (s *gRPCServer) Export(ctx context.Context, request *omnitelpb.ExportReques
 	return response, nil
 }
 
-func shardIsPartOfConfig(shard *omnitelpb.ShardDefinition, config *omnitelpb.ShardingConfig) bool {
+func shardIsPartOfConfig(shard *omnishardpb.ShardDefinition, config *omnishardpb.ShardingConfig) bool {
 	for _, s := range config.ShardDefinitions {
 		if s.ShardId == shard.ShardId &&
 			compareHashKey(s.StartingHashKey, shard.StartingHashKey) == 0 &&
@@ -100,7 +100,7 @@ func compareHashKey(k1 []byte, k2 []byte) int {
 	return bytes.Compare(k1, k2)
 }
 
-func (s *gRPCServer) GetShardingConfig(ctx context.Context, req *omnitelpb.ConfigRequest) (*omnitelpb.ShardingConfig, error) {
+func (s *gRPCServer) GetShardingConfig(ctx context.Context, req *omnishardpb.ConfigRequest) (*omnishardpb.ShardingConfig, error) {
 	if err := s.checkRequiredHeaders(ctx); err != nil {
 		return nil, err
 	}
@@ -134,28 +134,28 @@ type mockServer struct {
 	RandomServerError bool
 
 	s                          *grpc.Server
-	nextResponseCode           omnitelpb.ExportResponse_ResultCode
-	nextResponseShardingConfig *omnitelpb.ShardingConfig
+	nextResponseCode           omnishardpb.ExportResponse_ResultCode
+	nextResponseShardingConfig *omnishardpb.ShardingConfig
 
-	config      *omnitelpb.ShardingConfig
+	config      *omnishardpb.ShardingConfig
 	configMutex sync.Mutex
 }
 
 func newMockServer() *mockServer {
 	server := &mockServer{
 		s:      grpc.NewServer(),
-		config: &omnitelpb.ShardingConfig{},
+		config: &omnishardpb.ShardingConfig{},
 	}
 	return server
 }
 
-func (srv *mockServer) GetConfig() *omnitelpb.ShardingConfig {
+func (srv *mockServer) GetConfig() *omnishardpb.ShardingConfig {
 	srv.configMutex.Lock()
 	defer srv.configMutex.Unlock()
 	return srv.config
 }
 
-func (srv *mockServer) SetConfig(config *omnitelpb.ShardingConfig) {
+func (srv *mockServer) SetConfig(config *omnishardpb.ShardingConfig) {
 	srv.configMutex.Lock()
 	defer srv.configMutex.Unlock()
 	srv.config = config
@@ -163,7 +163,7 @@ func (srv *mockServer) SetConfig(config *omnitelpb.ShardingConfig) {
 
 func (srv *mockServer) Listen(
 	endpoint string,
-	onReceive func(request *omnitelpb.ExportRequest),
+	onReceive func(request *omnishardpb.ExportRequest),
 	headers map[string]string,
 ) error {
 	lis, err := net.Listen("tcp", endpoint)
@@ -176,7 +176,7 @@ func (srv *mockServer) Listen(
 		grpcSrv.SetRequiredHeaders(headers)
 	}
 
-	omnitelpb.RegisterOmniShardServer(srv.s, grpcSrv)
+	omnishardpb.RegisterOmniShardServer(srv.s, grpcSrv)
 	if err := srv.s.Serve(lis); err != nil {
 		log.Printf("failed to serve: %v", err)
 	}
@@ -189,26 +189,26 @@ func (srv *mockServer) Stop() {
 }
 
 func runServer(srv *mockServer, listenAddress string, headers map[string]string) {
-	onReceiveFunc := func(request *omnitelpb.ExportRequest) {
+	onReceiveFunc := func(request *omnishardpb.ExportRequest) {
 		srv.Sink.onReceive(request)
 	}
 	srv.Listen(listenAddress, onReceiveFunc, headers)
 }
 
 type mockServerSink struct {
-	requests []*omnitelpb.ExportRequest
-	records  []*omnitelpb.EncodedRecord
+	requests []*omnishardpb.ExportRequest
+	records  []*omnishardpb.EncodedRecord
 	mutex    sync.Mutex
 }
 
-func (mss *mockServerSink) onReceive(request *omnitelpb.ExportRequest) {
+func (mss *mockServerSink) onReceive(request *omnishardpb.ExportRequest) {
 	mss.mutex.Lock()
 	defer mss.mutex.Unlock()
 	mss.requests = append(mss.requests, request)
 	mss.records = append(mss.records, request.Record)
 }
 
-func (mss *mockServerSink) GetRecords() []*omnitelpb.EncodedRecord {
+func (mss *mockServerSink) GetRecords() []*omnishardpb.EncodedRecord {
 	mss.mutex.Lock()
 	defer mss.mutex.Unlock()
 	return mss.records

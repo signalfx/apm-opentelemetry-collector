@@ -20,12 +20,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 func TestNewShardingInMemConfig(t *testing.T) {
-	pbConf := &omnitelpb.ShardingConfig{
-		ShardDefinitions: []*omnitelpb.ShardDefinition{
+	pbConf := &omnishardpb.ShardingConfig{
+		ShardDefinitions: []*omnishardpb.ShardDefinition{
 			{
 				ShardId:         "def",
 				StartingHashKey: big.NewInt(10).Bytes(),

@@ -17,7 +17,7 @@ package omnishard
 import (
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // client allows to connect to a server, get sharding config and send encoded data.
@@ -30,7 +30,7 @@ type client interface {
 
 	// GetShardingConfig returns a sharding config from the server. May be called
 	// only after Connect succeeds.
-	GetShardingConfig() (*omnitelpb.ShardingConfig, error)
+	GetShardingConfig() (*omnishardpb.ShardingConfig, error)
 
 	// Send an encoded record to the server. The record must be encoded for the shard
 	// that is passed as a parameter (record's partition key must be in the hash
@@ -41,7 +41,7 @@ type client interface {
 	// callbacks.
 	// originalSpans represents original spans that are encoded into record.
 	// It is required that these 2 fields match each other.
-	Send(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *omnitelpb.ShardDefinition)
+	Send(record *omnishardpb.EncodedRecord, originalSpans []*jaeger.Span, shard *omnishardpb.ShardDefinition)
 
 	// Shutdown the client. After this call Send() should not be called anymore.
 	// Any requests that are not sent yet will not be sent. The responses to already
@@ -68,15 +68,15 @@ type ConnectionOptions struct {
 	// originalSpans represents original spans that were encoded into record and
 	// to which the response was received.
 	OnSendResponse func(
-		responseToRecords *omnitelpb.EncodedRecord,
+		responseToRecords *omnishardpb.EncodedRecord,
 		originalSpans []*jaeger.Span,
-		response *omnitelpb.ExportResponse,
+		response *omnishardpb.ExportResponse,
 	)
 
 	// Callback called if the records cannot be sent for whatever reason (e.g. the
 	// records cannot be serialized).
 	OnSendFail func(
-		failedRecords *omnitelpb.EncodedRecord,
+		failedRecords *omnishardpb.EncodedRecord,
 		failedSpans []*jaeger.Span,
 		code SendErrorCode,
 	)

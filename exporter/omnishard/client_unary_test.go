@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 func TestClientUnaryConnectCancellation(t *testing.T) {
@@ -93,7 +93,7 @@ func TestClientUnarySendRequest(t *testing.T) {
 			const recordCount = 1000
 			for i := 0; i < recordCount; i++ {
 				// Create a record and send it.
-				record := &omnitelpb.EncodedRecord{
+				record := &omnishardpb.EncodedRecord{
 					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
 					UncompressedBytes: int64(i * 10),
@@ -118,7 +118,7 @@ func TestClientUnarySendRequest(t *testing.T) {
 			require.True(t, len(serverRecords) == recordCount)
 
 			for i := 0; i < recordCount; i++ {
-				record := &omnitelpb.EncodedRecord{
+				record := &omnishardpb.EncodedRecord{
 					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
 					UncompressedBytes: int64(i * 10),
@@ -138,7 +138,7 @@ func TestClientUnarySendRequest(t *testing.T) {
 			sort.Sort(byPartitionKey(responseToRecords))
 
 			for i := 0; i < recordCount; i++ {
-				record := &omnitelpb.EncodedRecord{
+				record := &omnishardpb.EncodedRecord{
 					SpanCount:         int64(i),
 					PartitionKey:      fmt.Sprintf("%05d", i),
 					UncompressedBytes: int64(i * 10),
@@ -150,7 +150,7 @@ func TestClientUnarySendRequest(t *testing.T) {
 			responses := clientSink.getResponses()
 			for i := 0; i < len(responses); i++ {
 				response := responses[i]
-				assert.EqualValues(t, omnitelpb.ExportResponse_SUCCESS, response.ResultCode)
+				assert.EqualValues(t, omnishardpb.ExportResponse_SUCCESS, response.ResultCode)
 				assert.Nil(t, response.ShardingConfig)
 			}
 		}()
@@ -160,7 +160,7 @@ func TestClientUnarySendRequest(t *testing.T) {
 // TODO: add tests for server closing connection, server closing stream,
 // server returning non SUCCESS responses.
 
-func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *clientSink) (*ClientUnary, *mockServer, *omnitelpb.ShardingConfig) {
+func setupClientUnaryServer(t *testing.T, sendConcurrency uint, callback *clientSink) (*ClientUnary, *mockServer, *omnishardpb.ShardingConfig) {
 	// Find a local address for delivery.
 	endpoint := GetAvailableLocalAddress()
 	server := newMockServer()

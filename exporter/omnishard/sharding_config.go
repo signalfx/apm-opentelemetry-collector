@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"sort"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // shardingInMemConfig is an immutable in-memory representation of sharding
@@ -42,7 +42,7 @@ type shardInMemConfig struct {
 	endingHashKey   big.Int
 
 	// ShardDefinition that was this shard was created from.
-	origin *omnitelpb.ShardDefinition
+	origin *omnishardpb.ShardDefinition
 }
 
 // byStartingHashKey implements sort.Interface for []shardInMemConfig based on
@@ -55,8 +55,8 @@ func (a byStartingHashKey) Less(i, j int) bool {
 	return a[i].startingHashKey.Cmp(&a[j].startingHashKey) < 0
 }
 
-// newShardingInMemConfig creates a shardingInMemConfig from omnitelpb.ShardingConfig.
-func newShardingInMemConfig(pbConf *omnitelpb.ShardingConfig) (*shardingInMemConfig, error) {
+// newShardingInMemConfig creates a shardingInMemConfig from omnishardpb.ShardingConfig.
+func newShardingInMemConfig(pbConf *omnishardpb.ShardingConfig) (*shardingInMemConfig, error) {
 	sc := &shardingInMemConfig{}
 	for _, s := range pbConf.ShardDefinitions {
 		shard := shardInMemConfig{

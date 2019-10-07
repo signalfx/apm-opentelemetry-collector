@@ -24,20 +24,20 @@ import (
 
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // encoderSink stores results of encoding for later examination in the tests.
 type encoderSink struct {
 	mutex            sync.Mutex
 	successSpanCount int
-	encodedRecords   []*omnitelpb.EncodedRecord
+	encodedRecords   []*omnishardpb.EncodedRecord
 	failSpanCount    int
 	failedSpans      []*jaeger.Span
 }
 
 func (es *encoderSink) onReady(
-	record *omnitelpb.EncodedRecord,
+	record *omnishardpb.EncodedRecord,
 	originalSpans []*jaeger.Span,
 	shard *shardInMemConfig,
 ) {
@@ -62,7 +62,7 @@ func (es *encoderSink) getSuccessSpanCount() int {
 	return es.successSpanCount
 }
 
-func (es *encoderSink) getEncodedRecords() []*omnitelpb.EncodedRecord {
+func (es *encoderSink) getEncodedRecords() []*omnishardpb.EncodedRecord {
 	es.mutex.Lock()
 	defer es.mutex.Unlock()
 	return es.encodedRecords
@@ -140,9 +140,9 @@ func GetAvailableLocalAddress() string {
 	return ln.Addr().String()
 }
 
-// byPartitionKey implements sort.Interface for []*omnitelpb.EncodedRecord based on
+// byPartitionKey implements sort.Interface for []*omnishardpb.EncodedRecord based on
 // the PartitionKey field.
-type byPartitionKey []*omnitelpb.EncodedRecord
+type byPartitionKey []*omnishardpb.EncodedRecord
 
 func (a byPartitionKey) Len() int      { return len(a) }
 func (a byPartitionKey) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
@@ -155,16 +155,16 @@ func (a byPartitionKey) Less(i, j int) bool {
 type clientSink struct {
 	mutex sync.Mutex
 
-	responseToRecords []*omnitelpb.EncodedRecord
-	responses         []*omnitelpb.ExportResponse
+	responseToRecords []*omnishardpb.EncodedRecord
+	responses         []*omnishardpb.ExportResponse
 
-	failedRecords []*omnitelpb.EncodedRecord
+	failedRecords []*omnishardpb.EncodedRecord
 }
 
 func (cs *clientSink) onSendResponse(
-	responseToRecords *omnitelpb.EncodedRecord,
+	responseToRecords *omnishardpb.EncodedRecord,
 	originalSpans []*jaeger.Span,
-	response *omnitelpb.ExportResponse,
+	response *omnishardpb.ExportResponse,
 ) {
 	cs.mutex.Lock()
 	defer cs.mutex.Unlock()
@@ -173,7 +173,7 @@ func (cs *clientSink) onSendResponse(
 }
 
 func (cs *clientSink) onSendFail(
-	failedRecords *omnitelpb.EncodedRecord,
+	failedRecords *omnishardpb.EncodedRecord,
 	originalSpans []*jaeger.Span,
 	code SendErrorCode,
 ) {
@@ -182,13 +182,13 @@ func (cs *clientSink) onSendFail(
 	cs.failedRecords = append(cs.failedRecords, failedRecords)
 }
 
-func (cs *clientSink) getResponseToRecords() []*omnitelpb.EncodedRecord {
+func (cs *clientSink) getResponseToRecords() []*omnishardpb.EncodedRecord {
 	cs.mutex.Lock()
 	defer cs.mutex.Unlock()
 	return cs.responseToRecords
 }
 
-func (cs *clientSink) getResponses() []*omnitelpb.ExportResponse {
+func (cs *clientSink) getResponses() []*omnishardpb.ExportResponse {
 	cs.mutex.Lock()
 	defer cs.mutex.Unlock()
 	return cs.responses

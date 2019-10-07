@@ -27,13 +27,13 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 var testConfig = createTestShardConfig(4)
 
-func createTestShardConfig(shardCount int) *omnitelpb.ShardingConfig {
-	cfg := &omnitelpb.ShardingConfig{}
+func createTestShardConfig(shardCount int) *omnishardpb.ShardingConfig {
+	cfg := &omnishardpb.ShardingConfig{}
 
 	// Create shards, with evenly spaced start and end hash keys covering entire
 	// hash key space from minHashKey to maxHashKey.
@@ -49,7 +49,7 @@ func createTestShardConfig(shardCount int) *omnitelpb.ShardingConfig {
 		hashKey.Mul(hashKey, big.NewInt(int64(i)))
 		hashKey.Div(hashKey, big.NewInt(int64(shardCount)))
 
-		shard := &omnitelpb.ShardDefinition{
+		shard := &omnishardpb.ShardDefinition{
 			ShardId:         "shard#" + strconv.Itoa(i),
 			StartingHashKey: prevHashKey.Bytes(),
 			EndingHashKey:   hashKey.Bytes(),

@@ -27,7 +27,7 @@ import (
 	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
 	"go.uber.org/zap"
 
-	omnitelpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 const avgBatchSizeInSpans = 1000
@@ -36,7 +36,7 @@ var compressedMagicByte = [8]byte{111, 109, 58, 106, 115, 112, 108, 122}
 
 // A function that accepts encoded records, the original spans that were encoded
 // and the config that was used for encoding.
-type recordConsumeFunc func(record *omnitelpb.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig)
+type recordConsumeFunc func(record *omnishardpb.EncodedRecord, originalSpans []*jaeger.Span, shard *shardInMemConfig)
 
 // A function that accepts spans that failed processing and the failure code.
 type spanProcessFailFunc func(failedSpans []*jaeger.Span, code EncoderErrorCode)
@@ -206,7 +206,7 @@ func (se *shardEncoder) Flush() {
 	}
 
 	// Encoded and compressed successfully. Emit via onRecordReady callback.
-	record := &omnitelpb.EncodedRecord{
+	record := &omnishardpb.EncodedRecord{
 		Data:              compressed,
 		PartitionKey:      se.spans.Spans[0].TraceID.String(),
 		SpanCount:         int64(numSpans),
