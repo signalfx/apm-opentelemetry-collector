@@ -17,22 +17,24 @@ package telemetryextension
 import (
 	"testing"
 
+	"github.com/open-telemetry/opentelemetry-collector/config/configcheck"
 	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFactory_Type(t *testing.T) {
 	factory := Factory{}
-	require.Equal(t, typeStr, factory.Type())
+	assert.Equal(t, typeStr, factory.Type())
 }
 
 func TestFactory_CreateDefaultConfig(t *testing.T) {
 	factory := Factory{}
 	config := factory.CreateDefaultConfig()
-	require.Equal(t, config, &Config{
+	assert.Equal(t, config, &Config{
 		ExtensionSettings: configmodels.ExtensionSettings{
 			NameVal: typeStr,
 			TypeVal: typeStr,
 		},
 	})
+	assert.NoError(t, configcheck.ValidateConfig(config))
 }

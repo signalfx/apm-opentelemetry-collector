@@ -5,28 +5,28 @@ receivers:
 exporters:
   kinesis:
     disabled: false
-    queue-size: 1
-    num-workers: 2
-    flush-interval-seconds: 3
-    max-bytes-per-batch: 4
-    max-bytes-per-span: 5
+    queue_size: 1
+    num_workers: 2
+    flush_interval_seconds: 3
+    max_bytes_per_batch: 4
+    max_bytes_per_span: 5
 
     aws:
-        stream-name: test-stream
+        stream_name: test-stream
         region: mars-1
         role: arn:test-role
-        kinesis-endpoint: kinesis.mars-1.aws.galactic
+        kinesis_endpoint: kinesis.mars-1.aws.galactic
 
     kpl:
-        aggregate-batch-count: 10
-        aggregate-batch-size: 11
-        batch-size: 12
-        batch-count: 13
-        backlog-count: 14
-        flush-interval-seconds: 15
-        max-connections: 16
-        max-retries: 17
-        max-backoff-seconds: 18
+        aggregate_batch_count: 10
+        aggregate_batch_size: 11
+        batch_size: 12
+        batch_count: 13
+        backlog_count: 14
+        flush_interval_seconds: 15
+        max_connections: 16
+        max_retries: 17
+        max_backoff_seconds: 18
 
 processors:
   exampleprocessor:

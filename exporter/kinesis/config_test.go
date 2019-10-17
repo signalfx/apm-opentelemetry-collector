@@ -22,6 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/open-telemetry/opentelemetry-collector/config"
+	"github.com/open-telemetry/opentelemetry-collector/config/configcheck"
 	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 )
 
@@ -111,4 +112,9 @@ func TestConfig(t *testing.T) {
 			MaxBytesPerSpan:      5,
 		},
 	)
+}
+
+func TestConfigCheck(t *testing.T) {
+	cfg := (&Factory{}).CreateDefaultConfig()
+	assert.NoError(t, configcheck.ValidateConfig(cfg))
 }

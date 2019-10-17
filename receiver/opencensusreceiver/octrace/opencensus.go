@@ -102,7 +102,7 @@ func (ocr *Receiver) Export(tes agenttracepb.TraceService_ExportServer) error {
 		count := atomic.AddInt64(&ocr.serverStreamsCount, 1)
 		defer atomic.AddInt64(&ocr.serverStreamsCount, -1)
 		if count > ocr.maxServerStreams {
-			return status.Errorf(codes.ResourceExhausted, "max-server-streams %d rechead", ocr.maxServerStreams)
+			return status.Errorf(codes.ResourceExhausted, "max_server_streams %d rechead", ocr.maxServerStreams)
 		}
 	}
 

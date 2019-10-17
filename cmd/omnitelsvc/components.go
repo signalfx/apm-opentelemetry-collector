@@ -29,9 +29,9 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/oterr"
 	"github.com/open-telemetry/opentelemetry-collector/processor"
 	"github.com/open-telemetry/opentelemetry-collector/processor/attributesprocessor"
-	"github.com/open-telemetry/opentelemetry-collector/processor/nodebatcherprocessor"
-	"github.com/open-telemetry/opentelemetry-collector/processor/probabilisticsamplerprocessor"
+	"github.com/open-telemetry/opentelemetry-collector/processor/batchprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/processor/queuedprocessor"
+	"github.com/open-telemetry/opentelemetry-collector/processor/samplingprocessor/probabilisticsamplerprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
@@ -70,7 +70,7 @@ func components() (config.Factories, error) {
 	processors, err := processor.Build(
 		&attributesprocessor.Factory{},
 		&queuedprocessor.Factory{},
-		&nodebatcherprocessor.Factory{},
+		&batchprocessor.Factory{},
 		&memorylimiter.Factory{},
 		&probabilisticsamplerprocessor.Factory{},
 	)

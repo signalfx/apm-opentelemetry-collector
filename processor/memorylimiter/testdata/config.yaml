@@ -2,14 +2,14 @@ receivers:
   examplereceiver:
 
 processors:
-  memory-limiter:
+  memory_limiter:
     # empty config
 
-  memory-limiter/with-settings:
-    check-interval: 250ms
-    limit-mib: 4000
-    spike-limit-mib: 500
-    ballast-size-mib: 2000
+  memory_limiter/with-settings:
+    check_interval: 250ms
+    limit_mib: 4000
+    spike_limit_mib: 500
+    ballast_size_mib: 2000
 
 exporters:
   exampleexporter:
@@ -18,5 +18,5 @@ service:
   pipelines:
     traces:
       receivers: [examplereceiver]
-      processors: [memory-limiter/with-settings]
+      processors: [memory_limiter/with-settings]
       exporters: [exampleexporter]

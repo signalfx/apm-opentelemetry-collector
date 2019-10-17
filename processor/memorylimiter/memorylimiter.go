@@ -132,11 +132,9 @@ func (ml *memoryLimiter) GetCapabilities() processor.Capabilities {
 	return processor.Capabilities{MutatesConsumedData: false}
 }
 
-// stopCheck stops the periodic check for memory consumption.
-// The processor.TraceProcessor interface doesn't have a stop/flush method that
-// could be used and closing the background goroutine is important in tests.
-func (ml *memoryLimiter) stopCheck() {
+func (ml *memoryLimiter) Shutdown() error {
 	ml.ticker.Stop()
+	return nil
 }
 
 func (ml *memoryLimiter) readMemStats(ms *runtime.MemStats) {

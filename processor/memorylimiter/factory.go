@@ -25,7 +25,7 @@ import (
 
 const (
 	// The value of "type" Attribute Key in configuration.
-	typeStr = "memory-limiter"
+	typeStr = "memory_limiter"
 )
 
 // Factory is the factory for Attribute Key processor.

@@ -19,6 +19,7 @@ import (
 
 	kinesis "github.com/omnition/opencensus-go-exporter-kinesis"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
 	"go.uber.org/zap"
 )
@@ -27,6 +28,16 @@ import (
 type Exporter struct {
 	kinesis *kinesis.Exporter
 	logger  *zap.Logger
+}
+
+var _ (exporter.TraceExporter) = (*Exporter)(nil)
+
+// Start tells the exporter to start. The exporter may prepare for exporting
+// by connecting to the endpoint. Host parameter can be used for communicating
+// with the host after Start() has already returned. If error is returned by
+// Start() then the collector startup will be aborted.
+func (e Exporter) Start(host exporter.Host) error {
+	return nil
 }
 
 // Shutdown is invoked during exporter shutdown.

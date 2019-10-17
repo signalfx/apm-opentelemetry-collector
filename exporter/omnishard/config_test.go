@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/open-telemetry/opentelemetry-collector/config"
+	"github.com/open-telemetry/opentelemetry-collector/config/configcheck"
 	"github.com/open-telemetry/opentelemetry-collector/config/configgrpc"
 	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 	"github.com/stretchr/testify/assert"
@@ -92,4 +93,9 @@ func TestConfig(t *testing.T) {
 			BatchFlushInterval:    2 * time.Second,
 		},
 	)
+}
+
+func TestConfigCheck(t *testing.T) {
+	cfg := (&Factory{}).CreateDefaultConfig()
+	assert.NoError(t, configcheck.ValidateConfig(cfg))
 }

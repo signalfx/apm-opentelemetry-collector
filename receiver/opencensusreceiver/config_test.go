@@ -23,6 +23,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/open-telemetry/opentelemetry-collector/config"
+	"github.com/open-telemetry/opentelemetry-collector/config/configcheck"
 	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 )
 
@@ -42,7 +43,9 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, len(cfg.Receivers), 4)
 
 	r0 := cfg.Receivers["opencensus"]
-	assert.Equal(t, r0, factory.CreateDefaultConfig())
+	defaultCfg := factory.CreateDefaultConfig()
+	assert.Equal(t, r0, defaultCfg)
+	assert.NoError(t, configcheck.ValidateConfig(defaultCfg))
 
 	r1 := cfg.Receivers["opencensus/customname"].(*Config)
 	assert.Equal(t, r1.ReceiverSettings,

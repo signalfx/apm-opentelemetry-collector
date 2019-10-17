@@ -30,17 +30,17 @@ type Config struct {
 	// CheckInterval is the time between measurements of memory usage for the
 	// purposes of avoiding going over the limits. Defaults to zero, so no
 	// checks will be performed.
-	CheckInterval time.Duration `mapstructure:"check-interval"`
+	CheckInterval time.Duration `mapstructure:"check_interval"`
 
 	// MemoryLimitMiB is the maximum amount of memory, in MiB, targeted to be
 	// allocated by the process.
-	MemoryLimitMiB uint32 `mapstructure:"limit-mib"`
+	MemoryLimitMiB uint32 `mapstructure:"limit_mib"`
 
 	// MemorySpikeLimitMiB is the maximum, in MiB, spike expected between the
 	// measurements of memory usage.
-	MemorySpikeLimitMiB uint32 `mapstructure:"spike-limit-mib"`
+	MemorySpikeLimitMiB uint32 `mapstructure:"spike_limit_mib"`
 
 	// BallastSizeMiB is the size, in MiB, of the ballast size being used by the
 	// process.
-	BallastSizeMiB uint32 `mapstructure:"ballast-size-mib"`
+	BallastSizeMiB uint32 `mapstructure:"ballast_size_mib"`
 }

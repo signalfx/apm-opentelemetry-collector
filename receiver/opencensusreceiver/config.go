@@ -31,55 +31,55 @@ type Config struct {
 	configmodels.ReceiverSettings `mapstructure:",squash"` // squash ensures fields are correctly decoded in embedded struct
 
 	// TLSCredentials is a (cert_file, key_file) configuration.
-	TLSCredentials *tlsCredentials `mapstructure:"tls-credentials,omitempty"`
+	TLSCredentials *tlsCredentials `mapstructure:"tls_credentials"`
 
 	// Keepalive anchor for all the settings related to keepalive.
-	Keepalive *serverParametersAndEnforcementPolicy `mapstructure:"keepalive,omitempty"`
+	Keepalive *serverParametersAndEnforcementPolicy `mapstructure:"keepalive"`
 
 	// MaxRecvMsgSizeMiB sets the maximum size (in MiB) of messages accepted by the server.
-	MaxRecvMsgSizeMiB uint64 `mapstructure:"max-recv-msg-size-mib,omitempty"`
+	MaxRecvMsgSizeMiB uint64 `mapstructure:"max_recv_msg_size_mib"`
 
 	// MaxConcurrentStreams sets the limit on the number of concurrent streams to each ServerTransport.
-	MaxConcurrentStreams uint32 `mapstructure:"max-concurrent-streams,omitempty"`
+	MaxConcurrentStreams uint32 `mapstructure:"max_concurrent_streams"`
 
 	// EnableBackPressure indicates if the server should put back-pressure on callers (by
 	// dropping connections) or not,
 	EnableBackPressure bool `mapstructure:"backpressure"`
 
 	// MaxServerStreams sets the limit on the number of receiving routines for the trace receiver.
-	MaxServerStreams uint64 `mapstructure:"max-server-streams"`
+	MaxServerStreams uint64 `mapstructure:"max_server_streams"`
 }
 
 // tlsCredentials holds the fields for TLS credentials
 // that are used for starting a server.
 type tlsCredentials struct {
 	// CertFile is the file path containing the TLS certificate.
-	CertFile string `mapstructure:"cert-file"`
+	CertFile string `mapstructure:"cert_file"`
 
 	// KeyFile is the file path containing the TLS key.
-	KeyFile string `mapstructure:"key-file"`
+	KeyFile string `mapstructure:"key_file"`
 }
 
 type serverParametersAndEnforcementPolicy struct {
-	ServerParameters  *keepaliveServerParameters  `mapstructure:"server-parameters,omitempty"`
-	EnforcementPolicy *keepaliveEnforcementPolicy `mapstructure:"enforcement-policy,omitempty"`
+	ServerParameters  *keepaliveServerParameters  `mapstructure:"server_parameters"`
+	EnforcementPolicy *keepaliveEnforcementPolicy `mapstructure:"enforcement_policy"`
 }
 
 // keepaliveServerParameters allow configuration of the keepalive.ServerParameters.
 // See https://godoc.org/google.golang.org/grpc/keepalive#ServerParameters for details.
 type keepaliveServerParameters struct {
-	MaxConnectionIdle     time.Duration `mapstructure:"max-connection-idle,omitempty"`
-	MaxConnectionAge      time.Duration `mapstructure:"max-connection-age,omitempty"`
-	MaxConnectionAgeGrace time.Duration `mapstructure:"max-connection-age-grace,omitempty"`
-	Time                  time.Duration `mapstructure:"time,omitempty"`
-	Timeout               time.Duration `mapstructure:"timeout,omitempty"`
+	MaxConnectionIdle     time.Duration `mapstructure:"max_connection_idle"`
+	MaxConnectionAge      time.Duration `mapstructure:"max_connection_age"`
+	MaxConnectionAgeGrace time.Duration `mapstructure:"max_connection_age_grace"`
+	Time                  time.Duration `mapstructure:"time"`
+	Timeout               time.Duration `mapstructure:"timeout"`
 }
 
 // keepaliveEnforcementPolicy allow configuration of the keepalive.EnforcementPolicy.
 // See https://godoc.org/google.golang.org/grpc/keepalive#EnforcementPolicy for details.
 type keepaliveEnforcementPolicy struct {
-	MinTime             time.Duration `mapstructure:"min-time,omitempty"`
-	PermitWithoutStream bool          `mapstructure:"permit-without-stream,omitempty"`
+	MinTime             time.Duration `mapstructure:"min_time"`
+	PermitWithoutStream bool          `mapstructure:"permit_without_stream"`
 }
 
 func (rOpts *Config) buildOptions() (opts []Option, err error) {

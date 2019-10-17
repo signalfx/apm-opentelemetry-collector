@@ -4,16 +4,16 @@ receivers:
     endpoint: 0.0.0.0:9090
   opencensus/keepalive:
     keepalive:
-      server-parameters:
+      server_parameters:
         time: 30s
         timeout: 5s
-      enforcement-policy:
-        min-time: 10s
-        permit-without-stream: true
+      enforcement_policy:
+        min_time: 10s
+        permit_without_stream: true
   opencensus/nobackpressure:
     backpressure: false
-    max-recv-msg-size-mib: 32
-    max-concurrent-streams: 16
+    max_recv_msg_size_mib: 32
+    max_concurrent_streams: 16
 
 processors:
   exampleprocessor:

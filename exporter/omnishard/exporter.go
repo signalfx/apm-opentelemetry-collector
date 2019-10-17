@@ -20,6 +20,7 @@ import (
 
 	jaeger "github.com/jaegertracing/jaeger/model"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
 	"go.uber.org/zap"
 
@@ -85,6 +86,8 @@ type Exporter struct {
 	logger *zap.Logger
 }
 
+var _ (exporter.TraceExporter) = (*Exporter)(nil)
+
 // NewExporter creates a new Exporter based on user config.
 func NewExporter(cfg *Config, logger *zap.Logger, client client) (*Exporter, error) {
 	e := &Exporter{
@@ -110,9 +113,10 @@ func NewExporter(cfg *Config, logger *zap.Logger, client client) (*Exporter, err
 	return e, nil
 }
 
-// Start exporter.
-func (e *Exporter) Start() {
+// Start starts the goroutine that connects to endpoint and retrieves the configuration.
+func (e *Exporter) Start(host exporter.Host) error {
 	go e.connectAndGetConfig()
+	return nil
 }
 
 // Shutdown the exporter. Exporter cannot be started after it is shutdown. Safe to call

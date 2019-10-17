@@ -70,7 +70,6 @@ func (f *Factory) CreateTraceExporter(logger *zap.Logger, cfg configmodels.Expor
 		return nil, err
 	}
 
-	e.Start()
 	return e, nil
 }
 

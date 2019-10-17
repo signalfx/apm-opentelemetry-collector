@@ -93,7 +93,7 @@ func TestNew(t *testing.T) {
 				return
 			}
 			if got != nil {
-				got.(*memoryLimiter).stopCheck()
+				assert.NoError(t, got.Shutdown())
 			}
 		})
 	}

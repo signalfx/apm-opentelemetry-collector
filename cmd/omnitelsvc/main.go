@@ -20,6 +20,8 @@ import (
 	"log"
 
 	"github.com/open-telemetry/opentelemetry-collector/service"
+
+	"github.com/Omnition/omnition-opentelemetry-collector/internal/version"
 )
 
 func main() {
@@ -32,7 +34,16 @@ func main() {
 	factories, err := components()
 	handleErr(err)
 
-	svc := service.New(factories)
+	info := service.ApplicationStartInfo{
+		ExeName:  "omnitelsvc",
+		LongName: "Omnition OpenTelemetry Service",
+		Version:  version.Version,
+		GitHash:  version.GitHash,
+	}
+
+	svc, err := service.New(factories, info)
+	handleErr(err)
+
 	err = svc.Start()
 	handleErr(err)
 }

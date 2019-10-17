@@ -20,36 +20,36 @@ import (
 
 // AWSConfig contains AWS specific configuration such as kinesis stream, region, etc.
 type AWSConfig struct {
-	StreamName      string `mapstructure:"stream-name,omitempty"`
-	KinesisEndpoint string `mapstructure:"kinesis-endpoint,omitempty"`
-	Region          string `mapstructure:"region,omitempty"`
-	Role            string `mapstructure:"role,omitempty"`
+	StreamName      string `mapstructure:"stream_name"`
+	KinesisEndpoint string `mapstructure:"kinesis_endpoint"`
+	Region          string `mapstructure:"region"`
+	Role            string `mapstructure:"role"`
 }
 
 // KPLConfig contains kinesis producer library related config to controls things
 // like aggregation, batching, connections, retries, etc.
 type KPLConfig struct {
-	AggregateBatchCount  int `mapstructure:"aggregate-batch-count,omitempty"`
-	AggregateBatchSize   int `mapstructure:"aggregate-batch-size,omitempty"`
-	BatchSize            int `mapstructure:"batch-size, omitempty"`
-	BatchCount           int `mapstructure:"batch-count,omitempty"`
-	BacklogCount         int `mapstructure:"backlog-count,omitempty"`
-	FlushIntervalSeconds int `mapstructure:"flush-interval-seconds,omitempty"`
-	MaxConnections       int `mapstructure:"max-connections,omitempty"`
-	MaxRetries           int `mapstructure:"max-retries,omitempty"`
-	MaxBackoffSeconds    int `mapstructure:"max-backoff-seconds,omitempty"`
+	AggregateBatchCount  int `mapstructure:"aggregate_batch_count"`
+	AggregateBatchSize   int `mapstructure:"aggregate_batch_size"`
+	BatchSize            int `mapstructure:"batch_size, omitempty"`
+	BatchCount           int `mapstructure:"batch_count"`
+	BacklogCount         int `mapstructure:"backlog_count"`
+	FlushIntervalSeconds int `mapstructure:"flush_interval_seconds"`
+	MaxConnections       int `mapstructure:"max_connections"`
+	MaxRetries           int `mapstructure:"max_retries"`
+	MaxBackoffSeconds    int `mapstructure:"max_backoff_seconds"`
 }
 
 // Config contains the main configuration options for the kinesis exporter
 type Config struct {
 	configmodels.ExporterSettings `mapstructure:",squash"`
 
-	AWS AWSConfig `mapstructure:"aws,omitempty"`
-	KPL KPLConfig `mapstructure:"kpl,omitempty"`
+	AWS AWSConfig `mapstructure:"aws"`
+	KPL KPLConfig `mapstructure:"kpl"`
 
-	QueueSize            int `mapstructure:"queue-size,omitempty"`
-	NumWorkers           int `mapstructure:"num-workers,omitempty"`
-	MaxBytesPerBatch     int `mapstructure:"max-bytes-per-batch,omitempty"`
-	MaxBytesPerSpan      int `mapstructure:"max-bytes-per-span,omitempty"`
-	FlushIntervalSeconds int `mapstructure:"flush-interval-seconds,omitempty"`
+	QueueSize            int `mapstructure:"queue_size"`
+	NumWorkers           int `mapstructure:"num_workers"`
+	MaxBytesPerBatch     int `mapstructure:"max_bytes_per_batch"`
+	MaxBytesPerSpan      int `mapstructure:"max_bytes_per_span"`
+	FlushIntervalSeconds int `mapstructure:"flush_interval_seconds"`
 }
