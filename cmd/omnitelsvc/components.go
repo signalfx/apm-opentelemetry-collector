@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver"
 	"github.com/open-telemetry/opentelemetry-collector/config"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	"github.com/open-telemetry/opentelemetry-collector/exporter/jaeger/jaegergrpcexporter"
@@ -48,6 +49,7 @@ func components() (config.Factories, error) {
 	receivers, err := receiver.Build(
 		&jaegerreceiver.Factory{},
 		&zipkinreceiver.Factory{},
+		&zipkinscribereceiver.Factory{},
 		&opencensusreceiver.Factory{},
 	)
 	if err != nil {
