@@ -19,6 +19,7 @@ import (
 
 	kinesis "github.com/omnition/opencensus-go-exporter-kinesis"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
+	"github.com/open-telemetry/opentelemetry-collector/consumer/consumererror"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
 	"go.uber.org/zap"
@@ -51,7 +52,7 @@ func (e Exporter) ConsumeTraceData(c context.Context, td consumerdata.TraceData)
 	pBatch, err := jaegertranslator.OCProtoToJaegerProto(td)
 	if err != nil {
 		e.logger.Error("error translating span batch", zap.Error(err))
-		return err
+		return consumererror.Permanent(err)
 	}
 	// TODO: Use a multi error type
 	var exportErr error
