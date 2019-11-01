@@ -214,7 +214,7 @@ func (e *Exporter) resendSpans(spans []*jaeger.Span) {
 	case e.spansToRetry <- spans:
 	default:
 		// No more room in spansToRetry queue. Drop the failed spans.
-		e.encoder.hooks.OnDropSpans(int64(len(spans)))
+		e.encoder.hooks.OnDropSpans(RetryQueueFull, int64(len(spans)), nil)
 	}
 }
 
@@ -229,7 +229,7 @@ func (e *Exporter) onSpanProcessFail(failedSpans []*jaeger.Span, code EncoderErr
 		e.resendSpans(failedSpans)
 
 	case ErrEncodingFailed:
-		e.encoder.hooks.OnDropSpans(int64(len(failedSpans)))
+		e.encoder.hooks.OnDropSpans(FatalEncodingError, int64(len(failedSpans)), nil)
 	}
 }
 
@@ -243,11 +243,13 @@ func (e *Exporter) OnSendResponse(
 	switch response.ResultCode {
 	case omnishardpb.ExportResponse_SUCCESS:
 		// Spans were successfully delivered.
-		// TODO: increment success counter.
 
 	case omnishardpb.ExportResponse_FAILED_NOT_RETRYABLE:
 		// Spans are not accepted by the server.
-		e.encoder.hooks.OnDropSpans(int64(len(originalSpans)))
+		e.encoder.hooks.OnDropSpans(
+			ExportResponseNotRetryable,
+			int64(len(originalSpans)),
+			responseToRecords)
 
 	case omnishardpb.ExportResponse_FAILED_RETRYABLE:
 		// Spans must be retried.
@@ -262,6 +264,8 @@ func (e *Exporter) OnSendResponse(
 		// because they were encoded for wrong sharding config.
 		e.resendSpans(originalSpans)
 	}
+
+	e.encoder.hooks.OnSendResponse(responseToRecords, response)
 }
 
 // OnSendFail is called if the records cannot be sent for whatever reason (e.g. the
@@ -273,7 +277,10 @@ func (e *Exporter) OnSendFail(
 ) {
 	switch code {
 	case ErrFailedNotRetryable:
-		e.encoder.hooks.OnDropSpans(int64(len(originalSpans)))
+		e.encoder.hooks.OnDropSpans(
+			SendErrNotRetryable,
+			int64(len(originalSpans)),
+			failedRecords)
 
 	case ErrFailedRetryable:
 		e.resendSpans(originalSpans)

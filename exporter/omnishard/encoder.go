@@ -218,6 +218,8 @@ func (e *encoder) EncodeSpans(spans []*jaeger.Span) error {
 	// This will block and apply backpressure to caller if we have no room in
 	// spanBatchesToProcess queue.
 	e.spanBatchesToProcess <- spans
+	e.hooks.OnSpansEnqueued(int64(len(spans)))
+
 	return nil
 }
 
@@ -413,6 +415,7 @@ func (e *encoder) processQueuedSpans() {
 		select {
 		case spans := <-e.spanBatchesToProcess:
 			// We have spans to process.
+			e.hooks.OnSpansDequeued(int64(len(spans)))
 			e.processSpanBatch(spans)
 		case <-e.workerHardStopSignal:
 			// We got a hard stop signal and must terminate now.
@@ -426,9 +429,6 @@ func (e *encoder) processQueuedSpans() {
 func (e *encoder) processSpanBatch(spans []*jaeger.Span) {
 
 	for _, span := range spans {
-
-		// Update stats.
-		e.hooks.OnSpanDequeued()
 
 		// Find the right shard encoder based on trace id.
 		se, err := e.getShardEncoder(span.TraceID.String())

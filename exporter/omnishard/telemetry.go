@@ -24,13 +24,13 @@ import (
 var (
 	tagExporterName, _ = tag.NewKey("exporter")
 	tagShardID, _      = tag.NewKey("shard_id")
-	tagFlushReason, _  = tag.NewKey("flush_reason")
+	tagSendResult, _   = tag.NewKey("send_result")
+	tagDropReason, _   = tag.NewKey("drop_reason")
 
 	statXLSpansBytes = stats.Int64("omnishard_xl_span_size", "size of spans bigger than max support size", stats.UnitBytes)
-	statXLSpans      = stats.Int64("omnishard_xl_spans", "number of spans found to be bigger than the max support size", stats.UnitDimensionless)
 
 	statFlushedSpans      = stats.Int64("omnishard_flushed_spans", "number of spans flushed to omnishard exporter", stats.UnitDimensionless)
-	statFlushedSpansBytes = stats.Int64("omnishard_spanlist_bytes", "total size in bytes of spans flushed to omnishard exporter", stats.UnitBytes)
+	statFlushedSpansBytes = stats.Int64("omnishard_flushed_bytes", "total size in bytes of spans flushed to omnishard exporter", stats.UnitBytes)
 
 	statEnqueuedSpans = stats.Int64("omnishard_enqueued_spans", "spans received and put in a queue to be processed by omnishard exporter", stats.UnitDimensionless)
 	statDequeuedSpans = stats.Int64("omnishard_dequeued_spans", "spans taken out of queue and processed by omnishard exporter", stats.UnitDimensionless)
@@ -38,28 +38,40 @@ var (
 	statCompressFactor = stats.Int64("omnishard_compress_factor", "compression factor achieved by spanlists", stats.UnitDimensionless)
 
 	statDroppedSpans = stats.Int64("omnishard_dropped_spans", "dropped span count", stats.UnitDimensionless)
+	statDroppedBytes = stats.Int64("omnishard_dropped_bytes", "dropped bytes count", stats.UnitBytes)
+
+	statSentSpans = stats.Int64("omnishard_sent_spans", "number of spans sent", stats.UnitDimensionless)
+	statSentBytes = stats.Int64("omnishard_sent_bytes", "number of bytes sent", stats.UnitBytes)
 )
 
 // TODO: support telemetry level
 
 // MetricViews return the metrics views according to given telemetry level.
 func metricViews() []*view.View {
-	tagKeys := []tag.Key{tagExporterName, tagShardID, tagFlushReason}
+	tagKeys := []tag.Key{tagExporterName, tagShardID}
 
 	// There are some metrics enabled, return the views.
 
-	spansFlushedView := &view.View{
+	flushedSpansView := &view.View{
 		Name:        statFlushedSpans.Name(),
 		Measure:     statFlushedSpans,
-		Description: "Number of spans flushed.",
+		Description: statFlushedSpans.Description(),
 		TagKeys:     tagKeys,
 		Aggregation: view.Sum(),
 	}
 
-	spanListBytesView := &view.View{
+	flushedBatchesView := &view.View{
+		Name:        "omnishard_flushed_batches",
+		Measure:     statFlushedSpans,
+		Description: "number of batches flushed to omnishard exporter",
+		TagKeys:     tagKeys,
+		Aggregation: view.Count(),
+	}
+
+	flushedBatchBytesView := &view.View{
 		Name:        statFlushedSpansBytes.Name(),
 		Measure:     statFlushedSpansBytes,
-		Description: "Size of a spanlist in bytes",
+		Description: statFlushedSpansBytes.Description(),
 		TagKeys:     tagKeys,
 		Aggregation: view.LastValue(),
 	}
@@ -67,50 +79,131 @@ func metricViews() []*view.View {
 	xlSpansBytesView := &view.View{
 		Name:        statXLSpansBytes.Name(),
 		Measure:     statXLSpansBytes,
-		Description: "size of spans found that were larger than max supported size",
+		Description: statXLSpansBytes.Description(),
 		TagKeys:     tagKeys,
 		Aggregation: view.Sum(),
 	}
 
 	xlSpansView := &view.View{
-		Name:        statXLSpans.Name(),
-		Measure:     statXLSpans,
+		Name:        "omnishard_xl_spans",
+		Measure:     statXLSpansBytes,
 		Description: "number of spans found that were larger than max supported size",
 		TagKeys:     tagKeys,
-		Aggregation: view.Sum(),
+		Aggregation: view.Count(),
 	}
 
 	enqueuedSpansView := &view.View{
 		Name:        statEnqueuedSpans.Name(),
 		Measure:     statEnqueuedSpans,
-		Description: "spans received and put in a queue to be processed by omnishard exporter",
+		Description: statEnqueuedSpans.Description(),
 		TagKeys:     tagKeys,
 		Aggregation: view.Sum(),
+	}
+
+	enqueuedBatchesView := &view.View{
+		Name:        "omnishard_enqueued_batches",
+		Measure:     statEnqueuedSpans,
+		Description: "batches received and put in a queue to be processed by omnishard exporter",
+		TagKeys:     tagKeys,
+		Aggregation: view.Count(),
 	}
 
 	dequeuedSpansView := &view.View{
 		Name:        statDequeuedSpans.Name(),
 		Measure:     statDequeuedSpans,
-		Description: "spans taken out of queue and processed by omnishard exporter",
+		Description: statDequeuedSpans.Description(),
 		TagKeys:     tagKeys,
 		Aggregation: view.Sum(),
+	}
+
+	dequeuedBatchesView := &view.View{
+		Name:        "omnishard_dequeued_batches",
+		Measure:     statDequeuedSpans,
+		Description: "batches taken out of queue and processed by omnishard exporter",
+		TagKeys:     tagKeys,
+		Aggregation: view.Count(),
 	}
 
 	compressFactorView := &view.View{
 		Name:        statCompressFactor.Name(),
 		Measure:     statCompressFactor,
-		Description: "compression factor achieved per spanlist",
+		Description: statCompressFactor.Description(),
 		TagKeys:     tagKeys,
 		Aggregation: view.LastValue(),
 	}
 
+	droppedTagKeys := make([]tag.Key, len(tagKeys)+1)
+	copy(droppedTagKeys, tagKeys)
+	droppedTagKeys[len(tagKeys)] = tagDropReason
+
+	droppedSpansView := &view.View{
+		Name:        statDroppedSpans.Name(),
+		Measure:     statDroppedSpans,
+		Description: statDroppedSpans.Description(),
+		TagKeys:     droppedTagKeys,
+		Aggregation: view.Sum(),
+	}
+
+	droppedBatchesView := &view.View{
+		Name:        "omnishard_dropped_batches",
+		Measure:     statDroppedSpans,
+		Description: "dropped batches count",
+		TagKeys:     droppedTagKeys,
+		Aggregation: view.Count(),
+	}
+
+	droppedBytesView := &view.View{
+		Name:        statDroppedBytes.Name(),
+		Measure:     statDroppedBytes,
+		Description: statDroppedBytes.Description(),
+		TagKeys:     droppedTagKeys,
+		Aggregation: view.Sum(),
+	}
+
+	sentTagKeys := make([]tag.Key, len(tagKeys)+1)
+	copy(sentTagKeys, tagKeys)
+	sentTagKeys[len(tagKeys)] = tagSendResult
+
+	sentSpansView := &view.View{
+		Name:        statSentSpans.Name(),
+		Measure:     statSentSpans,
+		Description: statSentSpans.Description(),
+		TagKeys:     sentTagKeys,
+		Aggregation: view.Sum(),
+	}
+
+	sentBatchesView := &view.View{
+		Name:        "omnishard_sent_batches",
+		Measure:     statSentSpans,
+		Description: "number of batches sent",
+		TagKeys:     sentTagKeys,
+		Aggregation: view.Count(),
+	}
+
+	sentBytesView := &view.View{
+		Name:        statSentBytes.Name(),
+		Measure:     statSentBytes,
+		Description: statSentBytes.Description(),
+		TagKeys:     sentTagKeys,
+		Aggregation: view.Sum(),
+	}
+
 	return []*view.View{
 		compressFactorView,
-		spansFlushedView,
-		spanListBytesView,
+		flushedSpansView,
+		flushedBatchesView,
+		flushedBatchBytesView,
 		xlSpansBytesView,
 		xlSpansView,
 		enqueuedSpansView,
+		enqueuedBatchesView,
 		dequeuedSpansView,
+		dequeuedBatchesView,
+		droppedSpansView,
+		droppedBatchesView,
+		droppedBytesView,
+		sentSpansView,
+		sentBatchesView,
+		sentBytesView,
 	}
 }

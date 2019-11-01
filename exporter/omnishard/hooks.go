@@ -16,21 +16,38 @@ package omnishard
 
 import (
 	"context"
-	"sync"
 
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
+
+	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
 )
 
-type tagCache struct {
-	sync.RWMutex
-	tags map[tag.Key]map[string]tag.Mutator
-}
+var (
+	tagUpsertExportResponseSuccess             = tag.Upsert(tagSendResult, "SUCCESS")
+	tagUpsertExportResponseFailedNotRetryable  = tag.Upsert(tagSendResult, "FAILED_NOT_RETRYABLE")
+	tagUpsertExportResponseFailedRetryable     = tag.Upsert(tagSendResult, "FAILED_RETRYABLE")
+	tagUpsertExportResponseShardConfigMismatch = tag.Upsert(tagSendResult, "SHARD_CONFIG_MISTMATCH")
+
+	tagUpsertDropCodeRetryQueueFull             = tag.Upsert(tagDropReason, "RetryQueueFull")
+	tagUpsertDropCodeFatalEncondingError        = tag.Upsert(tagDropReason, "FatalEncodingError")
+	tagUpsertDropCodeExportResponseNotRetryable = tag.Upsert(tagDropReason, "ExportResponseNotRetryable")
+	tagUpsertDropCodeSendErrNotRetryable        = tag.Upsert(tagDropReason, "SendErrNotRetryable")
+)
 
 type telemetryHooks struct {
 	exporterName string
 	commonTags   []tag.Mutator
-	tagCache     tagCache
+
+	exportSuccessTags             []tag.Mutator
+	exportFailedNotRetryableTags  []tag.Mutator
+	exportFailedRetryableTags     []tag.Mutator
+	exportShardConfigMismatchTags []tag.Mutator
+
+	dropRetryQueueFullTags             []tag.Mutator
+	dropFatalEncodingErrorTags         []tag.Mutator
+	dropExportResponseNotRetryableTags []tag.Mutator
+	dropSendErrNotRetryableTags        []tag.Mutator
 }
 
 func newTelemetryHooks(name, shardID string) *telemetryHooks {
@@ -40,28 +57,46 @@ func newTelemetryHooks(name, shardID string) *telemetryHooks {
 	if shardID != "" {
 		tags = append(tags, tag.Upsert(tagShardID, shardID))
 	}
-	return &telemetryHooks{
+
+	h := &telemetryHooks{
 		exporterName: name,
 		commonTags:   tags,
-		tagCache: tagCache{
-			tags: map[tag.Key]map[string]tag.Mutator{},
-		},
 	}
+
+	// Prepare the pre-defined tags for export metrics.
+	h.exportSuccessTags = extendTagMutator(tags, tagUpsertExportResponseSuccess)
+	h.exportFailedNotRetryableTags = extendTagMutator(tags, tagUpsertExportResponseFailedNotRetryable)
+	h.exportFailedRetryableTags = extendTagMutator(tags, tagUpsertExportResponseFailedRetryable)
+	h.exportShardConfigMismatchTags = extendTagMutator(tags, tagUpsertExportResponseShardConfigMismatch)
+
+	// Prepare the pre-defined tags for drop metrics.
+	h.dropRetryQueueFullTags = extendTagMutator(tags, tagUpsertDropCodeRetryQueueFull)
+	h.dropFatalEncodingErrorTags = extendTagMutator(tags, tagUpsertDropCodeFatalEncondingError)
+	h.dropExportResponseNotRetryableTags = extendTagMutator(tags, tagUpsertDropCodeExportResponseNotRetryable)
+	h.dropSendErrNotRetryableTags = extendTagMutator(tags, tagUpsertDropCodeSendErrNotRetryable)
+
+	return h
 }
 
-func (h *telemetryHooks) OnSpanEnqueued() {
+func extendTagMutator(baseTags []tag.Mutator, extendedTags ...tag.Mutator) []tag.Mutator {
+	newTags := make([]tag.Mutator, 0, len(baseTags)+len(extendedTags))
+	newTags = append(newTags, baseTags...)
+	return append(newTags, extendedTags...)
+}
+
+func (h *telemetryHooks) OnSpansEnqueued(spans int64) {
 	_ = stats.RecordWithTags(
 		context.Background(),
 		h.commonTags,
-		statEnqueuedSpans.M(1),
+		statEnqueuedSpans.M(spans),
 	)
 }
 
-func (h *telemetryHooks) OnSpanDequeued() {
+func (h *telemetryHooks) OnSpansDequeued(spans int64) {
 	_ = stats.RecordWithTags(
 		context.Background(),
 		h.commonTags,
-		statDequeuedSpans.M(1),
+		statDequeuedSpans.M(spans),
 	)
 }
 
@@ -70,7 +105,6 @@ func (h *telemetryHooks) OnXLSpanTruncated(size int) {
 		context.Background(),
 		h.commonTags,
 		statXLSpansBytes.M(int64(size)),
-		statXLSpans.M(1),
 	)
 }
 
@@ -91,10 +125,59 @@ func (h *telemetryHooks) OnCompressed(original, compressed int64) {
 	)
 }
 
-func (h *telemetryHooks) OnDropSpans(spans int64) {
+func (h *telemetryHooks) OnDropSpans(
+	dataDropCode DataDropCode,
+	spans int64,
+	record *omnishardpb.EncodedRecord) {
+
+	var mutators []tag.Mutator
+	switch dataDropCode {
+	case RetryQueueFull:
+		mutators = h.dropRetryQueueFullTags
+	case FatalEncodingError:
+		mutators = h.dropFatalEncodingErrorTags
+	case ExportResponseNotRetryable:
+		mutators = h.dropExportResponseNotRetryableTags
+	case SendErrNotRetryable:
+		mutators = h.dropSendErrNotRetryableTags
+	}
+
+	if record == nil {
+		_ = stats.RecordWithTags(
+			context.Background(),
+			mutators,
+			statDroppedSpans.M(spans),
+		)
+		return
+	}
+
 	_ = stats.RecordWithTags(
 		context.Background(),
-		h.commonTags,
+		mutators,
 		statDroppedSpans.M(spans),
+		statDroppedBytes.M(int64(len(record.Data))),
 	)
+}
+
+func (h *telemetryHooks) OnSendResponse(
+	record *omnishardpb.EncodedRecord,
+	response *omnishardpb.ExportResponse,
+) {
+	var mutators []tag.Mutator
+	switch response.ResultCode {
+	case omnishardpb.ExportResponse_SUCCESS:
+		mutators = h.exportSuccessTags
+	case omnishardpb.ExportResponse_FAILED_NOT_RETRYABLE:
+		mutators = h.exportFailedNotRetryableTags
+	case omnishardpb.ExportResponse_FAILED_RETRYABLE:
+		mutators = h.exportFailedRetryableTags
+	case omnishardpb.ExportResponse_SHARD_CONFIG_MISTMATCH:
+		mutators = h.exportShardConfigMismatchTags
+	}
+
+	_ = stats.RecordWithTags(
+		context.Background(),
+		mutators,
+		statSentBytes.M(int64(len(record.Data))),
+		statSentSpans.M(record.SpanCount))
 }

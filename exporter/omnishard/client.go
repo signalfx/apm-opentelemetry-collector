@@ -74,7 +74,8 @@ type ConnectionOptions struct {
 	)
 
 	// Callback called if the records cannot be sent for whatever reason (e.g. the
-	// records cannot be serialized).
+	// records cannot be serialized). The failures represented here are at the
+	// transport level.
 	OnSendFail func(
 		failedRecords *omnishardpb.EncodedRecord,
 		failedSpans []*jaeger.Span,
