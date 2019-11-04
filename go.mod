@@ -16,12 +16,17 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.11.1
 	github.com/jaegertracing/jaeger v1.14.0
 	github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024
+	github.com/juju/errors v0.0.0-20190930114154-d42613fe1ab9 // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
 	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
 	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb0c1d1e
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
 	github.com/rs/cors v1.6.0
 	github.com/shirou/gopsutil v2.19.9+incompatible
+	github.com/signalfx/com_signalfx_metrics_protobuf v0.0.0-20190530013331-054be550cb49 // indirect
+	github.com/signalfx/gohistogram v0.0.0-20160107210732-1ccfd2ff5083 // indirect
+	github.com/signalfx/golib v2.5.1+incompatible
+	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.4.0
 	go.opencensus.io v0.22.1

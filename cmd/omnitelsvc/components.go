@@ -39,6 +39,7 @@ import (
 
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/kinesis"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/opencensusexporter"
+	signalfxexporter "github.com/Omnition/omnition-opentelemetry-collector/exporter/signalfx"
 	"github.com/Omnition/omnition-opentelemetry-collector/extension/telemetryextension"
 	"github.com/Omnition/omnition-opentelemetry-collector/processor/memorylimiter"
 	"github.com/Omnition/omnition-opentelemetry-collector/receiver/memorymonitor"
@@ -66,6 +67,7 @@ func components() (config.Factories, error) {
 		&jaegerthrifthttpexporter.Factory{},
 		&zipkinexporter.Factory{},
 		&kinesis.Factory{},
+		&signalfxexporter.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)

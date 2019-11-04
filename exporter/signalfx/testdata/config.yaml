@@ -1,0 +1,18 @@
+receivers:
+  examplereceiver:
+
+processors:
+  exampleprocessor:
+
+exporters:
+  signalfx:
+  signalfx/2:
+    auth_token: "token1"
+    realm: "us1"
+
+service:
+  pipelines:
+    traces:
+      receivers: [examplereceiver]
+      processors: [exampleprocessor]
+      exporters: [signalfx]
