@@ -41,6 +41,7 @@ import (
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/opencensusexporter"
 	"github.com/Omnition/omnition-opentelemetry-collector/extension/telemetryextension"
 	"github.com/Omnition/omnition-opentelemetry-collector/processor/memorylimiter"
+	"github.com/Omnition/omnition-opentelemetry-collector/receiver/memorymonitor"
 	"github.com/Omnition/omnition-opentelemetry-collector/receiver/opencensusreceiver"
 )
 
@@ -51,6 +52,7 @@ func components() (config.Factories, error) {
 		&zipkinreceiver.Factory{},
 		&zipkinscribereceiver.Factory{},
 		&opencensusreceiver.Factory{},
+		&memorymonitor.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)

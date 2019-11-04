@@ -1,0 +1,13 @@
+receivers:
+  memorymonitor:
+  memorymonitor/customname:
+    scrape_interval: 5s
+
+exporters:
+  exampleexporter:
+
+service:
+  pipelines:
+    metrics:
+      receivers: [memorymonitor]
+      exporters: [exampleexporter]

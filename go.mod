@@ -4,8 +4,11 @@ go 1.12
 
 require (
 	contrib.go.opencensus.io/exporter/ocagent v0.6.0
+	contrib.go.opencensus.io/resource v0.1.2
+	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/census-instrumentation/opencensus-proto v0.2.2
 	github.com/client9/misspell v0.3.4
+	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/gogo/protobuf v1.3.0
 	github.com/golang/protobuf v1.3.2
 	github.com/google/addlicense v0.0.0-20190510175307-22550fa7c1b0
@@ -18,6 +21,7 @@ require (
 	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb0c1d1e
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
 	github.com/rs/cors v1.6.0
+	github.com/shirou/gopsutil v2.19.9+incompatible
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.4.0
 	go.opencensus.io v0.22.1
