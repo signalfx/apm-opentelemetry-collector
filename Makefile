@@ -158,6 +158,10 @@ dep:
 omnitelsvc:
 	GO111MODULE=on CGO_ENABLED=0 go build $(GOMOD) -o ./bin/$(GOOS)/omnitelsvc $(BUILD_INFO) ./cmd/omnitelsvc
 
+.PHONY: run
+run:
+	GO111MODULE=on go run $(GOMOD) --race ./cmd/omnitelsvc --config $(RUN_CONFIG)
+
 .PHONY: docker-component # Not intended to be used directly
 docker-component: check-component
 	GOOS=linux $(MAKE) $(COMPONENT)

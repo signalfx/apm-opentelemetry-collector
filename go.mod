@@ -37,6 +37,9 @@ require (
 	google.golang.org/genproto v0.0.0-20190801165951-fa694d86fc64
 	google.golang.org/grpc v1.23.0
 	honnef.co/go/tools v0.0.1-2019.2.3
+	k8s.io/api v0.0.0-20190813020757-36bff7324fb7
+	k8s.io/apimachinery v0.0.0-20190809020650-423f5d784010
+	k8s.io/client-go v12.0.0+incompatible
 )
 
 replace contrib.go.opencensus.io/exporter/ocagent => github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition
