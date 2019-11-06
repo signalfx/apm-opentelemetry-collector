@@ -38,6 +38,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
 
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/kinesis"
+	"github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/opencensusexporter"
 	signalfxexporter "github.com/Omnition/omnition-opentelemetry-collector/exporter/signalfx"
 	"github.com/Omnition/omnition-opentelemetry-collector/extension/telemetryextension"
@@ -68,6 +69,7 @@ func components() (config.Factories, error) {
 		&jaegerthrifthttpexporter.Factory{},
 		&zipkinexporter.Factory{},
 		&kinesis.Factory{},
+		&omnishard.Factory{},
 		&signalfxexporter.Factory{},
 	)
 	if err != nil {
