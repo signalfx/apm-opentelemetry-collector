@@ -101,7 +101,7 @@ func (m *ExportRequest) GetShard() *ShardDefinition {
 
 type EncodedRecord struct {
 	// data is a byte sequence encoded as follows:
-	// 1. github.com/omnition/opencensus-go-exporter-kinesis/SpanList
+	// 1. github.com/signalfx/opencensus-go-exporter-kinesis/SpanList
 	//    encoded in Protocol Buffer format.
 	// 2. Result of step 1 compressed using gzip.
 	Data []byte `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`

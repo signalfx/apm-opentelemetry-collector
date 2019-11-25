@@ -17,11 +17,11 @@ package kinesis
 import (
 	"context"
 
-	kinesis "github.com/omnition/opencensus-go-exporter-kinesis"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumererror"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
+	kinesis "github.com/signalfx/opencensus-go-exporter-kinesis"
 	"go.uber.org/zap"
 )
 

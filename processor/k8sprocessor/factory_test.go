@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/processor/k8sprocessor/kube"
+	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor/kube"
 )
 
 func TestCreateDefaultConfig(t *testing.T) {

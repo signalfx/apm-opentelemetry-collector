@@ -34,8 +34,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	omnishard "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
-	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
+	omnishard "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
+	encodemodel "github.com/signalfx/opencensus-go-exporter-kinesis/models/gen"
 )
 
 func TestNewExporter(t *testing.T) {

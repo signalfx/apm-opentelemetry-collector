@@ -31,7 +31,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 type gRPCServer struct {

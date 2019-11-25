@@ -41,8 +41,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/ptypes/ptime"
-	"github.com/Omnition/omnition-opentelemetry-collector/receiver/opencensusreceiver/octrace"
+	"github.com/signalfx/apm-opentelemetry-collector/ptypes/ptime"
+	"github.com/signalfx/apm-opentelemetry-collector/receiver/opencensusreceiver/octrace"
 )
 
 func TestGrpcGateway_endToEnd(t *testing.T) {

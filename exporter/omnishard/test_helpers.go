@@ -24,7 +24,7 @@ import (
 
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // encoderSink stores results of encoding for later examination in the tests.

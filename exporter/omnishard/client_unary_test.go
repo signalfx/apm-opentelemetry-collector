@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 func TestClientUnaryConnectCancellation(t *testing.T) {

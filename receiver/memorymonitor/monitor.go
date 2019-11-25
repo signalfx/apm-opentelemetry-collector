@@ -26,7 +26,7 @@ import (
 	"github.com/shirou/gopsutil/mem"
 	"go.uber.org/zap"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/ptypes/ptime"
+	"github.com/signalfx/apm-opentelemetry-collector/ptypes/ptime"
 )
 
 type timeSeries struct {

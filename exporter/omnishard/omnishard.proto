@@ -28,7 +28,7 @@ message ExportRequest {
 
 message EncodedRecord {
     // data is a byte sequence encoded as follows:
-    // 1. github.com/omnition/opencensus-go-exporter-kinesis/SpanList
+    // 1. github.com/signalfx/opencensus-go-exporter-kinesis/SpanList
     //    encoded in Protocol Buffer format.
     // 2. Result of step 1 compressed using gzip.
     bytes data = 1;
