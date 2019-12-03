@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver"
 	"github.com/open-telemetry/opentelemetry-collector/config"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
@@ -40,7 +41,6 @@ import (
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/kinesis"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/opencensusexporter"
-	signalfxexporter "github.com/Omnition/omnition-opentelemetry-collector/exporter/signalfx"
 	"github.com/Omnition/omnition-opentelemetry-collector/extension/telemetryextension"
 	"github.com/Omnition/omnition-opentelemetry-collector/processor/k8sprocessor"
 	"github.com/Omnition/omnition-opentelemetry-collector/processor/memorylimiter"
