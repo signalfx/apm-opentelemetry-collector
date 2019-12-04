@@ -24,7 +24,7 @@ require (
 	github.com/juju/testing v0.0.0-20191001232224-ce9dec17d28b // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
 	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
-	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e1046cefa
+	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191204165229-c897290808c9
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191203211755-8ae89debd6c5
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
 	github.com/rs/cors v1.6.0
@@ -36,7 +36,7 @@ require (
 	go.opencensus.io v0.22.1
 	go.uber.org/zap v1.12.0
 	golang.org/x/lint v0.0.0-20190930215403-16217165b5de
-	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
+	golang.org/x/net v0.0.0-20190923162816-aa69164e4478
 	golang.org/x/tools v0.0.0-20191029190741-b9c20aec41a5
 	google.golang.org/genproto v0.0.0-20190801165951-fa694d86fc64
 	google.golang.org/grpc v1.23.0
