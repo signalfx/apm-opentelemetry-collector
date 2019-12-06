@@ -24,9 +24,10 @@ require (
 	github.com/juju/testing v0.0.0-20191001232224-ce9dec17d28b // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
 	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
-	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191204165229-c897290808c9
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191203211755-8ae89debd6c5
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
+	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205212659-419ed61e5bac
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191205020505-056258ef26de
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191205020505-056258ef26de
+	github.com/pierrec/lz4 v2.0.5+incompatible // indirect
 	github.com/rs/cors v1.6.0
 	github.com/shirou/gopsutil v2.19.9+incompatible
 	github.com/signalfx/golib v2.5.1+incompatible
