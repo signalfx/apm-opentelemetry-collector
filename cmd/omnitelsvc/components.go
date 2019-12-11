@@ -15,6 +15,8 @@
 package main
 
 import (
+	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver"
 	"github.com/open-telemetry/opentelemetry-collector/config"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
@@ -56,6 +58,7 @@ func components() (config.Factories, error) {
 		&zipkinscribereceiver.Factory{},
 		&opencensusreceiver.Factory{},
 		&memorymonitor.Factory{},
+		&sapmreceiver.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
@@ -71,6 +74,7 @@ func components() (config.Factories, error) {
 		&kinesis.Factory{},
 		&omnishard.Factory{},
 		&signalfxexporter.Factory{},
+		&sapmexporter.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
