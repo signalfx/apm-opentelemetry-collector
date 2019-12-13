@@ -25,10 +25,12 @@ require (
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
 	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
 	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205212659-419ed61e5bac
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191213033854-af8a37b00e74
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191211173639-c78990cbbb53
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191205020505-056258ef26de
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191211173639-c78990cbbb53
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191205020505-056258ef26de
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191213033854-af8a37b00e74
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191213033854-af8a37b00e74
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191213033854-af8a37b00e74
+	github.com/pierrec/lz4 v2.0.5+incompatible // indirect
 	github.com/rs/cors v1.6.0
 	github.com/shirou/gopsutil v2.19.9+incompatible
 	github.com/signalfx/golib v2.5.1+incompatible
