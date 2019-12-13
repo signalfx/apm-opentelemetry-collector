@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter"
@@ -73,7 +74,7 @@ func components() (config.Factories, error) {
 		&jaegergrpcexporter.Factory{},
 		&jaegerthrifthttpexporter.Factory{},
 		&zipkinexporter.Factory{},
-		&kinesis.Factory{},
+		&kinesisexporter.Factory{},
 		&omnishard.Factory{},
 		&signalfxexporter.Factory{},
 		&sapmexporter.Factory{},
