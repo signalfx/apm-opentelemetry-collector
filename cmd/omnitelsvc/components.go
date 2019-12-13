@@ -18,6 +18,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter"
 	"github.com/open-telemetry/opentelemetry-collector/config"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	"github.com/open-telemetry/opentelemetry-collector/exporter/jaeger/jaegergrpcexporter"
@@ -39,7 +40,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/exporter/kinesis"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/opencensusexporter"
 	signalfxexporter "github.com/Omnition/omnition-opentelemetry-collector/exporter/signalfx"
@@ -71,7 +71,7 @@ func components() (config.Factories, error) {
 		&jaegergrpcexporter.Factory{},
 		&jaegerthrifthttpexporter.Factory{},
 		&zipkinexporter.Factory{},
-		&kinesis.Factory{},
+		&kinesisexporter.Factory{},
 		&omnishard.Factory{},
 		&signalfxexporter.Factory{},
 		&sapmexporter.Factory{},

@@ -549,6 +549,8 @@ github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e1046cefa/go.mod h1:WCsoKuWfht1l33mnPISJ189n8l1p1G10TrQaKylV7no=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754 h1:gG2Ig+OgvWCyKLk3/Mz10HkSFolKjsWerT8kE9u+qig=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754/go.mod h1:WxiK9mcisb/hM6M6+2BRV/VIU2c8VzlCRJED2S1MWns=
+github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191213033854-af8a37b00e74 h1:+ZGCIapzQQH1S9c5evxhA3/uOI8hMtN26h/ZC76FCeE=
+github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191213033854-af8a37b00e74/go.mod h1:YJ0pp5EG63ghRw4pbL9mycMx9Ry4t23EEZhkWnGZaS0=
 github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191211173639-c78990cbbb53 h1:nKNCP9hBOdWqUIexU04+qcSuhuRUyZmAb6Kw6+ktiC0=
 github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191211173639-c78990cbbb53/go.mod h1:s8PEkgywb8/shlKrmYI6A9QHINiD/cru6fv6w81Fa8U=
 github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191211173639-c78990cbbb53 h1:pfUEVq0PZN3ORYFEtHuzgNjG21hLYRUarzBzKsi03bE=
@@ -659,6 +661,10 @@ github.com/signalfx/gohistogram v0.0.0-20160107210732-1ccfd2ff5083 h1:WsShHmu12Z
 github.com/signalfx/gohistogram v0.0.0-20160107210732-1ccfd2ff5083/go.mod h1:adPDS6s7WaajdFBV9mQ7i0dKfQ8xiDnF9ZNETVPpp7c=
 github.com/signalfx/golib v2.5.1+incompatible h1:rw16Flfx5Z29DahDSNGAA3ch8dOeNc3oOMUJm493yao=
 github.com/signalfx/golib v2.5.1+incompatible/go.mod h1:nWYefOwlUKWm/SpN/LgVSBnyH1T9NpT1ANlmgRIi1Cs=
+github.com/signalfx/omnition-kinesis-producer v0.4.6 h1:rs18AQ+zz7+B0akJfzJtwdrzqrX/gUIMDg/o8XV41bQ=
+github.com/signalfx/omnition-kinesis-producer v0.4.6/go.mod h1:Qo5UjM14fq/eVKavLkovKbXWbNTTQwiyuADYnXoGx1I=
+github.com/signalfx/opencensus-go-exporter-kinesis v0.4.0 h1:l6tnNSdU0nyRAn157IklHNPFN3LXTrs1IDm1b07wWLY=
+github.com/signalfx/opencensus-go-exporter-kinesis v0.4.0/go.mod h1:moUthjX4ThpXwvVZhIGEZP5g0cOkt+dXs9pElpaaWQw=
 github.com/signalfx/sapm-proto v0.0.2/go.mod h1:mnxTtJuYpsmOFW0F+f95bazdXGUnvjMMwbRNgSjaDb4=
 github.com/signalfx/sapm-proto v0.0.3-0.20191211161027-5e20f16d64d6 h1:yOY4t2Wtvr0tIcwvTzrHwihjwnVR7F/BitjcOMiY2wY=
 github.com/signalfx/sapm-proto v0.0.3-0.20191211161027-5e20f16d64d6/go.mod h1:IZihj/XeDgvA1z3fQx55O6V5LO3G8bC7rRkwySqDcng=
