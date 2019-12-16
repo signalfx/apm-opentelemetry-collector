@@ -40,6 +40,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/processor/samplingprocessor/probabilisticsamplerprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
+	"github.com/open-telemetry/opentelemetry-collector/receiver/prometheusreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
 
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/kinesis"
@@ -62,6 +63,7 @@ func components() (config.Factories, error) {
 		&opencensusreceiver.Factory{},
 		&memorymonitor.Factory{},
 		&sapmreceiver.Factory{},
+		&prometheusreceiver.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
