@@ -38,6 +38,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/processor/batchprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/processor/queuedprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/processor/samplingprocessor/probabilisticsamplerprocessor"
+	"github.com/open-telemetry/opentelemetry-collector/processor/spanprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/prometheusreceiver"
@@ -92,6 +93,7 @@ func components() (config.Factories, error) {
 		&batchprocessor.Factory{},
 		&memorylimiter.Factory{},
 		&probabilisticsamplerprocessor.Factory{},
+		&spanprocessor.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
