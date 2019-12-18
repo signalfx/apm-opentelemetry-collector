@@ -20,6 +20,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/signalfxreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver"
 	"github.com/open-telemetry/opentelemetry-collector/config"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
@@ -65,6 +66,7 @@ func components() (config.Factories, error) {
 		&memorymonitor.Factory{},
 		&sapmreceiver.Factory{},
 		&prometheusreceiver.Factory{},
+		&signalfxreceiver.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
