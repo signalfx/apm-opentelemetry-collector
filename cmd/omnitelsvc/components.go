@@ -43,7 +43,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/prometheusreceiver"
-	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
 
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/kinesis"
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard"

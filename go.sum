@@ -564,6 +564,7 @@ github.com/open-telemetry/opentelemetry-collector v0.2.0 h1:38/NrGdEEXufWqYFkW/6
 github.com/open-telemetry/opentelemetry-collector v0.2.0/go.mod h1:zZf9V+57o0Fd3ik5HzaHamVsWhudJTOwnKw9kJvWoDo=
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Update OTelCol module (#36)
 =======
@@ -576,6 +577,10 @@ github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb0c1d1e/go.mod h1:zZf9V+57o0Fd3ik5HzaHamVsWhudJTOwnKw9kJvWoDo=
 =======
 >>>>>>> Use kinesis exporter from contrib (#41)
+=======
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb0c1d1e h1:poxNKN8teT8QjLK6LwKN52cNQEPqHIOEsmPJv5ssZUU=
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb0c1d1e/go.mod h1:zZf9V+57o0Fd3ik5HzaHamVsWhudJTOwnKw9kJvWoDo=
+>>>>>>> Zipkin receiver for k8s (#45)
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191016224815-dfabfb0c1d1e/go.mod h1:zZf9V+57o0Fd3ik5HzaHamVsWhudJTOwnKw9kJvWoDo=
 <<<<<<< HEAD
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e1046cefa/go.mod h1:WCsoKuWfht1l33mnPISJ189n8l1p1G10TrQaKylV7no=
@@ -601,7 +606,10 @@ github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscriber
 =======
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e1046cefa/go.mod h1:WCsoKuWfht1l33mnPISJ189n8l1p1G10TrQaKylV7no=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e1046cefa/go.mod h1:WCsoKuWfht1l33mnPISJ189n8l1p1G10TrQaKylV7no=
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e1046cefa/go.mod h1:WCsoKuWfht1l33mnPISJ189n8l1p1G10TrQaKylV7no=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754 h1:gG2Ig+OgvWCyKLk3/Mz10HkSFolKjsWerT8kE9u+qig=
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754 h1:gG2Ig+OgvWCyKLk3/Mz10HkSFolKjsWerT8kE9u+qig=
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754/go.mod h1:WxiK9mcisb/hM6M6+2BRV/VIU2c8VzlCRJED2S1MWns=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754/go.mod h1:WxiK9mcisb/hM6M6+2BRV/VIU2c8VzlCRJED2S1MWns=
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1160,8 +1168,11 @@ golang.org/x/tools v0.0.0-20191029190741-b9c20aec41a5/go.mod h1:b+2E5dAYhXwXZwtn
 =======
 golang.org/x/tools v0.0.0-20191010075000-0337d82405ff/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20191010075000-0337d82405ff/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
+golang.org/x/tools v0.0.0-20191010075000-0337d82405ff/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20191012152004-8de300cfc20a/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20191012152004-8de300cfc20a/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
+golang.org/x/tools v0.0.0-20191012152004-8de300cfc20a/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
+golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
