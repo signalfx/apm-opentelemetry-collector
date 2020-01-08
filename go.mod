@@ -23,16 +23,18 @@ require (
 	github.com/juju/loggo v0.0.0-20190526231331-6e530bcce5d8 // indirect
 	github.com/juju/testing v0.0.0-20191001232224-ce9dec17d28b // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
-	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191211173639-c78990cbbb53
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191211173639-c78990cbbb53
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
+	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191209163440-5d463fe48816
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191216151958-b96fcb08e351
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/signalfxreceiver v0.0.0-20191218190817-7efaeccd8680
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191216151958-b96fcb08e351
 	github.com/rs/cors v1.6.0
 	github.com/shirou/gopsutil v2.19.9+incompatible
+	github.com/signalfx/gohistogram v0.0.0-20160107210732-1ccfd2ff5083 // indirect
 	github.com/signalfx/golib v2.5.1+incompatible
-	github.com/signalfx/opencensus-go-exporter-kinesis v0.3.4
+	github.com/signalfx/opencensus-go-exporter-kinesis v0.4.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.4.0
@@ -56,4 +58,5 @@ replace github.com/census-instrumentation/opencensus-proto => github.com/omnitio
 
 replace git.apache.org/thrift.git => github.com/apache/thrift v0.12.0
 
+// k8s.io/client-go has not migrated to go.mod properly yet. This is a workaround to pin a known working version.
 replace k8s.io/client-go => k8s.io/client-go v0.0.0-20190620085101-78d2af792bab

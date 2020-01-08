@@ -17,7 +17,6 @@ package main
 import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/signalfxreceiver"
@@ -44,15 +43,14 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/prometheusreceiver"
 
-	"github.com/signalfx/apm-opentelemetry-collector/exporter/kinesis"
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard"
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/opencensusexporter"
-	signalfxexporter "github.com/signalfx/apm-opentelemetry-collector/exporter/signalfx"
 	"github.com/signalfx/apm-opentelemetry-collector/extension/telemetryextension"
 	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor"
 	"github.com/signalfx/apm-opentelemetry-collector/processor/memorylimiter"
 	"github.com/signalfx/apm-opentelemetry-collector/receiver/memorymonitor"
 	"github.com/signalfx/apm-opentelemetry-collector/receiver/opencensusreceiver"
+	"github.com/signalfx/apm-opentelemetry-collector/receiver/zipkinreceiver"
 )
 
 func components() (config.Factories, error) {
