@@ -15,8 +15,11 @@
 package main
 
 import (
+	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/signalfxreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver"
 	"github.com/open-telemetry/opentelemetry-collector/config"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
@@ -35,19 +38,19 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/processor/batchprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/processor/queuedprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/processor/samplingprocessor/probabilisticsamplerprocessor"
+	"github.com/open-telemetry/opentelemetry-collector/processor/spanprocessor"
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
-	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
+	"github.com/open-telemetry/opentelemetry-collector/receiver/prometheusreceiver"
 
-	"github.com/signalfx/apm-opentelemetry-collector/exporter/kinesis"
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard"
 	"github.com/signalfx/apm-opentelemetry-collector/exporter/opencensusexporter"
-	signalfxexporter "github.com/signalfx/apm-opentelemetry-collector/exporter/signalfx"
 	"github.com/signalfx/apm-opentelemetry-collector/extension/telemetryextension"
 	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor"
 	"github.com/signalfx/apm-opentelemetry-collector/processor/memorylimiter"
 	"github.com/signalfx/apm-opentelemetry-collector/receiver/memorymonitor"
 	"github.com/signalfx/apm-opentelemetry-collector/receiver/opencensusreceiver"
+	"github.com/signalfx/apm-opentelemetry-collector/receiver/zipkinreceiver"
 )
 
 func components() (config.Factories, error) {
@@ -59,6 +62,8 @@ func components() (config.Factories, error) {
 		&opencensusreceiver.Factory{},
 		&memorymonitor.Factory{},
 		&sapmreceiver.Factory{},
+		&prometheusreceiver.Factory{},
+		&signalfxreceiver.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
@@ -71,7 +76,7 @@ func components() (config.Factories, error) {
 		&jaegergrpcexporter.Factory{},
 		&jaegerthrifthttpexporter.Factory{},
 		&zipkinexporter.Factory{},
-		&kinesis.Factory{},
+		&kinesisexporter.Factory{},
 		&omnishard.Factory{},
 		&signalfxexporter.Factory{},
 		&sapmexporter.Factory{},
@@ -87,6 +92,7 @@ func components() (config.Factories, error) {
 		&batchprocessor.Factory{},
 		&memorylimiter.Factory{},
 		&probabilisticsamplerprocessor.Factory{},
+		&spanprocessor.Factory{},
 	)
 	if err != nil {
 		errs = append(errs, err)
