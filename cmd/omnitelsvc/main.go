@@ -21,7 +21,7 @@ import (
 
 	"github.com/open-telemetry/opentelemetry-collector/service"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/internal/version"
+	"github.com/signalfx/apm-opentelemetry-collector/internal/version"
 )
 
 func main() {

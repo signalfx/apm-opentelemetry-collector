@@ -24,7 +24,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // ClientUnary can connect to a server and send an ExportRequest. It uses multiple

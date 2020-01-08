@@ -30,7 +30,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/extension"
 	"go.uber.org/zap"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/internal/version"
+	"github.com/signalfx/apm-opentelemetry-collector/internal/version"
 )
 
 const (

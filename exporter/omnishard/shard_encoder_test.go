@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	omnishard "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishard "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 func createShardEncoder(

@@ -1,4 +1,4 @@
-module github.com/Omnition/omnition-opentelemetry-collector
+module github.com/signalfx/apm-opentelemetry-collector
 
 go 1.12
 
@@ -23,7 +23,6 @@ require (
 	github.com/juju/loggo v0.0.0-20190526231331-6e530bcce5d8 // indirect
 	github.com/juju/testing v0.0.0-20191001232224-ce9dec17d28b // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
-	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
 	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191211173639-c78990cbbb53
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191211173639-c78990cbbb53
@@ -33,6 +32,7 @@ require (
 	github.com/signalfx/com_signalfx_metrics_protobuf v0.0.0-20190530013331-054be550cb49 // indirect
 	github.com/signalfx/gohistogram v0.0.0-20160107210732-1ccfd2ff5083 // indirect
 	github.com/signalfx/golib v2.5.1+incompatible
+	github.com/signalfx/opencensus-go-exporter-kinesis v0.3.4
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.4.0
@@ -55,3 +55,5 @@ replace contrib.go.opencensus.io/exporter/ocagent => github.com/omnition/opencen
 replace github.com/census-instrumentation/opencensus-proto => github.com/omnition/opencensus-proto v0.2.1-gogo-unary
 
 replace git.apache.org/thrift.git => github.com/apache/thrift v0.12.0
+
+replace k8s.io/client-go => k8s.io/client-go v0.0.0-20190620085101-78d2af792bab

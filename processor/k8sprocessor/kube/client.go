@@ -29,7 +29,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/processor/k8sprocessor/observability"
+	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor/observability"
 )
 
 // WatchClient is the main interface provided by this package to a kubernetes cluster.

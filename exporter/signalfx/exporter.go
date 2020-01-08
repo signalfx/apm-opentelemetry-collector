@@ -26,7 +26,7 @@ import (
 	"github.com/signalfx/golib/sfxclient"
 	"go.uber.org/zap"
 
-	signalfxtranslator "github.com/Omnition/omnition-opentelemetry-collector/translator/metric/signalfx"
+	signalfxtranslator "github.com/signalfx/apm-opentelemetry-collector/translator/metric/signalfx"
 )
 
 type sfxMetricExporter struct {

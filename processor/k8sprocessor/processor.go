@@ -23,8 +23,8 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/processor"
 	"go.uber.org/zap"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/client"
-	"github.com/Omnition/omnition-opentelemetry-collector/processor/k8sprocessor/kube"
+	"github.com/signalfx/apm-opentelemetry-collector/client"
+	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor/kube"
 )
 
 const (

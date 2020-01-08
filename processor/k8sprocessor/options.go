@@ -21,7 +21,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/selection"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/processor/k8sprocessor/kube"
+	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor/kube"
 )
 
 const (

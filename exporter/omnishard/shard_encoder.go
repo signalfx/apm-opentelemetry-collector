@@ -24,10 +24,10 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 	jaeger "github.com/jaegertracing/jaeger/model"
-	encodemodel "github.com/omnition/opencensus-go-exporter-kinesis/models/gen"
+	encodemodel "github.com/signalfx/opencensus-go-exporter-kinesis/models/gen"
 	"go.uber.org/zap"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 const avgBatchSizeInSpans = 1000
