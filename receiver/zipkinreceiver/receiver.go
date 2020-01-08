@@ -25,7 +25,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/client"
+	"github.com/signalfx/apm-opentelemetry-collector/client"
 )
 
 const defaultAddress = ":9411"

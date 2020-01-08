@@ -18,7 +18,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver/opencensusreceiver/ocmetrics"
 	"google.golang.org/grpc"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/receiver/opencensusreceiver/octrace"
+	"github.com/signalfx/apm-opentelemetry-collector/receiver/opencensusreceiver/octrace"
 )
 
 // Option interface defines for configuration settings to be applied to receivers.

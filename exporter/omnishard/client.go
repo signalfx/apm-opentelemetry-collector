@@ -17,7 +17,7 @@ package omnishard
 import (
 	jaeger "github.com/jaegertracing/jaeger/model"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // client allows to connect to a server, get sharding config and send encoded data.

@@ -22,7 +22,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
 	"github.com/open-telemetry/opentelemetry-collector/processor"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/processor/k8sprocessor/kube"
+	"github.com/signalfx/apm-opentelemetry-collector/processor/k8sprocessor/kube"
 )
 
 const (

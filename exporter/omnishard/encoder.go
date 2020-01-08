@@ -25,7 +25,7 @@ import (
 	"go.opencensus.io/stats/view"
 	"go.uber.org/zap"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 // encoder encodes spans into EncodedRecords. Spans are batched according to their

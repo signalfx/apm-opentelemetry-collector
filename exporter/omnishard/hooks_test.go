@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opencensus.io/stats/view"
 
-	omnishardpb "github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard/gen"
+	omnishardpb "github.com/signalfx/apm-opentelemetry-collector/exporter/omnishard/gen"
 )
 
 func TestAllTelemetryHooks(t *testing.T) {

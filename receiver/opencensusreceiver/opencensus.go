@@ -34,7 +34,7 @@ import (
 	"github.com/soheilhy/cmux"
 	"google.golang.org/grpc"
 
-	"github.com/Omnition/omnition-opentelemetry-collector/receiver/opencensusreceiver/octrace"
+	"github.com/signalfx/apm-opentelemetry-collector/receiver/opencensusreceiver/octrace"
 )
 
 // Receiver is the type that exposes Trace and Metrics reception.
