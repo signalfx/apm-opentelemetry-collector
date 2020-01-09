@@ -544,6 +544,8 @@ github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191119152140-567e10
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754/go.mod h1:WxiK9mcisb/hM6M6+2BRV/VIU2c8VzlCRJED2S1MWns=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191209163440-5d463fe48816 h1:jVHc4z0F+QFSVWwpyE5aq4qXMseHEDZFLVueVsFze6M=
 github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191209163440-5d463fe48816/go.mod h1:WxiK9mcisb/hM6M6+2BRV/VIU2c8VzlCRJED2S1MWns=
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20200109182910-256ec415ba33 h1:JnNePn3Vn0t5FMUXlsz+5LGjBCX4U8dTt3dbNQKzzQM=
+github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20200109182910-256ec415ba33/go.mod h1:WxiK9mcisb/hM6M6+2BRV/VIU2c8VzlCRJED2S1MWns=
 github.com/open-telemetry/opentelemetry-collector-contrib v0.0.0-20200107214741-006aabe03544 h1:PQMi0Te0DUMsTsTvtTJqE8kpGviMWPPIZWUHcNhzfa4=
 github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191216151958-b96fcb08e351 h1:7yLkVBh0oqhFiA+IwtpR2N9S0eU/aFsM6oi6cByrex0=
 github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191216151958-b96fcb08e351/go.mod h1:YJ0pp5EG63ghRw4pbL9mycMx9Ry4t23EEZhkWnGZaS0=
