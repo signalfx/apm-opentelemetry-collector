@@ -59,8 +59,6 @@ test:
 
 .PHONY: travis-ci
 travis-ci: fmt vet lint goimports misspell staticcheck test-with-cover omnitelsvc
-	$(MAKE) -C testbed install-tools
-	$(MAKE) -C testbed runtests
 
 .PHONY: test-with-cover
 test-with-cover:

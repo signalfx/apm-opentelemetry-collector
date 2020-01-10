@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/extension"
 	"go.uber.org/zap"
 
@@ -180,7 +181,7 @@ func parseArgs(setOfArgs []string) (metricsPort string, configFile string) {
 	return metricsPort, configFile
 }
 
-func (te *telemetryExtension) Start(host extension.Host) error {
+func (te *telemetryExtension) Start(host component.Host) error {
 	te.logger.Info(
 		"Starting telemetry extension",
 		zap.String("endpoint", te.cfg.Endpoint),

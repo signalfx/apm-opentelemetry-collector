@@ -24,6 +24,7 @@ import (
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
 
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
 	"github.com/open-telemetry/opentelemetry-collector/processor"
@@ -130,6 +131,10 @@ func (ml *memoryLimiter) ConsumeTraceData(
 
 func (ml *memoryLimiter) GetCapabilities() processor.Capabilities {
 	return processor.Capabilities{MutatesConsumedData: false}
+}
+
+func (ml *memoryLimiter) Start(host component.Host) error {
+	return nil
 }
 
 func (ml *memoryLimiter) Shutdown() error {

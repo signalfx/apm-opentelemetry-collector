@@ -26,9 +26,9 @@ import (
 	tracepb "github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1"
 	"github.com/gogo/protobuf/proto"
 	jaeger "github.com/jaegertracing/jaeger/model"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/config/configgrpc"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
-	"github.com/open-telemetry/opentelemetry-collector/receiver/receivertest"
 	tracetranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -50,7 +50,7 @@ func TestExporterStartAndShutdown(t *testing.T) {
 	exp, server := setupExporter(t, 1)
 	defer server.Stop()
 
-	exp.Start(receivertest.NewMockHost())
+	exp.Start(component.NewMockHost())
 	err := exp.Shutdown()
 	assert.Nil(t, err)
 }
@@ -63,7 +63,7 @@ func TestExporterSend(t *testing.T) {
 		assert.Nil(t, err)
 	}()
 
-	exp.Start(receivertest.NewMockHost())
+	exp.Start(component.NewMockHost())
 
 	// Send some batches via Exporter.
 	sentPartitionKeys := make(map[string]bool)
@@ -82,7 +82,7 @@ func TestExporterSendWithReconfig(t *testing.T) {
 		assert.Nil(t, err)
 	}()
 
-	exp.Start(receivertest.NewMockHost())
+	exp.Start(component.NewMockHost())
 
 	totalSentSpanCount := 0
 	sentPartitionKeys := make(map[string]bool)
@@ -111,7 +111,7 @@ func TestExporterSendWithServerError(t *testing.T) {
 		assert.Nil(t, err)
 	}()
 
-	exp.Start(receivertest.NewMockHost())
+	exp.Start(component.NewMockHost())
 
 	// Send some batches via Exporter.
 	sentPartitionKeys := make(map[string]bool)

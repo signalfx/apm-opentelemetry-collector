@@ -22,6 +22,7 @@ import (
 
 	"contrib.go.opencensus.io/resource/auto"
 	resourcepb "github.com/census-instrumentation/opencensus-proto/gen-go/resource/v1"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"go.uber.org/zap"
@@ -48,8 +49,8 @@ func (r *Receiver) MetricsSource() string {
 	return metricsSource
 }
 
-// StartMetricsReception scrapes and exports memory metrics from the local host.
-func (r *Receiver) StartMetricsReception(host receiver.Host) error {
+// Start scrapes and exports memory metrics from the local host.
+func (r *Receiver) Start(host component.Host) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -71,8 +72,8 @@ func (r *Receiver) StartMetricsReception(host receiver.Host) error {
 	return retErr
 }
 
-// StopMetricsReception stops and cancels the underlying memory metrics scrapers.
-func (r *Receiver) StopMetricsReception() error {
+// Shutdown stops and cancels the underlying memory metrics scrapers.
+func (r *Receiver) Shutdown() error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

@@ -29,11 +29,11 @@ import (
 	commonpb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/common/v1"
 	agenttracepb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/trace/v1"
 	tracepb "github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
 	"github.com/open-telemetry/opentelemetry-collector/exporter/exportertest"
 	"github.com/open-telemetry/opentelemetry-collector/observability/observabilitytest"
-	"github.com/open-telemetry/opentelemetry-collector/receiver/receivertest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
@@ -54,10 +54,10 @@ func TestGrpcGateway_endToEnd(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create trace receiver: %v", err)
 	}
-	defer ocr.StopTraceReception()
+	defer ocr.Shutdown()
 
-	mh := receivertest.NewMockHost()
-	if err := ocr.StartTraceReception(mh); err != nil {
+	mh := component.NewMockHost()
+	if err := ocr.Start(mh); err != nil {
 		t.Fatalf("Failed to start trace receiver: %v", err)
 	}
 
@@ -165,10 +165,10 @@ func TestTraceGrpcGatewayCors_endToEnd(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create trace receiver: %v", err)
 	}
-	defer ocr.StopTraceReception()
+	defer ocr.Shutdown()
 
-	mh := receivertest.NewMockHost()
-	if err := ocr.StartTraceReception(mh); err != nil {
+	mh := component.NewMockHost()
+	if err := ocr.Start(mh); err != nil {
 		t.Fatalf("Failed to start trace receiver: %v", err)
 	}
 
@@ -194,10 +194,10 @@ func TestMetricsGrpcGatewayCors_endToEnd(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create metrics receiver: %v", err)
 	}
-	defer ocr.StopMetricsReception()
+	defer ocr.Shutdown()
 
-	mh := receivertest.NewMockHost()
-	if err := ocr.StartMetricsReception(mh); err != nil {
+	mh := component.NewMockHost()
+	if err := ocr.Start(mh); err != nil {
 		t.Fatalf("Failed to start metrics receiver: %v", err)
 	}
 
@@ -227,11 +227,11 @@ func TestAcceptAllGRPCProtoAffiliatedContentTypes(t *testing.T) {
 		t.Fatalf("Failed to create trace receiver: %v", err)
 	}
 
-	mh := receivertest.NewMockHost()
-	if err := ocr.StartTraceReception(mh); err != nil {
+	mh := component.NewMockHost()
+	if err := ocr.Start(mh); err != nil {
 		t.Fatalf("Failed to start the trace receiver: %v", err)
 	}
-	defer ocr.StopTraceReception()
+	defer ocr.Shutdown()
 
 	// Now start the client with the various Proto affiliated gRPC Content-SubTypes as per:
 	//      https://godoc.org/google.golang.org/grpc#CallContentSubtype
@@ -384,12 +384,9 @@ func TestMultipleStopReceptionShouldNotError(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, r)
 
-	mh := receivertest.NewMockHost()
-	require.NoError(t, r.StartTraceReception(mh))
-	require.NoError(t, r.StartMetricsReception(mh))
-
-	require.NoError(t, r.StopMetricsReception())
-	require.NoError(t, r.StopTraceReception())
+	mh := component.NewMockHost()
+	require.NoError(t, r.Start(mh))
+	require.NoError(t, r.Shutdown())
 }
 
 func TestStartWithoutConsumersShouldFail(t *testing.T) {
@@ -398,9 +395,9 @@ func TestStartWithoutConsumersShouldFail(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, r)
 
-	mh := receivertest.NewMockHost()
-	require.Error(t, r.StartTraceReception(mh))
-	require.Error(t, r.StartMetricsReception(mh))
+	mh := component.NewMockHost()
+	require.Error(t, r.Start(mh))
+	require.Error(t, r.Start(mh))
 
 }
 
@@ -556,9 +553,9 @@ func TestOCReceiverTrace_HandleNextConsumerResponse(t *testing.T) {
 				require.NotNil(t, ocr)
 
 				ocr.traceConsumer = sink
-				err = ocr.StartTraceReception(receivertest.NewMockHost())
+				err = ocr.Start(component.NewMockHost())
 				require.Nil(t, err)
-				defer ocr.StopTraceReception()
+				defer ocr.Shutdown()
 
 				cc, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.WithBlock())
 				if err != nil {
