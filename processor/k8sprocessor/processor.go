@@ -18,6 +18,7 @@ import (
 	"context"
 
 	resourcepb "github.com/census-instrumentation/opencensus-proto/gen-go/resource/v1"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
 	"github.com/open-telemetry/opentelemetry-collector/processor"
@@ -72,6 +73,10 @@ func NewTraceProcessor(
 
 func (kp *kubernetesprocessor) GetCapabilities() processor.Capabilities {
 	return processor.Capabilities{MutatesConsumedData: true}
+}
+
+func (kp *kubernetesprocessor) Start(host component.Host) error {
+	return nil
 }
 
 func (kp *kubernetesprocessor) Shutdown() error {

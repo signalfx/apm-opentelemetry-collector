@@ -19,6 +19,7 @@ import (
 	"time"
 
 	jaeger "github.com/jaegertracing/jaeger/model"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/consumer/consumerdata"
 	"github.com/open-telemetry/opentelemetry-collector/exporter"
 	jaegertranslator "github.com/open-telemetry/opentelemetry-collector/translator/trace/jaeger"
@@ -115,7 +116,7 @@ func NewExporter(cfg *Config, logger *zap.Logger, client client) (*Exporter, err
 }
 
 // Start starts the goroutine that connects to endpoint and retrieves the configuration.
-func (e *Exporter) Start(host exporter.Host) error {
+func (e *Exporter) Start(host component.Host) error {
 	go e.connectAndGetConfig()
 	return nil
 }

@@ -26,9 +26,9 @@ import (
 	agentmetricspb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/metrics/v1"
 	agenttracepb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/trace/v1"
 	gatewayruntime "github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
 	"github.com/open-telemetry/opentelemetry-collector/observability"
-	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/opencensusreceiver/ocmetrics"
 	"github.com/rs/cors"
 	"github.com/soheilhy/cmux"
@@ -100,9 +100,8 @@ func (ocr *Receiver) TraceSource() string {
 	return source
 }
 
-// StartTraceReception runs the trace receiver on the gRPC server. Currently
-// it also enables the metrics receiver too.
-func (ocr *Receiver) StartTraceReception(host receiver.Host) error {
+// Start runs the receiver on the gRPC server.
+func (ocr *Receiver) Start(host component.Host) error {
 	return ocr.start()
 }
 
@@ -123,12 +122,6 @@ func (ocr *Receiver) registerTraceConsumer() error {
 // MetricsSource returns the name of the metrics data source.
 func (ocr *Receiver) MetricsSource() string {
 	return source
-}
-
-// StartMetricsReception runs the metrics receiver on the gRPC server. Currently
-// it also enables the trace receiver too.
-func (ocr *Receiver) StartMetricsReception(host receiver.Host) error {
-	return ocr.start()
 }
 
 func (ocr *Receiver) registerMetricsConsumer() error {
@@ -155,18 +148,8 @@ func (ocr *Receiver) grpcServer() *grpc.Server {
 	return ocr.serverGRPC
 }
 
-// StopTraceReception is a method to turn off receiving traces. It stops
-// metrics reception too.
-func (ocr *Receiver) StopTraceReception() error {
-	if err := ocr.stop(); err != errAlreadyStopped {
-		return err
-	}
-	return nil
-}
-
-// StopMetricsReception is a method to turn off receiving metrics. It stops
-// trace reception too.
-func (ocr *Receiver) StopMetricsReception() error {
+// Shutdown stops the receiver.
+func (ocr *Receiver) Shutdown() error {
 	if err := ocr.stop(); err != errAlreadyStopped {
 		return err
 	}

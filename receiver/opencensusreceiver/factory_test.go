@@ -22,9 +22,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector/component"
 	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 	"github.com/open-telemetry/opentelemetry-collector/exporter/exportertest"
-	"github.com/open-telemetry/opentelemetry-collector/receiver/receivertest"
 )
 
 func TestCreateDefaultConfig(t *testing.T) {
@@ -99,9 +99,9 @@ func TestCreateTraceReceiver(t *testing.T) {
 				return
 			}
 			if tr != nil {
-				mh := receivertest.NewMockHost()
-				if err := tr.StartTraceReception(mh); err == nil {
-					tr.StopTraceReception()
+				mh := component.NewMockHost()
+				if err := tr.Start(mh); err == nil {
+					tr.Shutdown()
 				} else {
 					t.Fatalf("StartTraceReception() error = %v", err)
 				}
