@@ -19,10 +19,11 @@ require (
 	github.com/jstemmer/go-junit-report v0.9.1
 	github.com/juju/errors v0.0.0-20190930114154-d42613fe1ab9 // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
-	github.com/open-telemetry/opentelemetry-collector v0.2.3
+	github.com/open-telemetry/opentelemetry-collector v0.2.4-0.20200115225140-264426a9cae4
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20200113165313-aaaf81577e1a
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20200113165313-aaaf81577e1a
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20200113165313-aaaf81577e1a
+	github.com/open-telemetry/opentelemetry-collector-contrib/processor/k8sprocessor v0.0.0-20200116182905-41c032071dce
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20200113165313-aaaf81577e1a
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/signalfxreceiver v0.0.0-20200113165313-aaaf81577e1a
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20200113165313-aaaf81577e1a
@@ -41,9 +42,6 @@ require (
 	google.golang.org/genproto v0.0.0-20191205163323-51378566eb59
 	google.golang.org/grpc v1.25.1
 	honnef.co/go/tools v0.0.1-2019.2.3
-	k8s.io/api v0.0.0-20190813020757-36bff7324fb7
-	k8s.io/apimachinery v0.0.0-20190809020650-423f5d784010
-	k8s.io/client-go v12.0.0+incompatible
 )
 
 replace contrib.go.opencensus.io/exporter/ocagent => github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition
