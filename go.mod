@@ -44,7 +44,7 @@ require (
 	honnef.co/go/tools v0.0.1-2019.2.3
 )
 
-replace contrib.go.opencensus.io/exporter/ocagent => github.com/omnition/opencensus-go-exporter-ocagent v0.6.0-omnition
+replace contrib.go.opencensus.io/exporter/ocagent => github.com/signalfx/opencensus-go-exporter-ocagent v0.6.0-omnition
 
 replace github.com/census-instrumentation/opencensus-proto => github.com/omnition/opencensus-proto v0.2.1-gogo-unary
 
